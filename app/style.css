@@ -1,0 +1,78 @@
+/* 文字盤のスキン。色はスキンごとの固定（時計そのものの色） */
+:root {
+  --f-dial: "Shippori Mincho B1", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+  --f-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+
+.dial {
+  min-height: 100vh; min-height: 100dvh;
+  background: var(--bg); color: var(--ink); font-family: var(--f-dial);
+  padding-block: max(12px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dial[data-skin="kon"] { --bg:#0b1628; --bg2:#0f1d36; --face:#13243f; --rim:#2a3b5c; --ink:#ebe1c8; --dim:#8693ab; --metal:#c9a660; --track:rgba(235,225,200,.07);
+  --s-syd:#6a9fb9; --s-tky:#d27967; --s-ldn:#84b089; --s-ny:#ae97d2; color-scheme: dark; }
+.dial[data-skin="hakuji"] { --bg:#dde2e8; --bg2:#f6f6f4; --face:#ffffff; --rim:#c6ccd5; --ink:#1b2a48; --dim:#6a7487; --metal:#2c55a3; --track:rgba(27,42,72,.06);
+  --s-syd:#5f9fbf; --s-tky:#cc6a59; --s-ldn:#62a06c; --s-ny:#8a74c0; color-scheme: light; }
+.dial[data-skin="midori"] { --bg:#0d2618; --bg2:#12301f; --face:#173a27; --rim:#2c5440; --ink:#f0e8d2; --dim:#88a594; --metal:#d8b56b; --track:rgba(240,232,210,.08);
+  --s-syd:#8cc3c9; --s-tky:#e59580; --s-ldn:#bcd88d; --s-ny:#cab4e6; color-scheme: dark; }
+body { background: #0b1628; }
+
+.top { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--dim); }
+.top h1 { margin: 0; font-size: 13px; letter-spacing: .12em; color: var(--ink); }
+
+.body { display: grid; gap: 12px; flex: 1; align-content: start; }
+#face { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto; }
+.side { display: flex; flex-direction: column; gap: 10px; min-width: 0; width: 100%; max-width: 420px; margin: 0 auto; }
+@media (min-width: 900px) {
+  .body { grid-template-columns: minmax(0, 560px) 360px; justify-content: center; align-content: center; gap: 48px; }
+  #face { max-width: 560px; }
+}
+
+.bezel { fill: var(--bg2); stroke: var(--rim); stroke-width: 1; }
+.face { fill: var(--face); stroke: var(--rim); stroke-width: .8; }
+.track { fill: none; stroke: var(--track); stroke-width: 6; }
+.tk { stroke: var(--ink); stroke-width: 1.1; opacity: .7; }
+.tk-big { stroke-width: 2.2; opacity: 1; }
+.tk-q { stroke-width: .8; opacity: .32; }
+.num { fill: var(--ink); font-family: var(--f-dial); font-size: 13px; font-weight: 500; text-anchor: middle; }
+.arc { fill: none; stroke-width: 6; }
+.arc.off { opacity: .42; }
+.s-syd { stroke: var(--s-syd); } .s-tky { stroke: var(--s-tky); } .s-ldn { stroke: var(--s-ldn); } .s-ny { stroke: var(--s-ny); }
+.mark, .ptr-dot, .sec { fill: var(--metal); }
+.ptr { stroke: var(--metal); stroke-width: 2.2; stroke-linecap: round; }
+.date { fill: var(--dim); font-size: 11.5px; text-anchor: middle; }
+.time { fill: var(--ink); font-size: 42px; font-weight: 500; text-anchor: middle; letter-spacing: .02em; }
+.next-name { fill: var(--ink); font-size: 12px; text-anchor: middle; font-family: var(--f-ui); }
+.next-left { fill: var(--metal); font-size: 17px; font-weight: 700; text-anchor: middle; font-family: var(--f-ui); }
+.state { fill: var(--dim); font-size: 10.5px; text-anchor: middle; font-family: var(--f-ui); }
+
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font-size: 12px; color: var(--dim); font-family: var(--f-ui); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 14px; height: 4px; display: inline-block; }
+.legend .on { color: var(--ink); font-weight: 700; }
+.b-syd { background: var(--s-syd); } .b-tky { background: var(--s-tky); } .b-ldn { background: var(--s-ldn); } .b-ny { background: var(--s-ny); }
+
+.list { list-style: none; margin: 0; padding: 0 4px; display: grid; gap: 2px; font-size: 14px; }
+.list li { display: grid; grid-template-columns: 3.3em 1fr auto; gap: 8px; align-items: baseline; padding: 4px 0; border-bottom: 1px solid var(--track); }
+.list time { font-variant-numeric: tabular-nums; text-align: right; }
+.list li.minor { font-size: 12.5px; color: var(--dim); }
+.list li.past { opacity: .4; }
+.list li.next { color: var(--metal); font-weight: 700; }
+.list em { font-style: normal; font-family: var(--f-ui); font-size: 13px; }
+.list small { margin-left: 6px; font-size: 11px; color: var(--metal); font-family: var(--f-ui); font-weight: 700; }
+
+.dst { font-family: var(--f-ui); font-size: 12px; color: var(--dim); text-align: center; line-height: 1.6; margin: 0; }
+.dst b { color: var(--ink); font-weight: 700; }
+
+.chips { display: flex; justify-content: center; gap: 12px; }
+.chip { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--rim); padding: 0; cursor: pointer; }
+.chip[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 3px; }
+.chip:focus-visible { outline: 2px dashed var(--ink); outline-offset: 3px; }
+.c-kon { background: linear-gradient(135deg, #13243f 50%, #c9a660 50%); }
+.c-hakuji { background: linear-gradient(135deg, #ffffff 50%, #2c55a3 50%); }
+.c-midori { background: linear-gradient(135deg, #173a27 50%, #d8b56b 50%); }
