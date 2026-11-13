@@ -1,0 +1,531 @@
+<title>FX時計 形の見本</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500&family=Klee+One:wght@400;600&family=M+PLUS+Rounded+1c:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 2つずつ本物の画面の大きさで並べる（広い画面は横、スマホは縦）。時計の中は形ごとの固定色 */
+:root{
+  --page:#eceff3; --ink:#1c2330; --sub:#5b6575; --line:#cfd5de; --tag:#dde3ea;
+  --f-ui:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --f-round:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Noto Sans JP",sans-serif;
+  --f-hand:"Klee One","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-ele:"Cormorant Garamond","Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --page:#151920; --ink:#e6eaf0; --sub:#9aa4b3; --line:#2c3441; --tag:#232a35; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --page:#151920; --ink:#e6eaf0; --sub:#9aa4b3; --line:#2c3441; --tag:#232a35; color-scheme:dark }
+body{ background:var(--page); color:var(--ink); font-family:var(--f-ui) }
+
+.wrap{ max-width:1040px; margin:0 auto; padding-block:20px 40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:40px }
+.head h1{ font-size:20px; margin:0 0 6px; letter-spacing:.02em; text-wrap:balance }
+.head p{ margin:0; color:var(--sub); font-size:14px; line-height:1.75; max-width:64ch }
+.slot{ display:flex; flex-direction:column; gap:16px }
+.slot-head{ border-top:1px solid var(--line); padding-top:14px; display:flex; flex-direction:column; gap:4px }
+.slot-head h2{ font-size:17px; margin:0 }
+.slot-head p{ margin:0; font-size:13.5px; color:var(--sub); line-height:1.6 }
+.pair{ display:grid; grid-template-columns:1fr; gap:32px }
+@media (min-width:880px){ .pair{ grid-template-columns:1fr 1fr } }
+.sample{ min-width:0; display:flex; flex-direction:column; gap:10px; align-items:center }
+.sample h3{ font-size:15px; margin:0; width:100%; max-width:420px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap }
+.sample h3 small{ font-size:12px; font-weight:400; color:var(--sub) }
+.no{ font-family:var(--f-cond); font-weight:700; font-size:15px; letter-spacing:.04em; background:var(--tag); padding:1px 9px; border-radius:4px }
+.screen{ width:100%; max-width:420px; border-radius:20px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.12), 0 8px 24px rgba(10,20,40,.12) }
+.note{ font-size:13.5px; color:var(--sub); line-height:1.7; max-width:420px; margin:0; width:100% }
+.foot{ font-size:13px; color:var(--sub); line-height:1.75; margin:0; max-width:70ch }
+.form svg{ display:block; width:100%; height:auto }
+.tab{ font-variant-numeric:tabular-nums }
+
+/* A アナログ・クラシック */
+.f-a1{ background:#e7e9ec; color:#1b2433; padding:18px 18px 16px; display:flex; flex-direction:column; gap:12px }
+.f-a1 svg{ max-width:340px; margin:0 auto }
+.a1-next{ font-size:13px; text-align:center; line-height:1.5 }
+.a1-next b{ font-size:16px }
+.a1-next span{ display:block; color:#1d4ea8; font-weight:700; font-size:15px }
+.lamps{ display:flex; justify-content:center; gap:16px; font-size:12px; color:#5a6474 }
+.lamps i{ display:inline-block; width:8px; height:8px; border-radius:50%; background:#b9c0ca; margin-right:5px; vertical-align:1px }
+.lamps .on{ color:#1b2433; font-weight:700 }
+.lamps .on i{ background:#25a05a; box-shadow:0 0 0 3px rgba(37,160,90,.18) }
+
+/* B アナログ・ローズ */
+.f-a2{ background:#f5e8e5; color:#6f4a43; padding:18px 18px 16px; display:flex; flex-direction:column; gap:12px; font-family:var(--f-round) }
+.f-a2 svg{ max-width:340px; margin:0 auto }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center }
+.chip{ font-size:12px; padding:3px 10px; border-radius:999px; background:var(--c-bg); color:var(--c-ink); white-space:nowrap }
+.chip.past{ opacity:.45 }
+.f-a2 .chip{ --c-bg:#fbf3f1; --c-ink:#8c5b50; border:1px solid #ecd1ca }
+.f-a2 .chip.next{ --c-bg:#d98c82; --c-ink:#fff; border-color:#d98c82 }
+.f-a2 .chip.g{ --c-bg:#fff; --c-ink:#c4706a; border-color:#e7a99f }
+
+/* C 世界時計 */
+.f-w{ background:#202326; color:#eef0f2; padding:18px 14px 16px; display:flex; flex-direction:column; gap:14px }
+.w-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px }
+.city{ display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0 }
+.city svg{ max-width:118px }
+.w-face{ fill:#f6f6f3; transition:fill .6s }
+.city.night .w-face{ fill:#2c323b }
+.w-tk{ stroke:#20242a } .city.night .w-tk{ stroke:#e9edf2 }
+.w-h, .w-m{ fill:#16191d } .city.night .w-h, .city.night .w-m{ fill:#f2f4f7 }
+.w-s{ stroke:#d9433a; stroke-width:1.1 }
+.w-name{ font-size:14px; font-weight:700; letter-spacing:.06em }
+.w-dig{ font-family:var(--f-cond); font-size:20px; font-weight:600; line-height:1 }
+.w-st{ font-size:11.5px; color:#9aa2ab; display:flex; align-items:center; gap:5px }
+.w-st i{ width:8px; height:8px; border-radius:50%; background:#555c64 }
+.w-st.on{ color:#7fe0a3 } .w-st.on i{ background:#3ccf73; box-shadow:0 0 6px #3ccf73 }
+.w-st.soon{ color:#ffc35a } .w-st.soon i{ background:#ffb020 }
+.w-sea{ font-size:10.5px; color:#8b939c }
+.w-next{ border-top:1px solid #3a3f45; padding-top:10px; display:grid; gap:4px; font-size:13px }
+.w-next div{ display:grid; grid-template-columns:3.4em 1fr auto; gap:8px }
+.w-next div:first-child{ color:#ffd28a; font-weight:700 }
+.w-next time{ text-align:right; font-family:var(--f-cond); font-size:16px }
+
+/* D パステルのドーナツ */
+.f-dn{ background:#fdf2f6; color:#5a3d55; padding:18px 16px 18px; display:flex; flex-direction:column; gap:14px; font-family:var(--f-round) }
+.f-dn svg{ max-width:300px; margin:0 auto }
+.f-dn .chip{ --c-bg:#fff; --c-ink:#7a5a73; border:1px solid #f1d3df }
+.f-dn .chip.next{ --c-bg:#ff9ec4; --c-ink:#fff; border-color:#ff9ec4 }
+.f-dn .chip.on{ --c-bg:#efe8ff; --c-ink:#6b55b5; border-color:#ddd2ff }
+.f-dn .chip.g{ --c-bg:#fff3c9; --c-ink:#9a6a00; border-color:#f3dc8c }
+.twinkle{ animation:tw 2.8s ease-in-out infinite }
+.twinkle:nth-child(2n){ animation-delay:1.1s }
+@keyframes tw{ 50%{ opacity:.25 } }
+
+/* E 手帳 */
+.f-pl{ background-color:#fbfaf6; background-image:radial-gradient(#e4dfd3 1px, transparent 1.2px); background-size:16px 16px; color:#3d3a35; padding:16px 14px 14px; display:flex; flex-direction:column; gap:8px; font-family:var(--f-hand) }
+.pl-head{ display:flex; justify-content:space-between; align-items:center; gap:8px }
+.pl-date{ font-size:21px; font-weight:600 }
+.pl-date small{ display:block; font-size:12px; font-weight:400; color:#8b8478 }
+.stamp{ width:58px; height:58px; border-radius:50%; border:2px solid #d9473a; color:#d9473a; display:grid; place-items:center; font-size:12.5px; font-weight:600; line-height:1.15; text-align:center }
+.stamp.plain{ border-color:#a39d92; color:#8b8478 }
+.pl-leg{ display:flex; flex-wrap:wrap; gap:4px 12px; font-size:12px; color:#6f6a61 }
+.pl-leg i{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:4px; vertical-align:-1px }
+.pl-leg u{ text-decoration:none; background:linear-gradient(transparent 45%, #ffe680 45%) }
+
+/* F 大きな数字 */
+.f-big{ background:#f1f1ee; color:#121212; padding:22px 20px 18px; display:flex; flex-direction:column; gap:14px }
+.big-top{ font-size:14px; color:#4b4b47 }
+.big-top b{ color:#121212; font-size:17px; margin-inline:2px }
+.big-num{ font-family:var(--f-cond); font-weight:600; font-size:clamp(64px, 26vw, 112px); line-height:.9; letter-spacing:-.01em; font-variant-numeric:tabular-nums }
+.big-bar{ height:3px; background:#d9d9d4; position:relative }
+.big-bar i{ position:absolute; left:0; top:0; bottom:0; background:#121212 }
+.big-foot{ display:flex; flex-wrap:wrap; gap:4px 14px; font-size:12.5px; color:#5c5c57 }
+.big-foot b{ color:#121212 }
+.big-foot .on{ color:#1c7a45; font-weight:700 }
+
+/* G ウィジェット */
+.f-wg{ background:linear-gradient(160deg,#304c5a 0%,#5f7f86 55%,#b9a98f 100%); padding:20px 16px 18px; display:flex; flex-direction:column; gap:10px; color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Zen Kaku Gothic New",sans-serif }
+.wg-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px }
+.wg{ background:rgba(28,28,30,.92); border-radius:22px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; min-width:0; aspect-ratio:1/1; max-width:100% }
+.wg.m{ grid-column:1 / -1; aspect-ratio:auto; flex-direction:row; gap:14px; align-items:stretch }
+.wg-lab{ font-size:11px; color:rgba(255,255,255,.75); text-align:center }
+.wg-ring{ flex:1; display:grid; place-items:center }
+.wg-ring svg{ width:84%; max-width:120px }
+.wg small{ font-size:11px; color:#a1a1a6 }
+.wg .ttl{ font-size:13px; font-weight:600 }
+.mk{ display:grid; gap:7px; margin-top:4px }
+.mk div{ display:flex; align-items:center; justify-content:space-between; font-size:13px }
+.mk i{ width:9px; height:9px; border-radius:50%; background:#48484a }
+.mk .on i{ background:#30d158; box-shadow:0 0 6px #30d158 }
+.m-time{ font-size:44px; font-weight:600; letter-spacing:-.02em; line-height:1; font-variant-numeric:tabular-nums }
+.m-left{ display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
+.m-list{ flex:1; display:grid; gap:6px; align-content:center; font-size:12.5px; min-width:0 }
+.m-list div{ display:grid; grid-template-columns:2.9em 1fr auto; gap:6px; align-items:baseline }
+.m-list div:first-child{ color:#ff9f0a; font-weight:600 }
+.m-list em{ font-style:normal; font-variant-numeric:tabular-nums; color:#a1a1a6 }
+.m-list div:first-child em{ color:#ff9f0a }
+.la{ background:rgba(28,28,30,.92); border-radius:20px; padding:12px 16px; display:flex; flex-direction:column; gap:8px }
+.la-row{ display:flex; justify-content:space-between; align-items:baseline; gap:8px }
+.la-row b{ font-size:15px }
+.la-row span{ font-size:24px; font-weight:600; color:#ff9f0a; font-variant-numeric:tabular-nums }
+.la-bar{ height:5px; border-radius:3px; background:#3a3a3c; overflow:hidden }
+.la-bar i{ display:block; height:100%; background:#ff9f0a; border-radius:3px }
+
+/* H 横に流れる帯 */
+.f-tl{ background:#0f1720; color:#e6edf5; padding:16px 14px 14px; display:flex; flex-direction:column; gap:10px }
+.tl-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:8px; flex-wrap:wrap }
+.tl-time{ font-family:var(--f-cond); font-weight:600; font-size:46px; line-height:1; font-variant-numeric:tabular-nums }
+.tl-next{ font-size:12.5px; text-align:right; color:#8a9bb0; line-height:1.4 }
+.tl-next b{ display:block; color:#e6edf5; font-size:15px }
+.tl-next span{ color:#ffb35c; font-weight:700 }
+.tl-leg{ display:flex; flex-wrap:wrap; gap:4px 12px; font-size:11.5px; color:#8a9bb0 }
+.tl-leg i{ display:inline-block; width:12px; height:5px; margin-right:4px; vertical-align:2px }
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none!important }
+  .twinkle{ animation:none }
+}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <h1>FX時計　形の見本</h1>
+    <p>時計の形そのものがちがう8つです。いまある2つの形（24時間の輪の文字盤・1時間ごとの時刻表）とあわせて10の形にして、色の着せかえは形ごとに2〜3色つける案です。時刻はいまの日本時間で動いています。気に入った形の記号を教えてください（いくつでも）。</p>
+  </header>
+
+  <section class="slot" aria-labelledby="g1">
+    <div class="slot-head"><h2 id="g1">アナログ（針の時計）</h2><p>ふつうの12時間の針の時計に、FX の時間をそっと足す形。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">A</span>アナログ・クラシック<small>ビジネス向け</small></h3>
+        <div class="screen"><div class="form f-a1" data-form="a1"></div></div>
+        <p class="note">紺の文字盤に銀の針。外のふちの点が、これから12時間の大事な時間（赤は値が決まる時間）。6時の小窓が「次まで」の残り、3時の窓に日付とゴトー日。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">B</span>アナログ・ローズ<small>女性向け</small></h3>
+        <div class="screen"><div class="form f-a2" data-form="a2"></div></div>
+        <p class="note">ローズゴールドの枠に、やさしい色の市場の輪（いまから12時間分）。数字は4つだけ、秒針の先に小さなハート。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="slot" aria-labelledby="g2">
+    <div class="slot-head"><h2 id="g2">ビジネス・机の上</h2><p>仕事の机や会議中に、一目で読める形。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">C</span>世界時計<small>トレーダーの机</small></h3>
+        <div class="screen"><div class="form f-w" data-form="world"></div></div>
+        <p class="note">東京・ロンドン・NY の時計を並べて、取引中かどうかのランプつき。開く1時間前は黄色。その街が夜の時は文字盤が暗くなる。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">D</span>大きな数字<small>ミニマル</small></h3>
+        <div class="screen"><div class="form f-big" data-form="big"></div></div>
+        <p class="note">次の大事な時間までの残りだけを大きく。下の細い線が、前の時間から次の時間までの進み具合。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="slot" aria-labelledby="g3">
+    <div class="slot-head"><h2 id="g3">女性向け</h2><p>やわらかい色と丸い字。数字を追うより、ひと目で「あとどれくらい」が分かる形。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">E</span>パステルのドーナツ</h3>
+        <div class="screen"><div class="form f-dn" data-form="donut"></div></div>
+        <p class="note">次の時間に向かって、ドーナツの輪がたまっていく。市場の様子とゴトー日は、やさしい色の札に。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">F</span>手帳</h3>
+        <div class="screen"><div class="form f-pl" data-form="planner"></div></div>
+        <p class="note">手帳のページのように、いまの前後12時間を縦に。値が決まる時間に蛍光ペンの線、いまは赤い線。ゴトー日はハンコ。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="slot" aria-labelledby="g4">
+    <div class="slot-head"><h2 id="g4">ガジェット・大きな画面</h2><p>アプリのウィジェットや、PC・テレビの横長の画面向け。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">G</span>ウィジェット<small>アプリの有料の所</small></h3>
+        <div class="screen"><div class="form f-wg" data-form="widget"></div></div>
+        <p class="note">ホーム画面のウィジェット（小・中）と、ロック画面のカウントダウンの見本。お試しつきの買い切りで開ける所です。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">H</span>横に流れる帯</h3>
+        <div class="screen"><div class="form f-tl" data-form="line"></div></div>
+        <p class="note">いまの線を左に固定して、市場の時間帯と大事な時間が右から流れてくる。横長の画面ほど先まで見える。</p>
+      </article>
+    </div>
+  </section>
+
+  <p class="foot">どれも画像なし（CSS と SVG）。字体はアプリの中に入れる無料の字体です。東京とシドニーの時間帯は仮の値、指標と休場はあとで入る所です（#3・#4）。色の着せかえの例は、前の見本（桜の木・夜光・パタパタなど）。</p>
+</div>
+
+<script>
+(function(){
+const TZ={tky:'Asia/Tokyo',ldn:'Europe/London',ny:'America/New_York',syd:'Australia/Sydney'};
+const WD=['日','月','火','水','木','金','土'];
+const WDE=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const fc={};
+function parts(ms,tz){
+  const f=fc[tz]||(fc[tz]=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric',weekday:'short'}));
+  const o={}; f.formatToParts(new Date(ms)).forEach(function(p){o[p.type]=p.value;});
+  return {y:+o.year,mo:+o.month,d:+o.day,h:(+o.hour)%24,mi:+o.minute,s:+o.second,wd:WDE.indexOf(o.weekday)};
+}
+function offMin(ms,tz){const p=parts(ms,tz);return Math.round((Date.UTC(p.y,p.mo-1,p.d,p.h,p.mi,p.s)-Math.floor(ms/1000)*1000)/60000);}
+function zoned(y,mo,d,h,mi,tz){const b=Date.UTC(y,mo-1,d,h,mi);let t=b-offMin(b,tz)*60000;t=b-offMin(t,tz)*60000;return t;}
+function addDays(p,n){const x=new Date(Date.UTC(p.y,p.mo-1,p.d+n));return {y:x.getUTCFullYear(),mo:x.getUTCMonth()+1,d:x.getUTCDate(),wd:x.getUTCDay()};}
+function wk(wd){return wd>=1&&wd<=5;}
+const EVENTS=[
+  {id:'nakane',name:'仲値',tz:TZ.tky,h:9,m:55,kind:'fix'},
+  {id:'ldn',name:'ロンドンオープン',tz:TZ.ldn,h:8,m:0,kind:'open'},
+  {id:'ny',name:'NYオープン',tz:TZ.ny,h:8,m:0,kind:'open'},
+  {id:'nys',name:'NY株の寄り付き',tz:TZ.ny,h:9,m:30,kind:'minor'},
+  {id:'fix',name:'ロンドンフィックス',tz:TZ.ldn,h:16,m:0,kind:'fix'},
+  {id:'nyc',name:'NYクローズ',tz:TZ.ny,h:17,m:0,kind:'close'}
+];
+const CLOSE=EVENTS[5];
+const SESSIONS=[
+  {id:'syd',name:'シドニー',tz:TZ.syd,o:7,c:16},
+  {id:'tky',name:'東京',tz:TZ.tky,o:9,c:17},
+  {id:'ldn',name:'ロンドン',tz:TZ.ldn,o:8,c:17},
+  {id:'ny',name:'NY',tz:TZ.ny,o:8,c:17}
+];
+const SES=function(id){return SESSIONS.find(function(s){return s.id===id;});};
+function nextOcc(ev,after){const p=parts(after,ev.tz);for(let n=-1;n<=9;n++){const q=addDays(p,n);if(!wk(q.wd))continue;const t=zoned(q.y,q.mo,q.d,ev.h,ev.m,ev.tz);if(t>after)return t;}return null;}
+function prevOcc(ev,before){const p=parts(before,ev.tz);for(let n=1;n>=-9;n--){const q=addDays(p,n);if(!wk(q.wd))continue;const t=zoned(q.y,q.mo,q.d,ev.h,ev.m,ev.tz);if(t<=before)return t;}return null;}
+function sessionIntervals(s,from,to){const out=[];const p=parts(from,s.tz);for(let n=-1;n<=3;n++){const q=addDays(p,n);if(!wk(q.wd))continue;const a=zoned(q.y,q.mo,q.d,s.o,0,s.tz),b=zoned(q.y,q.mo,q.d,s.c,0,s.tz);if(b>from&&a<to)out.push({a:a,b:b});}return out;}
+function marketClosed(now){const p=parts(now,TZ.ny);const m=p.h*60+p.mi;return (p.wd===5&&m>=1020)||p.wd===6||(p.wd===0&&m<1020);}
+function isOpen(s,now){if(marketClosed(now))return false;const p=parts(now,s.tz);if(!wk(p.wd))return false;const m=p.h*60+p.mi;return m>=s.o*60&&m<s.c*60;}
+function schedule(now){const start=prevOcc(CLOSE,now);const list=EVENTS.map(function(ev){return {ev:ev,t:nextOcc(ev,start)};}).sort(function(x,y){return x.t-y.t;});const next=list.find(function(x){return x.t>now;});return {list:list,next:next};}
+function between(from,to){const out=[];EVENTS.forEach(function(ev){let t=nextOcc(ev,from-1),g=0;while(t&&t<=to&&g<12){out.push({ev:ev,t:t});t=nextOcc(ev,t);g++;}});return out.sort(function(a,b){return a.t-b.t;});}
+function prevAny(now){let m=0;EVENTS.forEach(function(ev){const t=prevOcc(ev,now);if(t&&t>m)m=t;});return m;}
+function lastDay(y,mo){return new Date(Date.UTC(y,mo,0)).getUTCDate();}
+function gDay(q){return q.d%5===0||q.d===lastDay(q.y,q.mo);}
+function isGotobi(t){const p=parts(t,TZ.tky);if(!wk(p.wd))return false;if(gDay(p))return true;if(p.wd===5)return gDay(addDays(p,1))||gDay(addDays(p,2));return false;}
+const pad=function(n){return String(n).padStart(2,'0');};
+function hm(t){const p=parts(t,TZ.tky);return p.h+':'+pad(p.mi);}
+function season(now){const ny=offMin(now,TZ.ny),ln=offMin(now,TZ.ldn);if(ny-ln!==-300)return 'NYだけ夏時間';return ny===-240?'夏時間':'冬時間';}
+function left(ms){const s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;
+  if(h>=24)return 'あと'+Math.floor(h/24)+'日'+(h%24)+'時間';if(h>0)return 'あと'+h+'時間'+m+'分';if(m>=10)return 'あと'+m+'分';return 'あと'+m+'分'+pad(sec)+'秒';}
+function hms(ms){const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/3600)+':'+pad(Math.floor(s%3600/60))+':'+pad(s%60);}
+function hmShort(ms){const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/3600)+':'+pad(Math.floor(s%3600/60));}
+const ld=function(p){return p.mo+'月'+p.d+'日（'+WD[p.wd]+'）';};
+const f2=function(n){return n.toFixed(2);};
+function pt(cx,cy,r,a){const t=a*Math.PI/180;return [cx+r*Math.sin(t),cy-r*Math.cos(t)];}
+function arc(cx,cy,r,a0,len){if(len>=359.9)len=359.9;const a=pt(cx,cy,r,a0),b=pt(cx,cy,r,a0+len);return 'M'+f2(a[0])+' '+f2(a[1])+'A'+r+' '+r+' 0 '+(len>180?1:0)+' 1 '+f2(b[0])+' '+f2(b[1]);}
+function a12(t){const p=parts(t,TZ.tky);return ((p.h%12)+p.mi/60+p.s/3600)*30;}
+function rot(a){return 'translate(180 180) rotate('+f2(a)+')';}
+const KIND={fix:'#ff6b5e',open:'#7fb2ff',close:'#9aa3ad',minor:'#7d8fa8'};
+const $=function(el,c){return el.querySelector(c);};
+const FORMS={};
+
+/* ---------- A アナログ・クラシック ---------- */
+FORMS.a1={
+  build:function(el){
+    let s='<svg viewBox="0 0 360 360" role="img" aria-label="12時間の針の時計"><defs>'+
+      '<radialGradient id="a1f" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="#25406b"/><stop offset="1" stop-color="#0c1730"/></radialGradient>'+
+      '<linearGradient id="a1r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#9aa3ad"/><stop offset=".55" stop-color="#e3e7eb"/><stop offset="1" stop-color="#7d8792"/></linearGradient></defs>'+
+      '<circle cx="180" cy="180" r="177" fill="url(#a1r)"/><circle cx="180" cy="180" r="169" fill="#0a1222"/><circle cx="180" cy="180" r="158" fill="url(#a1f)"/>';
+    for(let i=0;i<60;i++){if(i%5===0)continue;const p1=pt(180,180,150,i*6),p2=pt(180,180,156,i*6);s+='<line x1="'+f2(p1[0])+'" y1="'+f2(p1[1])+'" x2="'+f2(p2[0])+'" y2="'+f2(p2[1])+'" stroke="#c9d1dc" stroke-width=".8"/>';}
+    for(let h=0;h<12;h++){s+='<g transform="'+rot(h*30)+'">'+(h===0?'<rect x="-8" y="-154" width="6" height="26" rx="1.2" fill="#e3e8ee"/><rect x="2" y="-154" width="6" height="26" rx="1.2" fill="#e3e8ee"/>':'<rect x="-3" y="-154" width="6" height="24" rx="1.2" fill="#e3e8ee"/>')+'</g>';}
+    s+='<text x="180" y="112" text-anchor="middle" fill="#e3e8ee" font-size="12" letter-spacing="4" font-family="Zen Kaku Gothic New, sans-serif">FX時計</text>'+
+      '<text x="180" y="126" text-anchor="middle" fill="#8ea2c0" font-size="8.5" letter-spacing="2" font-family="Barlow Condensed, sans-serif">USD / JPY</text>'+
+      '<rect x="226" y="170" width="34" height="20" rx="2" fill="#f4f6f8" stroke="#6d7784"/><text class="a1-day" x="243" y="185" text-anchor="middle" font-size="13" font-weight="700" fill="#141a24" font-family="Barlow Condensed, sans-serif"></text>'+
+      '<text class="a1-goto" x="243" y="204" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ff7b6e" font-family="Zen Kaku Gothic New, sans-serif"></text>'+
+      '<circle cx="180" cy="250" r="31" fill="rgba(0,0,0,.28)" stroke="rgba(223,228,234,.35)"/><circle cx="180" cy="250" r="24" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="4"/>'+
+      '<path class="a1-prog" fill="none" stroke="#9ec2ff" stroke-width="4" stroke-linecap="round"/>'+
+      '<text class="a1-sn" x="180" y="244" text-anchor="middle" font-size="8" fill="#c3cddb" font-family="Zen Kaku Gothic New, sans-serif"></text>'+
+      '<text class="a1-sl" x="180" y="261" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff" font-family="Barlow Condensed, sans-serif"></text>'+
+      '<g class="a1-mk"></g>'+
+      '<g class="a1-h"><path d="M-4.5 18 L-3.4 -80 L0 -90 L3.4 -80 L4.5 18Z" fill="#e6eaef"/></g>'+
+      '<g class="a1-m"><path d="M-3 22 L-2.2 -126 L0 -136 L2.2 -126 L3 22Z" fill="#f2f4f7"/></g>'+
+      '<g class="a1-s"><line x1="0" y1="30" x2="0" y2="-142" stroke="#ff5a4a" stroke-width="1.4"/><circle r="4.2" fill="#ff5a4a"/><circle r="1.8" fill="#10151d"/></g></svg>'+
+      '<div class="a1-next"></div><div class="lamps"></div>';
+    el.innerHTML=s;
+  },
+  render:function(el,c){
+    const p=c.p;
+    $(el,'.a1-h').setAttribute('transform',rot(((p.h%12)+p.mi/60+p.s/3600)*30));
+    $(el,'.a1-m').setAttribute('transform',rot((p.mi+p.s/60)*6));
+    $(el,'.a1-s').setAttribute('transform',rot(p.s*6));
+    $(el,'.a1-day').textContent=p.d+' '+WD[p.wd];
+    $(el,'.a1-goto').textContent=isGotobi(c.now)?'ゴトー日':'';
+    let mk='';between(c.now,c.now+12*36e5).forEach(function(x){const q=pt(180,180,163.5,a12(x.t));mk+='<circle cx="'+f2(q[0])+'" cy="'+f2(q[1])+'" r="'+(x.ev.kind==='minor'?2:3.2)+'" fill="'+KIND[x.ev.kind]+'"/>';});
+    $(el,'.a1-mk').innerHTML=mk;
+    if(c.next){
+      const pr=c.prog*360;$(el,'.a1-prog').setAttribute('d',pr>1?arc(180,250,24,0,pr):'');
+      $(el,'.a1-sn').textContent=c.next.ev.name.length>6?c.next.ev.name.slice(0,6)+'…':c.next.ev.name;
+      $(el,'.a1-sl').textContent=hmShort(c.next.t-c.now);
+      $(el,'.a1-next').innerHTML='次は <b>'+hm(c.next.t)+' '+c.next.ev.name+'</b><span>'+left(c.next.t-c.now)+'</span>';
+    }
+    $(el,'.lamps').innerHTML=['tky','ldn','ny'].map(function(id){const s=SES(id),o=isOpen(s,c.now);return '<span class="'+(o?'on':'')+'"><i></i>'+s.name+'</span>';}).join('');
+  }
+};
+
+/* ---------- B アナログ・ローズ ---------- */
+const PASTEL={syd:'#9ccbd9',tky:'#f2a7a0',ldn:'#b5d6a7',ny:'#c7b5e5'};
+FORMS.a2={
+  build:function(el){
+    let s='<svg viewBox="0 0 360 360" role="img" aria-label="12時間の針の時計（ローズ）"><defs>'+
+      '<radialGradient id="a2f" cx="50%" cy="40%" r="65%"><stop offset="0" stop-color="#fffaf8"/><stop offset="1" stop-color="#f4dcd6"/></radialGradient>'+
+      '<linearGradient id="a2r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d6c8"/><stop offset=".4" stop-color="#c98b76"/><stop offset=".6" stop-color="#f2cdbd"/><stop offset="1" stop-color="#b8775f"/></linearGradient></defs>'+
+      '<circle cx="180" cy="180" r="177" fill="url(#a2r)"/><circle cx="180" cy="180" r="168" fill="url(#a2f)"/>';
+    for(let h=0;h<12;h++){if(h%3===0){const q=pt(180,180,146,h*30);s+='<text x="'+f2(q[0])+'" y="'+f2(q[1]+12)+'" text-anchor="middle" font-size="36" font-style="italic" fill="#8c5b50" font-family="Cormorant Garamond, serif">'+(h===0?12:h)+'</text>';}
+      else{const q=pt(180,180,148,h*30);s+='<circle cx="'+f2(q[0])+'" cy="'+f2(q[1])+'" r="4" fill="#f6e2da" stroke="#d9a898" stroke-width=".7"/>';}}
+    s+='<g class="a2-arcs"></g>'+
+      '<text x="180" y="120" text-anchor="middle" font-size="12" fill="#b07f73" letter-spacing="3" font-family="M PLUS Rounded 1c, sans-serif">FX時計</text>'+
+      '<text class="a2-n" x="180" y="236" text-anchor="middle" font-size="12" fill="#8c5b50" font-family="M PLUS Rounded 1c, sans-serif"></text>'+
+      '<text class="a2-l" x="180" y="258" text-anchor="middle" font-size="17" font-weight="700" fill="#c4706a" font-family="M PLUS Rounded 1c, sans-serif"></text>'+
+      '<g class="a2-h"><path d="M-3.2 14 Q-3.8 -40 0 -80 Q3.8 -40 3.2 14Z" fill="#b97c6a"/></g>'+
+      '<g class="a2-m"><path d="M-2.3 16 Q-2.7 -60 0 -120 Q2.7 -60 2.3 16Z" fill="#b97c6a"/></g>'+
+      '<g class="a2-s"><line x1="0" y1="24" x2="0" y2="-104" stroke="#d98c82" stroke-width="1.2"/><path transform="translate(0 -112) scale(.95)" d="M0,-3 C-2,-7 -7,-6 -7,-2 C-7,1 -3,3.5 0,6.5 C3,3.5 7,1 7,-2 C7,-6 2,-7 0,-3Z" fill="#e2918a"/><circle r="5" fill="#b97c6a"/><circle r="2" fill="#fffaf8"/></g></svg>'+
+      '<div class="chips"></div>';
+    el.innerHTML=s;
+  },
+  render:function(el,c){
+    const p=c.p;
+    $(el,'.a2-h').setAttribute('transform',rot(((p.h%12)+p.mi/60+p.s/3600)*30));
+    $(el,'.a2-m').setAttribute('transform',rot((p.mi+p.s/60)*6));
+    $(el,'.a2-s').setAttribute('transform',rot(p.s*6));
+    const end=c.now+12*36e5;let a='';
+    SESSIONS.forEach(function(s,i){const o=isOpen(s,c.now);sessionIntervals(s,c.now,end).forEach(function(iv){const x=Math.max(iv.a,c.now),y=Math.min(iv.b,end);if(y<=x)return;
+      a+='<path d="'+arc(180,180,130-i*7,a12(x),(y-x)/36e5*30)+'" fill="none" stroke="'+PASTEL[s.id]+'" stroke-width="4.5" stroke-linecap="round" opacity="'+(o&&iv.a<=c.now?1:.7)+'"/>';});});
+    $(el,'.a2-arcs').innerHTML=a;
+    if(c.next){$(el,'.a2-n').textContent=c.next.ev.name+'まで';$(el,'.a2-l').textContent=left(c.next.t-c.now);}
+    let ch=isGotobi(c.now)?'<span class="chip g">きょうはゴトー日</span>':'';
+    c.sc.list.filter(function(x){return x.t>c.now;}).slice(0,4).forEach(function(x){ch+='<span class="chip'+(c.next&&x===c.next?' next':'')+'">'+hm(x.t)+' '+x.ev.name+'</span>';});
+    $(el,'.chips').innerHTML=ch;
+  }
+};
+
+/* ---------- C 世界時計 ---------- */
+const CITY=[{id:'tky',name:'東京',tz:TZ.tky},{id:'ldn',name:'ロンドン',tz:TZ.ldn},{id:'ny',name:'ニューヨーク',tz:TZ.ny}];
+FORMS.world={
+  build:function(el){
+    let s='<div class="w-row">';
+    CITY.forEach(function(ct){
+      let k='<svg viewBox="0 0 120 120" role="img" aria-label="'+ct.name+'の時計"><circle cx="60" cy="60" r="58" fill="#3a3f45"/><circle cx="60" cy="60" r="53" class="w-face"/>';
+      for(let h=0;h<12;h++){const big=h%3===0,a=pt(60,60,big?41:44,h*30),b=pt(60,60,49,h*30);k+='<line x1="'+f2(a[0])+'" y1="'+f2(a[1])+'" x2="'+f2(b[0])+'" y2="'+f2(b[1])+'" class="w-tk" stroke-width="'+(big?2.6:1.3)+'"/>';}
+      k+='<path class="w-h" d="M-2.6 6 L-2 -28 L0 -32 L2 -28 L2.6 6Z"/><path class="w-m" d="M-1.8 7 L-1.3 -42 L0 -46 L1.3 -42 L1.8 7Z"/><line class="w-s" x1="0" y1="9" x2="0" y2="-46"/><circle cx="60" cy="60" r="2.6" fill="#d9433a"/></svg>';
+      s+='<div class="city" data-city="'+ct.id+'">'+k+'<div class="w-name">'+ct.name+'</div><div class="w-dig tab"></div><div class="w-st"><i></i><span></span></div><div class="w-sea"></div></div>';
+    });
+    s+='</div><div class="w-next"></div>';
+    el.innerHTML=s;
+  },
+  render:function(el,c){
+    CITY.forEach(function(ct){
+      const box=$(el,'[data-city="'+ct.id+'"]'),p=parts(c.now,ct.tz),tr=function(a){return 'translate(60 60) rotate('+f2(a)+')';};
+      box.querySelector('.w-h').setAttribute('transform',tr(((p.h%12)+p.mi/60)*30));
+      box.querySelector('.w-m').setAttribute('transform',tr((p.mi+p.s/60)*6));
+      box.querySelector('.w-s').setAttribute('transform',tr(p.s*6));
+      box.classList.toggle('night',p.h<6||p.h>=18);
+      box.querySelector('.w-dig').textContent=p.h+':'+pad(p.mi);
+      const s=SES(ct.id),o=isOpen(s,c.now);let st='お休み',cls='';
+      if(o){st='取引中';cls='on';}else{const nx=sessionIntervals(s,c.now,c.now+3*864e5).find(function(iv){return iv.a>c.now;});if(nx&&!marketClosed(nx.a-1)&&nx.a-c.now<=36e5){st='まもなく';cls='soon';}}
+      const w=box.querySelector('.w-st');w.className='w-st '+cls;w.querySelector('span').textContent=st;
+      box.querySelector('.w-sea').textContent=ct.id==='tky'?'時差の基準':(offMin(c.now,ct.tz)>(ct.id==='ny'?-300:0)?'夏時間':'冬時間');
+    });
+    let h='';c.sc.list.filter(function(x){return x.t>c.now;}).slice(0,3).forEach(function(x,i){h+='<div><time>'+hm(x.t)+'</time><span>'+x.ev.name+'</span><em style="font-style:normal">'+(i===0?left(x.t-c.now):'')+'</em></div>';});
+    $(el,'.w-next').innerHTML=h;
+  }
+};
+
+/* ---------- D 大きな数字 ---------- */
+FORMS.big={
+  build:function(el){el.innerHTML='<div class="big-top"></div><div class="big-num" role="timer"></div><div class="big-bar"><i></i></div><svg class="big-day" viewBox="0 0 360 40" role="img" aria-label="きょうの大事な時間（7時から翌7時）"></svg><div class="big-foot"></div>';},
+  render:function(el,c){
+    if(c.next){$(el,'.big-top').innerHTML='次は<b>'+c.next.ev.name+'</b>'+hm(c.next.t);$(el,'.big-num').textContent=hms(c.next.t-c.now);}
+    $(el,'.big-bar i').style.width=(c.prog*100).toFixed(1)+'%';
+    let ds=zoned(c.p.y,c.p.mo,c.p.d,7,0,TZ.tky);if(ds>c.now)ds-=864e5;const px=360/24;let s='<line x1="0" y1="14" x2="360" y2="14" stroke="#bdbdb7"/>';
+    [[0,'7'],[6,'13'],[12,'19'],[18,'1']].forEach(function(h){const x=h[0]*px;s+='<text x="'+(x+2)+'" y="34" font-size="10" fill="#7a7a74" font-family="Barlow Condensed, sans-serif">'+h[1]+'</text>';});
+    between(ds,ds+864e5).forEach(function(x){const X=(x.t-ds)/36e5*px;s+='<line x1="'+f2(X)+'" y1="'+(x.ev.kind==='minor'?10:6)+'" x2="'+f2(X)+'" y2="14" stroke="'+(x.ev.kind==='fix'?'#d23c2c':'#121212')+'" stroke-width="2"/>';});
+    const N=(c.now-ds)/36e5*px;s+='<circle cx="'+f2(N)+'" cy="14" r="4" fill="#121212"/>';
+    $(el,'.big-day').innerHTML=s;
+    $(el,'.big-foot').innerHTML='<span>いま <b class="tab">'+c.p.h+':'+pad(c.p.mi)+'</b></span>'+['tky','ldn','ny'].map(function(id){const s=SES(id),o=isOpen(s,c.now);return '<span class="'+(o?'on':'')+'">'+s.name+' '+(o?'取引中':'お休み')+'</span>';}).join('');
+  }
+};
+
+/* ---------- E パステルのドーナツ ---------- */
+const STAR='M0,-8 C1,-2 2,-1 8,0 C2,1 1,2 0,8 C-1,2 -2,1 -8,0 C-2,-1 -1,-2 0,-8Z';
+FORMS.donut={
+  build:function(el){
+    let s='<svg viewBox="0 0 300 300" role="img" aria-label="次の時間までの残りを輪で表した時計"><defs><linearGradient id="dng" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9ec4"/><stop offset="1" stop-color="#b9a2ff"/></linearGradient></defs><g>';
+    [[38,40,.9,'#ffc2d6'],[262,56,.7,'#cdbdff'],[30,240,.6,'#cdbdff'],[268,246,.85,'#ffc2d6'],[150,14,.5,'#ffd98a']].forEach(function(q){s+='<path class="twinkle" transform="translate('+q[0]+' '+q[1]+') scale('+q[2]+')" d="'+STAR+'" fill="'+q[3]+'"/>';});
+    s+='</g><circle cx="150" cy="150" r="112" fill="none" stroke="#f9dfe8" stroke-width="24"/><path class="dn-p" fill="none" stroke="url(#dng)" stroke-width="24" stroke-linecap="round"/><circle class="dn-k" r="8" fill="#fff" stroke="#ff9ec4" stroke-width="3"/>'+
+      '<text x="150" y="104" text-anchor="middle" font-size="13" fill="#b58aa0" font-family="M PLUS Rounded 1c, sans-serif">つぎは</text>'+
+      '<text class="dn-n" x="150" y="134" text-anchor="middle" font-size="20" font-weight="700" fill="#5a3d55" font-family="M PLUS Rounded 1c, sans-serif"></text>'+
+      '<text class="dn-t" x="150" y="158" text-anchor="middle" font-size="14" fill="#b58aa0" font-family="M PLUS Rounded 1c, sans-serif"></text>'+
+      '<text class="dn-l" x="150" y="194" text-anchor="middle" font-size="22" font-weight="700" fill="#e2668f" font-family="M PLUS Rounded 1c, sans-serif"></text></svg><div class="chips"></div>';
+    el.innerHTML=s;
+  },
+  render:function(el,c){
+    const a=c.prog*360,k=pt(150,150,112,a);
+    $(el,'.dn-p').setAttribute('d',a>1?arc(150,150,112,0,a):'');
+    $(el,'.dn-k').setAttribute('cx',f2(k[0]));$(el,'.dn-k').setAttribute('cy',f2(k[1]));
+    if(c.next){$(el,'.dn-n').textContent=c.next.ev.name;$(el,'.dn-t').textContent=hm(c.next.t);$(el,'.dn-l').textContent=left(c.next.t-c.now);}
+    let ch=['tky','ldn','ny'].map(function(id){const s=SES(id),o=isOpen(s,c.now);return '<span class="chip'+(o?' on':'')+'">'+s.name+' '+(o?'取引中':'お休み')+'</span>';}).join('');
+    if(isGotobi(c.now))ch+='<span class="chip g">ゴトー日</span>';
+    c.sc.list.forEach(function(x){ch+='<span class="chip'+(x.t<=c.now?' past':'')+(c.next&&x===c.next?' next':'')+'">'+hm(x.t)+' '+x.ev.name+'</span>';});
+    $(el,'.chips').innerHTML=ch;
+  }
+};
+
+/* ---------- F 手帳 ---------- */
+const PL={syd:'#a8d4dd',tky:'#f4b4a8',ldn:'#bcdcae',ny:'#cdbde9'};
+FORMS.planner={
+  build:function(el){
+    el.innerHTML='<div class="pl-head"><div class="pl-date"></div><div class="stamp"></div></div><svg class="pl-sv" viewBox="0 0 360 348" role="img" aria-label="いまの前後12時間の手帳のページ"></svg>'+
+      '<div class="pl-leg">'+SESSIONS.map(function(s){return '<span><i style="background:'+PL[s.id]+'"></i>'+s.name+'</span>';}).join('')+'<span><u>蛍光ペン</u>＝値が決まる時間</span></div>';
+  },
+  render:function(el,c){
+    const p=c.p;
+    $(el,'.pl-date').innerHTML=ld(p)+'<small>きょうのFX　'+c.sea+'</small>';
+    const st=$(el,'.stamp'),g=isGotobi(c.now);st.className='stamp'+(g?'':' plain');st.innerHTML=g?'ゴトー<br>日':(c.closed?'市場<br>お休み':'ふつう<br>の日');
+    const RH=26,T0=12;let start=zoned(p.y,p.mo,p.d,p.h,0,TZ.tky)-2*36e5;const end=start+13*36e5,Y=function(t){return T0+(t-start)/36e5*RH;};
+    let s='';
+    for(let i=0;i<=13;i++){const t=start+i*36e5,y=T0+i*RH,q=parts(t,TZ.tky);
+      s+='<line x1="44" y1="'+y+'" x2="352" y2="'+y+'" stroke="#e3ddd0"/>';
+      if(i<13)s+='<line x1="44" y1="'+(y+RH/2)+'" x2="352" y2="'+(y+RH/2)+'" stroke="#eee9de" stroke-dasharray="2 4"/><text x="8" y="'+(y+5)+'" font-size="13" fill="#8b8478" font-family="Klee One, sans-serif">'+q.h+'時</text>';}
+    SESSIONS.forEach(function(se,i){sessionIntervals(se,start,end).forEach(function(iv){const a=Math.max(iv.a,start),b=Math.min(iv.b,end);if(b<=a)return;
+      s+='<rect x="'+(320+i*8)+'" y="'+f2(Y(a))+'" width="6" height="'+f2(Y(b)-Y(a))+'" rx="3" fill="'+PL[se.id]+'"/>';});});
+    between(start,end).forEach(function(x){const y=Y(x.t),past=x.t<=c.now,lab=hm(x.t)+' '+x.ev.name;
+      s+='<g opacity="'+(past?.45:1)+'">'+(x.ev.kind==='fix'?'<rect x="64" y="'+f2(y-6)+'" width="'+(lab.length*12.5)+'" height="13" fill="#ffe680" opacity=".85"/>':'')+
+        '<circle cx="55" cy="'+f2(y)+'" r="4" fill="'+(x.ev.kind==='fix'?'#e0a400':x.ev.kind==='minor'?'#b9b2a6':'#6f8fc9')+'"/><text x="66" y="'+f2(y+4.5)+'" font-size="'+(x.ev.kind==='minor'?12:14)+'" font-weight="600" fill="#3d3a35" font-family="Klee One, sans-serif">'+lab+'</text></g>';});
+    const ny=Y(c.now);
+    s+='<line x1="44" y1="'+f2(ny)+'" x2="352" y2="'+f2(ny)+'" stroke="#e0503a" stroke-width="1.6"/><circle cx="44" cy="'+f2(ny)+'" r="3.5" fill="#e0503a"/><text x="314" y="'+f2(ny-4)+'" text-anchor="end" font-size="11" fill="#e0503a" font-family="Klee One, sans-serif">いま '+p.h+':'+pad(p.mi)+'</text>';
+    $(el,'.pl-sv').innerHTML=s;
+  }
+};
+
+/* ---------- G ウィジェット ---------- */
+FORMS.widget={
+  build:function(el){
+    el.innerHTML='<div class="wg-grid">'+
+      '<div><div class="wg s1"><div class="ttl wg-n"></div><div class="wg-ring"><svg viewBox="0 0 100 100" role="img" aria-label="次の時間までの残り"><circle cx="50" cy="50" r="40" fill="none" stroke="#3a3a3c" stroke-width="9"/><path class="wg-p" fill="none" stroke="#ff9f0a" stroke-width="9" stroke-linecap="round"/><text class="wg-l" x="50" y="56" text-anchor="middle" font-size="19" font-weight="600" fill="#fff"></text></svg></div><small class="wg-t"></small></div><div class="wg-lab">小・次の時間</div></div>'+
+      '<div><div class="wg s2"><div class="ttl">市場</div><div class="mk"></div></div><div class="wg-lab">小・取引中の市場</div></div>'+
+      '<div class="wg m"><div class="m-left"><div><small class="m-date"></small><div class="m-time"></div></div><small class="m-sea"></small></div><div class="m-list"></div></div>'+
+      '</div><div class="wg-lab">中・いまとこの先</div><div class="la"><div class="la-row"><b class="la-n"></b><span class="la-l"></span></div><div class="la-bar"><i></i></div></div><div class="wg-lab">ロック画面のカウントダウン</div>';
+  },
+  render:function(el,c){
+    if(!c.next)return;
+    const a=c.prog*360;
+    $(el,'.wg-n').textContent=c.next.ev.name;$(el,'.wg-p').setAttribute('d',a>1?arc(50,50,40,0,a):'');
+    $(el,'.wg-l').textContent=hmShort(c.next.t-c.now);$(el,'.wg-t').textContent=hm(c.next.t)+' から';
+    $(el,'.mk').innerHTML=SESSIONS.map(function(s){const o=isOpen(s,c.now);return '<div class="'+(o?'on':'')+'"><span>'+s.name+'</span><i></i></div>';}).join('');
+    $(el,'.m-date').textContent=ld(c.p);$(el,'.m-time').textContent=c.p.h+':'+pad(c.p.mi);$(el,'.m-sea').textContent=c.sea+(isGotobi(c.now)?'・ゴトー日':'');
+    $(el,'.m-list').innerHTML=c.sc.list.filter(function(x){return x.t>c.now;}).slice(0,3).map(function(x){return '<div><span>'+hm(x.t)+'</span><span>'+x.ev.name+'</span><em>'+hmShort(x.t-c.now)+'</em></div>';}).join('');
+    $(el,'.la-n').textContent=c.next.ev.name+' '+hm(c.next.t);$(el,'.la-l').textContent=hms(c.next.t-c.now);
+    $(el,'.la-bar i').style.width=(c.prog*100).toFixed(1)+'%';
+  }
+};
+
+/* ---------- H 横に流れる帯 ---------- */
+const TL={syd:'#5aa9c9',tky:'#ef7b5f',ldn:'#5fbf72',ny:'#9b87e0'};
+FORMS.line={
+  build:function(el){
+    el.innerHTML='<div class="tl-head"><div class="tl-time tab"></div><div class="tl-next"></div></div><svg class="tl-sv" viewBox="0 0 360 172" role="img" aria-label="いまから先の市場と大事な時間の帯"></svg>'+
+      '<div class="tl-leg">'+SESSIONS.map(function(s){return '<span><i style="background:'+TL[s.id]+'"></i>'+s.name+'</span>';}).join('')+'<span style="color:#ff7d6e">赤い印＝値が決まる時間</span></div>';
+  },
+  render:function(el,c){
+    $(el,'.tl-time').textContent=c.p.h+':'+pad(c.p.mi)+':'+pad(c.p.s);
+    if(c.next)$(el,'.tl-next').innerHTML='次は<b>'+hm(c.next.t)+' '+c.next.ev.name+'</b><span>'+left(c.next.t-c.now)+'</span>';
+    const w0=c.now-2*36e5,w1=c.now+10*36e5,PX=30,X=function(t){return (t-w0)/36e5*PX;};
+    let s='<rect x="0" y="20" width="'+f2(X(c.now))+'" height="132" fill="rgba(255,255,255,.035)"/>';
+    let h0=Math.ceil(w0/36e5)*36e5;
+    for(let t=h0;t<=w1;t+=36e5){const x=X(t),q=parts(t,TZ.tky);s+='<line x1="'+f2(x)+'" y1="148" x2="'+f2(x)+'" y2="152" stroke="#3a4a5e"/>';if(q.h%3===0)s+='<text x="'+f2(x)+'" y="166" text-anchor="middle" font-size="10.5" fill="#8a9bb0" font-family="Barlow Condensed, sans-serif">'+q.h+'時</text>';}
+    SESSIONS.forEach(function(se,i){const y=94+i*13;s+='<rect x="0" y="'+y+'" width="360" height="9" fill="#18222e"/>';
+      sessionIntervals(se,w0,w1).forEach(function(iv){const a=Math.max(iv.a,w0),b=Math.min(iv.b,w1);if(b<=a)return;s+='<rect x="'+f2(X(a))+'" y="'+y+'" width="'+f2(X(b)-X(a))+'" height="9" rx="2" fill="'+TL[se.id]+'" opacity="'+(b<=c.now?.35:.95)+'"/>';});});
+    between(w0,w1).forEach(function(x,i){const xx=X(x.t),col=x.ev.kind==='fix'?'#ff7d6e':x.ev.kind==='minor'?'#5d6f86':'#cfe0f5',ly=i%2?36:52,past=x.t<=c.now;
+      s+='<g opacity="'+(past?.4:1)+'"><line x1="'+f2(xx)+'" y1="'+(ly+6)+'" x2="'+f2(xx)+'" y2="146" stroke="'+col+'" stroke-width="'+(x.ev.kind==='minor'?1:1.5)+'" stroke-dasharray="'+(x.ev.kind==='minor'?'2 3':'none')+'"/><circle cx="'+f2(xx)+'" cy="'+(ly+6)+'" r="3" fill="'+col+'"/>'+
+        '<text x="'+f2(Math.min(Math.max(xx,30),330))+'" y="'+ly+'" text-anchor="middle" font-size="10.5" fill="'+(x.ev.kind==='minor'?'#8a9bb0':'#e6edf5')+'" font-family="Zen Kaku Gothic New, sans-serif">'+hm(x.t)+' '+x.ev.name+'</text></g>';});
+    const nx=X(c.now);s+='<line x1="'+f2(nx)+'" y1="14" x2="'+f2(nx)+'" y2="152" stroke="#ff5a4a" stroke-width="2"/><text x="'+f2(nx)+'" y="11" text-anchor="middle" font-size="10" font-weight="700" fill="#ff5a4a" font-family="Zen Kaku Gothic New, sans-serif">いま</text>';
+    $(el,'.tl-sv').innerHTML=s;
+  }
+};
+
+const els=[].slice.call(document.querySelectorAll('.form'));
+els.forEach(function(el){try{FORMS[el.dataset.form].build(el);}catch(e){console.error(e);}});
+function tick(){
+  const now=Date.now(),sc=schedule(now),prev=prevAny(now),nx=sc.next;
+  const prog=nx&&prev?Math.min(1,Math.max(0,(now-prev)/(nx.t-prev))):0;
+  const c={now:now,sc:sc,next:nx,prog:prog,p:parts(now,TZ.tky),sea:season(now),closed:marketClosed(now)};
+  els.forEach(function(el){try{FORMS[el.dataset.form].render(el,c);}catch(e){console.error(e);}});
+}
+tick();
+setTimeout(function(){tick();setInterval(tick,1000);},1000-Date.now()%1000);
+})();
+</script>

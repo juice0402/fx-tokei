@@ -1,0 +1,450 @@
+<title>FX時計 スキン見本2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Barlow+Condensed:wght@500;600;700&family=DotGothic16&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* 枠ごとに2案を本物の画面の大きさで並べる（広い画面は横、スマホは縦に積む）。時計の中は各スキンの固定色 */
+:root{
+  --page:#eceff3; --ink:#1c2330; --sub:#5b6575; --line:#cfd5de; --ring:#1c2330; --tag:#dde3ea;
+  --f-ui:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-min:"Shippori Mincho B1","Hiragino Mincho ProN","Noto Serif JP",serif;
+  --f-cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --f-board:"BIZ UDPGothic","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-dot:"DotGothic16","BIZ UDPGothic",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --page:#151920; --ink:#e6eaf0; --sub:#9aa4b3; --line:#2c3441; --ring:#e6eaf0; --tag:#232a35; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --page:#151920; --ink:#e6eaf0; --sub:#9aa4b3; --line:#2c3441; --ring:#e6eaf0; --tag:#232a35; color-scheme:dark }
+body{ background:var(--page); color:var(--ink); font-family:var(--f-ui); }
+
+.wrap{ max-width:1040px; margin:0 auto; padding-block:20px 40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:40px }
+.head h1{ font-size:20px; margin:0 0 4px; letter-spacing:.02em; text-wrap:balance }
+.head p{ margin:0; color:var(--sub); font-size:14px; line-height:1.7; max-width:62ch }
+.slot{ display:flex; flex-direction:column; gap:16px }
+.slot-head{ display:flex; flex-direction:column; gap:4px; border-top:1px solid var(--line); padding-top:14px }
+.slot-head h2{ font-size:17px; margin:0; text-wrap:balance }
+.slot-head p{ margin:0; font-size:13.5px; color:var(--sub); line-height:1.6 }
+.pair{ display:grid; grid-template-columns:1fr; gap:32px }
+@media (min-width:880px){ .pair{ grid-template-columns:1fr 1fr; gap:32px } }
+.sample{ min-width:0; display:flex; flex-direction:column; gap:10px; align-items:center }
+.sample h3{ font-size:15px; margin:0; width:100%; max-width:420px; display:flex; align-items:baseline; gap:10px }
+.no{ font-family:var(--f-cond); font-weight:700; font-size:15px; letter-spacing:.04em; background:var(--tag); padding:1px 8px; border-radius:4px }
+.screen{ width:100%; max-width:420px; border-radius:20px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.12), 0 8px 24px rgba(10,20,40,.12) }
+.note{ font-size:13.5px; color:var(--sub); line-height:1.7; max-width:420px; margin:0; width:100% }
+.foot{ font-size:13px; color:var(--sub); line-height:1.75; margin:0; max-width:70ch }
+
+/* ===== 文字盤 ===== */
+.dial{ --a-font:var(--f-min); --a-tsz:42px; --a-off:.42; --a-panel:transparent; --a-screw:#000;
+  font-family:var(--f-ui); background:var(--a-bg); color:var(--a-ink); padding:14px 14px 16px; display:flex; flex-direction:column; gap:10px }
+.dial[data-skin="sakura"]{ --a-bg:#d9d6cf; --a-bg2:#c99a72; --a-face:#efe0c8; --a-rim:#8a6040; --a-ink:#2b1d13; --a-bink:#3a2616; --a-dim:#6b5a49;
+  --a-metal:#b33a2a; --a-ptr:#2b1d13; --a-track:rgba(58,38,22,.11); --a-grain:rgba(140,95,55,.2);
+  --s-syd:#4f8aa3; --s-tky:#c4553f; --s-ldn:#58894d; --s-ny:#7a62a6 }
+.dial[data-skin="washi"]{ --a-bg:#d6d5ce; --a-bg2:#efeee8; --a-face:#f7f6f1; --a-rim:#c6c3b9; --a-ink:#1f2328; --a-bink:#1f2328; --a-dim:#686a6d;
+  --a-metal:#c7372c; --a-ptr:#c7372c; --a-track:rgba(31,35,40,.07); --a-grain:rgba(110,98,74,.3);
+  --s-syd:#3c97a8; --s-tky:#c84657; --s-ldn:#5a9a68; --s-ny:#8670b4 }
+.dial[data-skin="yakou"]{ --a-font:var(--f-ui); --a-off:.3; --a-bg:#000000; --a-bg2:#07090a; --a-face:#0b0e0f; --a-rim:#1b2224; --a-ink:#bfe3cb; --a-bink:#9fd4b0; --a-dim:#567562;
+  --a-metal:#9ef0b6; --a-ptr:#b8ffcc; --a-track:rgba(159,212,176,.07); --a-grain:transparent;
+  --s-syd:#2f6a77; --s-tky:#7e463b; --s-ldn:#41724a; --s-ny:#5d527d }
+.dial[data-skin="neon"]{ --a-font:var(--f-cond); --a-tsz:50px; --a-off:.35; --a-bg:#07040f; --a-bg2:#0c0718; --a-face:#120a22; --a-rim:#2a1a48; --a-ink:#f3eaff; --a-bink:#d9c8ff; --a-dim:#8c7bb0;
+  --a-metal:#ff4fa3; --a-ptr:#ff4fa3; --a-track:rgba(217,200,255,.06); --a-grain:transparent;
+  --s-syd:#39e6ff; --s-tky:#ff5c8a; --s-ldn:#88ff6a; --s-ny:#b48cff }
+.dial[data-skin="koku"]{ --a-font:var(--f-cond); --a-tsz:50px; --a-bg:#0e0f10; --a-panel:#1b1c1e; --a-screw:#2a2c2f; --a-bg2:#151618; --a-face:#1d1e20; --a-rim:#30333a; --a-ink:#f2f2ee; --a-bink:#f2f2ee; --a-dim:#8a8d91;
+  --a-metal:#ff8a1f; --a-ptr:#ff8a1f; --a-track:rgba(242,242,238,.06); --a-grain:transparent;
+  --s-syd:#4fa6c8; --s-tky:#e9724f; --s-ldn:#66b86a; --s-ny:#a38bd9 }
+.dial[data-skin="sus"]{ --a-font:var(--f-ui); --a-bg:#e3e6ea; --a-bg2:#d5dae0; --a-face:#eef1f4; --a-rim:#98a0aa; --a-ink:#1c2a46; --a-bink:#1c2a46; --a-dim:#5d6878;
+  --a-metal:#c8102e; --a-ptr:#c8102e; --a-track:rgba(28,42,70,.07); --a-grain:rgba(28,42,70,.07);
+  --s-syd:#3b8db2; --s-tky:#d0573f; --s-ldn:#3f985a; --s-ny:#6b57b4 }
+
+.a-top{ display:flex; justify-content:space-between; align-items:baseline; font-size:12px; color:var(--a-dim) }
+.a-top b{ color:var(--a-ink); font-weight:700; font-size:13px; letter-spacing:.12em }
+.dial svg{ display:block; width:100%; max-width:360px; height:auto; margin:0 auto }
+.d-panel{ fill:var(--a-panel) }
+.d-screw{ fill:var(--a-screw); stroke:var(--a-rim); stroke-width:1 }
+.d-slot{ stroke:var(--a-bg); stroke-width:1.8; stroke-linecap:round }
+.d-bezel{ fill:var(--a-bg2); stroke:var(--a-rim); stroke-width:1 }
+.d-face{ fill:var(--a-face); stroke:var(--a-rim); stroke-width:.8 }
+.d-ring, .d-hair, .d-fiber{ fill:none; stroke:var(--a-grain) }
+.d-hair{ stroke-width:.35 }
+.d-fiber{ stroke-linecap:round }
+.d-track{ fill:none; stroke:var(--a-track); stroke-width:6 }
+.d-tk{ stroke:var(--a-bink); stroke-width:1.1; opacity:.7 }
+.d-tk-big{ stroke-width:2.2; opacity:1 }
+.d-tk-q{ stroke-width:.8; opacity:.32 }
+.dial[data-skin="koku"] .d-tk{ stroke-width:1.6; opacity:.9 }
+.dial[data-skin="koku"] .d-tk-big{ stroke-width:3.6; opacity:1 }
+.dial[data-skin="koku"] .d-tk-q{ stroke-width:1; opacity:.45 }
+.d-num{ fill:var(--a-bink); font-family:var(--a-font); font-size:13px; font-weight:500; text-anchor:middle }
+.d-num.long{ font-size:10.5px; letter-spacing:-.04em }
+.dial[data-skin="koku"] .d-num, .dial[data-skin="neon"] .d-num{ font-size:16px; font-weight:600 }
+.arc{ fill:none; stroke-width:6 }
+.arc.off{ opacity:var(--a-off) }
+.s-syd{ stroke:var(--s-syd) } .s-tky{ stroke:var(--s-tky) } .s-ldn{ stroke:var(--s-ldn) } .s-ny{ stroke:var(--s-ny) }
+.d-mark{ fill:var(--a-metal) }
+.d-ptr{ stroke:var(--a-ptr); stroke-width:2.2; stroke-linecap:round }
+.d-ptr-dot{ fill:var(--a-ptr) }
+.d-sec{ fill:var(--a-metal) }
+.d-date{ fill:var(--a-dim); font-size:11.5px; text-anchor:middle; font-family:var(--f-ui) }
+.d-time{ fill:var(--a-ink); font-size:var(--a-tsz); font-weight:500; text-anchor:middle; letter-spacing:.02em; font-family:var(--a-font) }
+.dial[data-skin="sus"] .d-time{ font-weight:700 }
+.d-nextn{ fill:var(--a-ink); font-size:12px; text-anchor:middle; font-family:var(--f-ui) }
+.d-nextt{ fill:var(--a-metal); font-size:17px; font-weight:700; text-anchor:middle; font-family:var(--f-ui) }
+.d-state{ fill:var(--a-dim); font-size:10.5px; text-anchor:middle; font-family:var(--f-ui) }
+.a-legend{ display:flex; flex-wrap:wrap; justify-content:center; gap:4px 14px; font-size:12px; color:var(--a-dim) }
+.a-legend span{ display:inline-flex; align-items:center; gap:5px }
+.a-legend i{ width:14px; height:4px; display:inline-block }
+.a-legend .on{ color:var(--a-ink); font-weight:700 }
+.a-list{ list-style:none; margin:0; padding:0 4px; display:grid; gap:2px; font-size:13.5px }
+.a-list li{ display:grid; grid-template-columns:3.3em 1fr auto; gap:8px; align-items:baseline; padding:3px 0; border-bottom:1px solid var(--a-track) }
+.a-list time{ font-variant-numeric:tabular-nums; text-align:right; font-family:var(--a-font) }
+.a-list li.minor{ font-size:12px; color:var(--a-dim) }
+.a-list li.next{ color:var(--a-metal); font-weight:700 }
+.a-list em{ font-style:normal; font-size:12.5px }
+.a-list small{ margin-left:6px; font-size:11px; color:var(--a-metal); font-weight:700 }
+
+/* ===== 発着の掲示（時刻表） ===== */
+.dep{ font-family:var(--f-board); background:var(--b-bg); color:var(--b-ink); padding:14px 14px 16px; display:flex; flex-direction:column; gap:10px }
+.dep[data-skin="flap"]{ --b-bg:#121315; --b-ink:#f3efe2; --b-sub:#9a9da3; --b-line:#2a2c30; --b-tile:#1d1f22; --b-tile2:#26292d; --b-acc:#f5c400; --b-next:#f5c400; --b-lane:#1b1d20;
+  --s-syd:#9a8cff; --s-tky:#ffb000; --s-ldn:#42c977; --s-ny:#4aa3ff }
+.dep[data-skin="led"]{ --b-bg:#0a0a0a; --b-ink:#ffa21f; --b-sub:#a8661a; --b-line:#2a1d0e; --b-tile:transparent; --b-tile2:transparent; --b-acc:#ff4b3a; --b-next:#44e26a; --b-lane:#1a130a;
+  --s-syd:#ffb21a; --s-tky:#ff4b3a; --s-ldn:#44e26a; --s-ny:#6ad4ff;
+  font-family:var(--f-dot); background-image:radial-gradient(rgba(255,255,255,.055) 1px, transparent 1.3px); background-size:4px 4px }
+.dp-top{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--b-line); padding-bottom:6px }
+.dp-brand{ font-weight:700; font-size:15px; letter-spacing:.08em }
+.dp-brand small{ font-weight:400; font-size:12px; letter-spacing:.04em; margin-left:6px; color:var(--b-sub) }
+.dp-date{ font-size:12px; color:var(--b-sub) }
+.dp-now{ display:flex; align-items:flex-end; gap:8px 16px; flex-wrap:wrap }
+.dp-next{ font-size:12.5px; line-height:1.4; padding-bottom:4px; min-width:0 }
+.dp-next strong{ display:block; font-size:17px }
+.dp-next .left{ color:var(--b-next); font-weight:700; font-size:14px }
+.tiles{ display:flex; gap:3px; align-items:flex-end; perspective:300px }
+.tile{ font-family:var(--f-cond); font-weight:700; font-size:46px; line-height:1; min-width:.66em; text-align:center; padding:7px 2px 6px;
+  background:linear-gradient(var(--b-tile2) 0 50%, var(--b-tile) 50% 100%); border-radius:4px; position:relative; color:var(--b-ink); font-variant-numeric:tabular-nums }
+.tile::after{ content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:var(--b-bg) }
+.tile.colon{ background:none; min-width:.28em; padding-inline:0 }
+.tile.colon::after{ display:none }
+.tile.sm{ font-size:22px; padding:5px 2px 4px; margin-left:4px }
+.tile.flip{ animation:flip .32s ease-out }
+@keyframes flip{ from{ transform:rotateX(-80deg) } to{ transform:rotateX(0) } }
+.led-clock{ font-size:50px; line-height:1; letter-spacing:.04em; text-shadow:0 0 6px currentColor }
+.led-clock small{ font-size:22px; margin-left:4px }
+.dp-ticker{ overflow:hidden; white-space:nowrap; border-block:1px solid var(--b-line); padding:4px 0; color:var(--b-next); text-shadow:0 0 5px currentColor; font-size:14px }
+.dp-ticker span{ display:inline-block; padding-left:100%; animation:run 22s linear infinite }
+@keyframes run{ to{ transform:translateX(-100%) } }
+.dp-strip svg{ display:block; width:100%; height:auto }
+.st-lane{ fill:var(--b-lane) }
+.st-lab, .st-hr{ fill:var(--b-sub); font-family:var(--f-board); font-size:10.5px }
+.dep[data-skin="led"] .st-lab, .dep[data-skin="led"] .st-hr{ font-family:var(--f-dot) }
+.st-hr{ text-anchor:middle }
+.st-grid{ stroke:var(--b-line); stroke-width:1 }
+.st-now{ stroke:var(--b-acc); stroke-width:2 }
+.st-nowtip{ fill:var(--b-acc) }
+.f-syd{ fill:var(--s-syd) } .f-tky{ fill:var(--s-tky) } .f-ldn{ fill:var(--s-ldn) } .f-ny{ fill:var(--s-ny) }
+.dp-tt{ width:100%; border-collapse:collapse }
+.dp-tt th{ font-size:11px; font-weight:400; color:var(--b-sub); text-align:left; letter-spacing:.25em; padding:2px 4px 4px; border-bottom:1px solid var(--b-line) }
+.dp-tt th:last-child, .dp-tt td:last-child{ text-align:right }
+.dp-tt td{ padding:6px 4px; border-bottom:1px solid var(--b-line); vertical-align:middle }
+.dp-tt td.t{ width:4.6em; white-space:nowrap }
+.dp-tt td.n{ font-size:13.5px }
+.dp-tt td.s{ font-size:12.5px; white-space:nowrap; color:var(--b-sub) }
+.mini{ display:inline-flex; gap:2px }
+.mini span{ font-family:var(--f-cond); font-weight:700; font-size:20px; line-height:1; min-width:.62em; text-align:center; padding:3px 1px 2px; border-radius:2px;
+  background:linear-gradient(var(--b-tile2) 0 50%, var(--b-tile) 50% 100%); font-variant-numeric:tabular-nums }
+.mini span.c{ background:none; min-width:.25em }
+.dep[data-skin="led"] .mini span{ font-family:var(--f-dot); font-weight:400; font-size:18px; text-shadow:0 0 4px currentColor }
+.dp-tt tr.fix td.n, .dp-tt tr.fix .mini span{ color:var(--b-acc) }
+.dp-tt tr.minor td.n{ font-size:12px; color:var(--b-sub) }
+.dp-tt tr.minor .mini span{ font-size:16px; color:var(--b-sub) }
+.dp-tt tr.past{ opacity:.38 }
+.dp-tt tr.next td.s{ color:var(--b-next); font-weight:700 }
+.dep[data-skin="led"] .dp-tt td{ text-shadow:0 0 4px currentColor }
+.badge{ font-size:10.5px; border:1px solid currentColor; padding:0 3px; margin-left:6px; color:var(--b-acc) }
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none!important }
+  .tile.flip{ animation:none }
+  .dp-ticker span{ animation:none; padding-left:0 }
+}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <h1>FX時計　スキン見本（残りの4つ）</h1>
+    <p>文字盤の3つと時刻表の1つを、2案ずつ並べました。番号で選んでください。時刻はいまの日本時間で動いています。</p>
+  </header>
+
+  <section class="slot" aria-labelledby="s4">
+    <div class="slot-head"><h2 id="s4">文字盤 4つめ　木と和</h2><p>日本の素材の着せかえ。リビングや本棚に置いてなじむ向き。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">1a</span>桜の木</h3>
+        <div class="screen"><div class="dial" data-skin="sakura"></div></div>
+        <p class="note">明るい木の枠と、年輪の入った文字盤。針は墨色、印と「次」は朱。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">1b</span>和紙と墨</h3>
+        <div class="screen"><div class="dial" data-skin="washi"></div></div>
+        <p class="note">繊維の見える紙に墨の線。数字は漢数字で、市場の色は浅葱・紅・若竹・藤。針は朱。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="slot" aria-labelledby="s5">
+    <div class="slot-head"><h2 id="s5">文字盤 5つめ　夜に置く</h2><p>暗い部屋・寝る前・スタンバイ（充電中の横置き）向け。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">2a</span>夜光</h3>
+        <div class="screen"><div class="dial" data-skin="yakou"></div></div>
+        <p class="note">真っ黒な地に、蓄光のような淡い緑。明るさをおさえて、夜に見てもまぶしくない。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">2b</span>ネオン</h3>
+        <div class="screen"><div class="dial" data-skin="neon"></div></div>
+        <p class="note">光る線で市場の輪を描く。暗い部屋や、配信・作業机の背景で映える。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="slot" aria-labelledby="s6">
+    <div class="slot-head"><h2 id="s6">文字盤 6つめ　計器</h2><p>道具らしい質感。数字をはっきり読みたい人向け。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">3a</span>航空計器</h3>
+        <div class="screen"><div class="dial" data-skin="koku"></div></div>
+        <p class="note">つや消しの黒に白い目盛りと橙の針。四すみのねじ。細長い数字で遠くからも読める。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">3b</span>ステンレス</h3>
+        <div class="screen"><div class="dial" data-skin="sus"></div></div>
+        <p class="note">銀の枠と、細い線が回る文字盤。紺の数字に赤の針。明るい机の上に。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="slot" aria-labelledby="s7">
+    <div class="slot-head"><h2 id="s7">時刻表 4つめ　発着の掲示</h2><p>いまの時刻表は1時間ごとの表。こちらは空港や駅の発着板のように、1行に1つの時間を並べます。</p></div>
+    <div class="pair">
+      <article class="sample">
+        <h3><span class="no">4a</span>空港のパタパタ</h3>
+        <div class="screen"><div class="dep" data-skin="flap"></div></div>
+        <p class="note">1文字ずつの板が、変わるときにめくれる。黄色は値が決まる時間（仲値・フィックス）。</p>
+      </article>
+      <article class="sample">
+        <h3><span class="no">4b</span>電光掲示</h3>
+        <div class="screen"><div class="dep" data-skin="led"></div></div>
+        <p class="note">点の文字の電光掲示。次の時間が流れる帯つき。赤は値が決まる時間、緑は次の時間。</p>
+      </article>
+    </div>
+  </section>
+
+  <p class="foot">いまある6つ：文字盤は紺と真鍮・白磁・深緑、時刻表は駅の白・夜行の紺・若草。どれも画像なし（CSS と SVG）で、字体はアプリの中に入れる無料の字体です。東京とシドニーの時間帯は仮の値、指標と休場はあとで入る所です。</p>
+</div>
+
+<script>
+(function(){
+const TZ={tky:'Asia/Tokyo',ldn:'Europe/London',ny:'America/New_York',syd:'Australia/Sydney'};
+const WD=['日','月','火','水','木','金','土'];
+const WDE=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const fc={};
+function parts(ms,tz){
+  const f=fc[tz]||(fc[tz]=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',second:'numeric',weekday:'short'}));
+  const o={}; f.formatToParts(new Date(ms)).forEach(function(p){o[p.type]=p.value;});
+  return {y:+o.year,mo:+o.month,d:+o.day,h:(+o.hour)%24,mi:+o.minute,s:+o.second,wd:WDE.indexOf(o.weekday)};
+}
+function offMin(ms,tz){const p=parts(ms,tz);return Math.round((Date.UTC(p.y,p.mo-1,p.d,p.h,p.mi,p.s)-Math.floor(ms/1000)*1000)/60000);}
+function zoned(y,mo,d,h,mi,tz){const b=Date.UTC(y,mo-1,d,h,mi);let t=b-offMin(b,tz)*60000;t=b-offMin(t,tz)*60000;return t;}
+function addDays(p,n){const x=new Date(Date.UTC(p.y,p.mo-1,p.d+n));return {y:x.getUTCFullYear(),mo:x.getUTCMonth()+1,d:x.getUTCDate(),wd:x.getUTCDay()};}
+function wk(wd){return wd>=1&&wd<=5;}
+
+const EVENTS=[
+  {id:'nakane',name:'仲値',tz:TZ.tky,h:9,m:55,kind:'fix'},
+  {id:'ldn',name:'ロンドンオープン',tz:TZ.ldn,h:8,m:0,kind:'open'},
+  {id:'ny',name:'NYオープン',tz:TZ.ny,h:8,m:0,kind:'open'},
+  {id:'nys',name:'NY株の寄り付き',tz:TZ.ny,h:9,m:30,kind:'minor'},
+  {id:'fix',name:'ロンドンフィックス',tz:TZ.ldn,h:16,m:0,kind:'fix'},
+  {id:'nyc',name:'NYクローズ',tz:TZ.ny,h:17,m:0,kind:'close'}
+];
+const CLOSE=EVENTS[5];
+const SESSIONS=[
+  {id:'syd',name:'シドニー',tz:TZ.syd,o:7,c:16},
+  {id:'tky',name:'東京',tz:TZ.tky,o:9,c:17},
+  {id:'ldn',name:'ロンドン',tz:TZ.ldn,o:8,c:17},
+  {id:'ny',name:'NY',tz:TZ.ny,o:8,c:17}
+];
+function nextOcc(ev,after){const p=parts(after,ev.tz);for(let n=-1;n<=9;n++){const q=addDays(p,n);if(!wk(q.wd))continue;const t=zoned(q.y,q.mo,q.d,ev.h,ev.m,ev.tz);if(t>after)return t;}return null;}
+function prevOcc(ev,before){const p=parts(before,ev.tz);for(let n=1;n>=-9;n--){const q=addDays(p,n);if(!wk(q.wd))continue;const t=zoned(q.y,q.mo,q.d,ev.h,ev.m,ev.tz);if(t<=before)return t;}return null;}
+function sessionIntervals(s,from,to){const out=[];const p=parts(from,s.tz);for(let n=-1;n<=3;n++){const q=addDays(p,n);const a=zoned(q.y,q.mo,q.d,s.o,0,s.tz),b=zoned(q.y,q.mo,q.d,s.c,0,s.tz);if(b>from&&a<to)out.push({a:a,b:b});}return out;}
+function marketClosed(now){const p=parts(now,TZ.ny);const m=p.h*60+p.mi;return (p.wd===5&&m>=1020)||p.wd===6||(p.wd===0&&m<1020);}
+function isOpen(s,now){if(marketClosed(now))return false;const p=parts(now,s.tz);if(!wk(p.wd))return false;const m=p.h*60+p.mi;return m>=s.o*60&&m<s.c*60;}
+function schedule(now){const start=prevOcc(CLOSE,now);const list=EVENTS.map(function(ev){return {ev:ev,t:nextOcc(ev,start)};}).sort(function(x,y){return x.t-y.t;});const next=list.find(function(x){return x.t>now;});return {list:list,next:next};}
+function lastDay(y,mo){return new Date(Date.UTC(y,mo,0)).getUTCDate();}
+function gDay(q){return q.d%5===0||q.d===lastDay(q.y,q.mo);}
+function isGotobi(t){const p=parts(t,TZ.tky);if(!wk(p.wd))return false;if(gDay(p))return true;if(p.wd===5)return gDay(addDays(p,1))||gDay(addDays(p,2));return false;}
+const pad=function(n){return String(n).padStart(2,'0');};
+function hm(t){const p=parts(t,TZ.tky);return p.h+':'+pad(p.mi);}
+function hm2(t){const p=parts(t,TZ.tky);return pad(p.h)+':'+pad(p.mi);}
+function season(now){const ny=offMin(now,TZ.ny),ln=offMin(now,TZ.ldn);if(ny-ln!==-300)return 'NYだけ夏時間';return ny===-240?'夏時間':'冬時間';}
+function left(ms){const s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;
+  if(h>=24)return 'あと'+Math.floor(h/24)+'日'+(h%24)+'時間';if(h>0)return 'あと'+h+'時間'+m+'分';if(m>=10)return 'あと'+m+'分';return 'あと'+m+'分'+pad(sec)+'秒';}
+const ld=function(p){return p.mo+'月'+p.d+'日（'+WD[p.wd]+'）';};
+const gTag=function(x){return x.ev.id==='nakane'&&isGotobi(x.t);};
+
+/* ---------- 文字盤 ---------- */
+const RAD=[140,131,122,113];
+function pt(r,a){const t=a*Math.PI/180;return [180+r*Math.sin(t),180-r*Math.cos(t)];}
+function f2(n){return n.toFixed(2);}
+function angJST(t){const p=parts(t,TZ.tky);return (p.h+p.mi/60+p.s/3600)*15;}
+function arcPath(r,a0,len){const a=pt(r,a0),b=pt(r,a0+len);return 'M'+f2(a[0])+' '+f2(a[1])+'A'+r+' '+r+' 0 '+(len>180?1:0)+' 1 '+f2(b[0])+' '+f2(b[1]);}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+const KAN={0:'〇',3:'三',6:'六',9:'九',12:'十二',15:'十五',18:'十八',21:'二十一'};
+const SKINS={
+  sakura:{name:'桜の木',nums:'ar',extra:'rings',bez:['#b98a62','#d6ae87','#c2946b','#dab48e','#b4855d'],face:['#f3e6d0','#e6cfae']},
+  washi:{name:'和紙と墨',nums:'kan',extra:'fibers'},
+  yakou:{name:'夜光',nums:'ar',glow:1.4,glowOn:'num ptr time'},
+  neon:{name:'ネオン',nums:'ar',glow:2.4,glowOn:'arc ptr num mark time'},
+  koku:{name:'航空計器',nums:'ar',extra:'screws'},
+  sus:{name:'ステンレス',nums:'ar',extra:'hairline',bez:['#f6f8fa','#b4bbc4','#eef1f4','#99a2ad','#e6e9ed'],face:['#f9fafc','#dde2e8']}
+};
+function grad(id,stops,radial){
+  const st=stops.map(function(c,i){return '<stop offset="'+(i/(stops.length-1)).toFixed(2)+'" stop-color="'+c+'"/>';}).join('');
+  return radial?'<radialGradient id="'+id+'" cx="45%" cy="40%" r="65%">'+st+'</radialGradient>':'<linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1">'+st+'</linearGradient>';
+}
+let uid=0;
+function buildDial(el){
+  const o=SKINS[el.dataset.skin],id='d'+(++uid),R=rng(uid*977+13);
+  const on=function(k){return o.glowOn&&o.glowOn.split(' ').indexOf(k)>=0?' filter="url(#'+id+'g)"':'';};
+  el.innerHTML='<div class="a-top"><b>FX時計</b><span class="season"></span></div><svg viewBox="0 0 360 360" role="img" aria-label="24時間の文字盤（'+o.name+'）。色の輪が各市場の取引時間"></svg><div class="a-legend"></div><ul class="a-list"></ul>';
+  let s='<defs><clipPath id="'+id+'c"><circle cx="180" cy="180" r="177"/></clipPath>';
+  if(o.bez)s+=grad(id+'b',o.bez,false);
+  if(o.face)s+=grad(id+'f',o.face,true);
+  if(o.glow)s+='<filter id="'+id+'g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="'+o.glow+'" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  s+='</defs>';
+  if(o.extra==='screws'){
+    s+='<rect x="0" y="0" width="360" height="360" rx="22" class="d-panel"/>';
+    [[17,17,35],[343,17,-25],[17,343,70],[343,343,10]].forEach(function(c){
+      const a=c[2]*Math.PI/180,dx=5*Math.cos(a),dy=5*Math.sin(a);
+      s+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="7.5" class="d-screw"/><line x1="'+f2(c[0]-dx)+'" y1="'+f2(c[1]-dy)+'" x2="'+f2(c[0]+dx)+'" y2="'+f2(c[1]+dy)+'" class="d-slot"/>';
+    });
+  }
+  s+='<circle cx="180" cy="180" r="178" class="d-bezel"'+(o.bez?' style="fill:url(#'+id+'b)"':'')+'/>';
+  s+='<circle cx="180" cy="180" r="104" class="d-face"'+(o.face?' style="fill:url(#'+id+'f)"':'')+'/>';
+  if(o.extra==='rings'){let r=5;while(r<100){s+='<ellipse cx="'+f2(178+R()*4)+'" cy="'+f2(181+R()*3)+'" rx="'+f2(r)+'" ry="'+f2(r*(0.95+R()*0.04))+'" class="d-ring" stroke-width="'+f2(0.5+R()*0.9)+'"/>';r+=3+R()*6;}}
+  if(o.extra==='hairline'){for(let r=3;r<104;r+=1.6)s+='<circle cx="180" cy="180" r="'+f2(r)+'" class="d-hair"/>';}
+  if(o.extra==='fibers'){
+    s+='<g clip-path="url(#'+id+'c)">';
+    for(let i=0;i<110;i++){const a=R()*Math.PI*2,rr=Math.sqrt(R())*176,x=180+rr*Math.cos(a),y=180+rr*Math.sin(a),L=5+R()*16,b=R()*Math.PI;
+      const x2=x+L*Math.cos(b),y2=y+L*Math.sin(b),cx=(x+x2)/2+(R()-.5)*8,cy=(y+y2)/2+(R()-.5)*8;
+      s+='<path d="M'+f2(x)+' '+f2(y)+'Q'+f2(cx)+' '+f2(cy)+' '+f2(x2)+' '+f2(y2)+'" class="d-fiber" stroke-width="'+f2(0.35+R()*0.6)+'"/>';}
+    s+='</g>';
+  }
+  RAD.forEach(function(r){s+='<circle cx="180" cy="180" r="'+r+'" class="d-track"/>';});
+  for(let i=0;i<96;i++){const a=i*3.75,big=i%12===0,hr=i%4===0;const p1=pt(big?145:hr?149:152,a),p2=pt(155,a);
+    s+='<line x1="'+f2(p1[0])+'" y1="'+f2(p1[1])+'" x2="'+f2(p2[0])+'" y2="'+f2(p2[1])+'" class="d-tk'+(big?' d-tk-big':hr?'':' d-tk-q')+'"/>';}
+  s+='<g'+on('num')+'>';
+  for(let h=0;h<24;h+=3){const p=pt(167,h*15),lab=o.nums==='kan'?KAN[h]:String(h),long=lab.length>2;
+    s+='<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+4.5).toFixed(1)+'" class="d-num'+(long?' long':'')+'">'+lab+'</text>';}
+  s+='</g><g class="g-arcs"'+on('arc')+'></g><g class="g-marks"'+on('mark')+'></g><g class="g-ptr"'+on('ptr')+'></g><circle r="2.4" class="d-sec" cx="180" cy="83"/>';
+  s+='<text x="180" y="128" class="d-date"></text><text x="180" y="170" class="d-time"'+on('time')+'></text>';
+  s+='<text x="180" y="197" class="d-nextn"></text><text x="180" y="219" class="d-nextt"></text><text x="180" y="246" class="d-state"></text>';
+  el.querySelector('svg').innerHTML=s;
+  const q=function(c){return el.querySelector(c);};
+  el._r={season:q('.season'),arcs:q('.g-arcs'),marks:q('.g-marks'),ptr:q('.g-ptr'),sec:q('.d-sec'),date:q('.d-date'),time:q('.d-time'),
+    nextn:q('.d-nextn'),nextt:q('.d-nextt'),state:q('.d-state'),legend:q('.a-legend'),list:q('.a-list')};
+}
+function renderDial(el,now,sc,sea,closed){
+  const r=el._r,p=parts(now,TZ.tky);
+  r.season.textContent=sea;
+  r.date.textContent=ld(p);
+  r.time.textContent=p.h+':'+pad(p.mi);
+  const sp=pt(98,p.s*6);r.sec.setAttribute('cx',f2(sp[0]));r.sec.setAttribute('cy',f2(sp[1]));
+  const a=angJST(now),p1=pt(106,a),p2=pt(157,a);
+  r.ptr.innerHTML='<line x1="'+f2(p1[0])+'" y1="'+f2(p1[1])+'" x2="'+f2(p2[0])+'" y2="'+f2(p2[1])+'" class="d-ptr"/><circle cx="'+f2(p2[0])+'" cy="'+f2(p2[1])+'" r="3.2" class="d-ptr-dot"/>';
+  if(sc.next){r.nextn.textContent=sc.next.ev.name+' '+hm(sc.next.t);r.nextt.textContent=left(sc.next.t-now);}
+  let arcs='',leg='';const open=[];
+  SESSIONS.forEach(function(s,i){
+    const iv=sessionIntervals(s,now,now+3*864e5)[0],o=isOpen(s,now);if(o)open.push(s.name);
+    if(iv)arcs+='<path d="'+arcPath(RAD[i],angJST(iv.a),(iv.b-iv.a)/36e5*15)+'" class="arc s-'+s.id+(o?'':' off')+'"/>';
+    leg+='<span class="'+(o?'on':'')+'"><i style="background:var(--s-'+s.id+')"></i>'+s.name+'</span>';
+  });
+  r.arcs.innerHTML=arcs;r.legend.innerHTML=leg;
+  r.state.textContent=closed?'土日は市場がお休み':(open.length?open.join('・')+' 取引中':'');
+  let mk='',li='';
+  sc.list.forEach(function(x){const m=pt(159,angJST(x.t));mk+='<circle cx="'+f2(m[0])+'" cy="'+f2(m[1])+'" r="'+(x.ev.kind==='minor'?1.8:2.8)+'" class="d-mark"/>';});
+  sc.list.filter(function(x){return x.t>now;}).slice(0,4).forEach(function(x){
+    const nx=sc.next&&x===sc.next;
+    li+='<li class="'+[nx?'next':'',x.ev.kind==='minor'?'minor':''].join(' ').trim()+'"><time>'+hm(x.t)+'</time><span>'+x.ev.name+(gTag(x)?'<small>ゴトー日</small>':'')+'</span><em>'+(nx?left(x.t-now):'')+'</em></li>';
+  });
+  r.marks.innerHTML=mk;r.list.innerHTML=li;
+}
+
+/* ---------- 発着の掲示 ---------- */
+function strip(now){
+  const p=parts(now,TZ.tky);let ds=zoned(p.y,p.mo,p.d,7,0,TZ.tky);if(ds>now)ds-=864e5;const de=ds+864e5;
+  const L=56,R=354,px=(R-L)/24,Y=[4,18,32,46];let s='';
+  SESSIONS.forEach(function(se,i){
+    s+='<text x="0" y="'+(Y[i]+8.5)+'" class="st-lab">'+se.name+'</text><rect x="'+L+'" y="'+Y[i]+'" width="'+(R-L)+'" height="10" class="st-lane"/>';
+    sessionIntervals(se,ds,de).forEach(function(iv){const a=Math.max(iv.a,ds),b=Math.min(iv.b,de);if(b<=a)return;
+      s+='<rect x="'+f2(L+(a-ds)/36e5*px)+'" y="'+Y[i]+'" width="'+f2((b-a)/36e5*px)+'" height="10" class="f-'+se.id+'"/>';});
+  });
+  [[0,'7'],[5,'12'],[11,'18'],[17,'0'],[23,'6']].forEach(function(h){const x=L+h[0]*px;s+='<line x1="'+f2(x)+'" y1="58" x2="'+f2(x)+'" y2="62" class="st-grid"/><text x="'+f2(x)+'" y="72" class="st-hr">'+h[1]+'</text>';});
+  const nx=L+(now-ds)/36e5*px;
+  s+='<line x1="'+f2(nx)+'" y1="2" x2="'+f2(nx)+'" y2="60" class="st-now"/><path d="M'+f2(nx-4)+' 0H'+f2(nx+4)+'L'+f2(nx)+' 5Z" class="st-nowtip"/>';
+  return '<svg viewBox="0 0 360 76" role="img" aria-label="きょうの市場の時間帯（7時から翌7時）。線がいま">'+s+'</svg>';
+}
+function buildDep(el){
+  const led=el.dataset.skin==='led';
+  el.innerHTML='<div class="dp-top"><span class="dp-brand">FX時計<small>'+(led?'電光掲示':'発着案内')+'</small></span><span class="dp-date"></span></div>'+
+    '<div class="dp-now"><div class="'+(led?'led-clock':'tiles')+'" role="timer" aria-label="いまの時刻"></div><div class="dp-next"></div></div>'+
+    (led?'<div class="dp-ticker" aria-hidden="true"><span></span></div>':'')+
+    '<div class="dp-strip"></div>'+
+    '<table class="dp-tt"><thead><tr><th scope="col">時刻</th><th scope="col">内容</th><th scope="col">状況</th></tr></thead><tbody></tbody></table>';
+  const q=function(c){return el.querySelector(c);};
+  el._r={led:led,date:q('.dp-date'),clock:q(led?'.led-clock':'.tiles'),next:q('.dp-next'),ticker:led?q('.dp-ticker span'):null,strip:q('.dp-strip'),body:q('tbody'),tick:''};
+  if(!led){
+    let t='';for(let i=0;i<8;i++)t+='<span class="tile'+(i===2?' colon':'')+(i===5?' colon':'')+(i>5?' sm':'')+'"></span>';
+    el._r.clock.innerHTML=t;
+    el._r.clock.children[5].style.display='none';
+  }
+}
+function setTiles(box,str){
+  for(let i=0;i<str.length;i++){const c=box.children[i];if(!c||c.textContent===str[i])continue;
+    c.textContent=str[i];c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');}
+}
+function miniTime(t){const s=hm2(t);return '<span class="mini">'+s.split('').map(function(c){return c===':'?'<span class="c">:</span>':'<span>'+c+'</span>';}).join('')+'</span>';}
+function renderDep(el,now,sc,sea,closed){
+  const r=el._r,p=parts(now,TZ.tky);
+  r.date.textContent=ld(p)+'　'+sea;
+  if(r.led)r.clock.innerHTML=p.h+':'+pad(p.mi)+'<small>'+pad(p.s)+'</small>';
+  else setTiles(r.clock,pad(p.h)+':'+pad(p.mi)+' '+pad(p.s));
+  if(sc.next)r.next.innerHTML=(closed?'土日はお休み・次は':'次は')+'<strong>'+hm(sc.next.t)+' '+sc.next.ev.name+'</strong><span class="left">'+left(sc.next.t-now)+'</span>';
+  if(r.led&&sc.next){
+    const key=p.h+':'+p.mi;
+    if(r.tick!==key){r.tick=key;
+      const g=sc.list.some(gTag)?'　／　きょうはゴトー日':'';
+      r.ticker.textContent='つぎは '+hm(sc.next.t)+' '+sc.next.ev.name+'　'+left(sc.next.t-now).replace(/\d+秒$/,'')+'　／　'+sea+g;}
+  }
+  r.strip.innerHTML=strip(now);
+  let html='';
+  sc.list.forEach(function(x){
+    const past=x.t<=now,nx=sc.next&&x===sc.next;
+    const st=past?'済':nx?left(x.t-now):'予定';
+    html+='<tr class="'+[x.ev.kind,past?'past':'',nx?'next':''].join(' ').trim()+'"><td class="t">'+miniTime(x.t)+'</td><td class="n">'+x.ev.name+(gTag(x)?'<span class="badge">ゴトー日</span>':'')+'</td><td class="s">'+st+'</td></tr>';
+  });
+  r.body.innerHTML=html;
+}
+
+const dials=[].slice.call(document.querySelectorAll('.dial'));
+const deps=[].slice.call(document.querySelectorAll('.dep'));
+dials.forEach(buildDial);deps.forEach(buildDep);
+function tick(){
+  const now=Date.now(),sc=schedule(now),sea=season(now),closed=marketClosed(now);
+  dials.forEach(function(el){try{renderDial(el,now,sc,sea,closed);}catch(e){console.error(e);}});
+  deps.forEach(function(el){try{renderDep(el,now,sc,sea,closed);}catch(e){console.error(e);}});
+}
+tick();
+setTimeout(function(){tick();setInterval(tick,1000);},1000-Date.now()%1000);
+})();
+</script>
