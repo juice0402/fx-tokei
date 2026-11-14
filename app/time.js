@@ -173,6 +173,63 @@ export function dstInfo(now) {
   };
 }
 
+export function seasonLabel(dst) {
+  return dst.gapNow ? 'NYだけ夏時間' : dst.summerNow ? '夏時間' : '冬時間';
+}
+
+// 1秒ごとに形へ渡す計算の結果（どの形も同じものを使う）
+export function tickContext(now) {
+  return { now, p: parts(now, TZ.tky), sc: schedule(now), dst: dstInfo(now), closed: isMarketClosed(now) };
+}
+
+// 時刻表のダイヤの範囲：日本時間の startHour 時から次の日の startHour 時まで（いまをふくむ）
+export function diaRange(now, startHour) {
+  const p = parts(now, TZ.tky);
+  let d = p;
+  let from = zonedTime(d.y, d.mo, d.d, startHour, 0, TZ.tky);
+  if (from > now) {
+    d = addDays(p, -1);
+    from = zonedTime(d.y, d.mo, d.d, startHour, 0, TZ.tky);
+  }
+  const e = addDays(d, 1);
+  return { from, to: zonedTime(e.y, e.mo, e.d, startHour, 0, TZ.tky) };
+}
+
+const dayLabel = (p) => `${p.mo}/${p.d}（${WD[p.wd]}）`;
+
+// 時刻表の行：日本時間の「時」ごとにまとめ、日付が変わる所に区切りを入れる
+// 並びがきょうから始まるときの区切りは「翌日」、週末などで先の日から始まるときは日付
+export function timetableRows(sc, now) {
+  const today = parts(now, TZ.tky);
+  const key = (p) => `${p.y}-${p.mo}-${p.d}`;
+  const rows = [];
+  let date = null;
+  let fromToday = true;
+  for (const x of sc.list) {
+    const q = parts(x.t, TZ.tky);
+    const d = key(q);
+    if (date === null) {
+      fromToday = d === key(today);
+      if (!fromToday) rows.push({ type: 'day', label: dayLabel(q) });
+    } else if (d !== date) {
+      rows.push({ type: 'day', label: fromToday ? '翌日' : dayLabel(q) });
+    }
+    let r = rows[rows.length - 1];
+    if (!r || r.type !== 'hour' || r.h !== q.h || d !== date) {
+      r = { type: 'hour', h: q.h, items: [] };
+      rows.push(r);
+    }
+    date = d;
+    r.items.push({ ev: x.ev, t: x.t, mi: q.mi, gotobi: x.ev.id === 'nakane' && isGotobi(x.t) });
+  }
+  for (const r of rows) {
+    if (r.type !== 'hour') continue;
+    r.past = r.items.every((it) => it.t <= now);
+    r.next = !!sc.next && r.items.some((it) => it.t === sc.next.t && it.ev === sc.next.ev);
+  }
+  return rows;
+}
+
 export function formatLeft(ms) {
   const s = Math.max(0, Math.floor(ms / 1000));
   const h = Math.floor(s / 3600);

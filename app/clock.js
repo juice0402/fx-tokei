@@ -1,14 +1,16 @@
-// 文字盤の画面。計算は time.js、ここは描くだけ
+// 形「文字盤」。計算は time.js、色と大きさは skins.json（skins.js）、ここは描くだけ
 import {
-  TZ, WD, SESSIONS, parts, pad, hm, schedule, sessionIntervals, isSessionOpen,
-  isMarketClosed, isGotobi, dstInfo, formatLeft,
+  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, isSessionOpen, isGotobi, formatLeft, seasonLabel,
 } from './time.js';
+import { SIZE } from './skins.js';
 
-const $ = (id) => document.getElementById(id);
-const RAD = [140, 131, 122, 113]; // シドニー・東京・ロンドン・NY の輪
+const G = SIZE.dial.geo;
+const C = G.view / 2;
+const RING = G['ring-r']; // シドニー・東京・ロンドン・NY の輪
+const DEG_H = 360 / 24;
 const f2 = (n) => n.toFixed(2);
-const pt = (r, a) => { const t = (a * Math.PI) / 180; return [180 + r * Math.sin(t), 180 - r * Math.cos(t)]; };
-const angle = (t) => { const p = parts(t, TZ.tky); return (p.h + p.mi / 60 + p.s / 3600) * 15; };
+const pt = (r, a) => { const t = (a * Math.PI) / 180; return [C + r * Math.sin(t), C - r * Math.cos(t)]; };
+const angle = (t) => { const p = parts(t, TZ.tky); return (p.h + p.mi / 60 + p.s / 3600) * DEG_H; };
 const arc = (r, a0, len) => {
   const a = pt(r, a0), b = pt(r, a0 + len);
   return `M${f2(a[0])} ${f2(a[1])}A${r} ${r} 0 ${len > 180 ? 1 : 0} 1 ${f2(b[0])} ${f2(b[1])}`;
@@ -16,41 +18,55 @@ const arc = (r, a0, len) => {
 const shortDate = (p) => `${p.mo}/${p.d}（${WD[p.wd]}）`;
 const dir = (c) => (c.summer ? '夏時間へ' : '冬時間へ');
 
-function buildFace() {
-  let s = '<circle cx="180" cy="180" r="178" class="bezel"/><circle cx="180" cy="180" r="104" class="face"/>';
-  for (const r of RAD) s += `<circle cx="180" cy="180" r="${r}" class="track"/>`;
-  for (let i = 0; i < 96; i++) {
-    const a = i * 3.75, big = i % 12 === 0, hour = i % 4 === 0;
-    const p1 = pt(big ? 145 : hour ? 149 : 152, a), p2 = pt(155, a);
+function faceSvg() {
+  let s = `<circle cx="${C}" cy="${C}" r="${G['bezel-r']}" class="bezel"/><circle cx="${C}" cy="${C}" r="${G['face-r']}" class="face"/>`;
+  for (const r of RING) s += `<circle cx="${C}" cy="${C}" r="${r}" class="track"/>`;
+  const per = G['ticks-per-hour'], n = 24 * per, [inBig, inHour, inQ] = G['tick-in'];
+  for (let i = 0; i < n; i++) {
+    const a = (i * 360) / n, big = i % (per * G['num-step']) === 0, hour = i % per === 0;
+    const p1 = pt(big ? inBig : hour ? inHour : inQ, a), p2 = pt(G['tick-out'], a);
     s += `<line x1="${f2(p1[0])}" y1="${f2(p1[1])}" x2="${f2(p2[0])}" y2="${f2(p2[1])}" class="tk${big ? ' tk-big' : hour ? '' : ' tk-q'}"/>`;
   }
-  for (let h = 0; h < 24; h += 3) {
-    const p = pt(167, h * 15);
-    s += `<text x="${p[0].toFixed(1)}" y="${(p[1] + 4.5).toFixed(1)}" class="num">${h}</text>`;
+  for (let h = 0; h < 24; h += G['num-step']) {
+    const p = pt(G['num-r'], h * DEG_H);
+    s += `<text x="${p[0].toFixed(1)}" y="${(p[1] + G['num-dy']).toFixed(1)}" class="num">${h}</text>`;
   }
-  s += '<g id="arcs"></g><g id="marks"></g><g id="ptr"></g><circle id="sec" r="2.4" class="sec" cx="180" cy="83"/>';
-  s += '<text id="date" x="180" y="128" class="date"></text><text id="time" x="180" y="170" class="time"></text>';
-  s += '<text id="nextName" x="180" y="197" class="next-name"></text><text id="nextLeft" x="180" y="219" class="next-left"></text>';
-  s += '<text id="state" x="180" y="246" class="state"></text>';
-  $('face').innerHTML = s;
+  s += `<g data-k="arcs"></g><g data-k="marks"></g><g data-k="ptr"></g><circle data-k="sec" r="${G['sec-dot']}" class="sec" cx="${C}" cy="${C - G['sec-r']}"/>`;
+  s += `<text data-k="date" x="${C}" y="${G['date-y']}" class="date"></text><text data-k="time" x="${C}" y="${G['time-y']}" class="time"></text>`;
+  s += `<text data-k="nextName" x="${C}" y="${G['next-name-y']}" class="next-name"></text><text data-k="nextLeft" x="${C}" y="${G['next-left-y']}" class="next-left"></text>`;
+  s += `<text data-k="state" x="${C}" y="${G['state-y']}" class="state"></text>`;
+  return s;
 }
 
-function render() {
-  const now = Date.now();
-  const sc = schedule(now), dst = dstInfo(now), closed = isMarketClosed(now);
-  const p = parts(now, TZ.tky);
+function mount(root) {
+  root.className = 'page dial';
+  root.innerHTML = `<header class="top"><h1>FX時計</h1><span data-k="season"></span></header>
+<div class="body">
+  <svg class="dial-svg" viewBox="0 0 ${G.view} ${G.view}" role="img" aria-label="日本時間の24時間の文字盤。色の輪が各市場の取引時間">${faceSvg()}</svg>
+  <div class="side">
+    <div class="legend" data-k="legend"></div>
+    <ul class="list" data-k="list"></ul>
+    <p class="dst" data-k="dst"></p>
+    <div class="pick-slot"></div>
+  </div>
+</div>`;
+  const q = (k) => root.querySelector(`[data-k="${k}"]`);
+  const el = Object.fromEntries(['season', 'arcs', 'marks', 'ptr', 'sec', 'date', 'time', 'nextName', 'nextLeft', 'state', 'legend', 'list', 'dst'].map((k) => [k, q(k)]));
+  return (ctx) => render(el, ctx);
+}
 
-  $('season').textContent = dst.gapNow ? 'NYだけ夏時間' : dst.summerNow ? '夏時間' : '冬時間';
-  $('date').textContent = `${p.mo}月${p.d}日（${WD[p.wd]}）`;
-  $('time').textContent = `${p.h}:${pad(p.mi)}`;
-  const sp = pt(98, p.s * 6);
-  $('sec').setAttribute('cx', f2(sp[0]));
-  $('sec').setAttribute('cy', f2(sp[1]));
-  const a = angle(now), p1 = pt(106, a), p2 = pt(157, a);
-  $('ptr').innerHTML = `<line x1="${f2(p1[0])}" y1="${f2(p1[1])}" x2="${f2(p2[0])}" y2="${f2(p2[1])}" class="ptr"/><circle cx="${f2(p2[0])}" cy="${f2(p2[1])}" r="3.2" class="ptr-dot"/>`;
+function render(el, { now, p, sc, dst, closed }) {
+  el.season.textContent = seasonLabel(dst);
+  el.date.textContent = `${p.mo}月${p.d}日（${WD[p.wd]}）`;
+  el.time.textContent = `${p.h}:${pad(p.mi)}`;
+  const sp = pt(G['sec-r'], (p.s * 360) / 60);
+  el.sec.setAttribute('cx', f2(sp[0]));
+  el.sec.setAttribute('cy', f2(sp[1]));
+  const a = angle(now), p1 = pt(G['ptr-in'], a), p2 = pt(G['ptr-out'], a);
+  el.ptr.innerHTML = `<line x1="${f2(p1[0])}" y1="${f2(p1[1])}" x2="${f2(p2[0])}" y2="${f2(p2[1])}" class="ptr"/><circle cx="${f2(p2[0])}" cy="${f2(p2[1])}" r="${G['ptr-dot']}" class="ptr-dot"/>`;
   if (sc.next) {
-    $('nextName').textContent = `${sc.next.ev.name} ${hm(sc.next.t)}`;
-    $('nextLeft').textContent = formatLeft(sc.next.t - now);
+    el.nextName.textContent = `${sc.next.ev.name} ${hm(sc.next.t)}`;
+    el.nextLeft.textContent = formatLeft(sc.next.t - now);
   }
 
   let arcs = '', legend = '';
@@ -59,24 +75,25 @@ function render() {
     const iv = sessionIntervals(s, now, now + 3 * 864e5)[0];
     const on = isSessionOpen(s, now);
     if (on) open.push(s.name);
-    if (iv) arcs += `<path d="${arc(RAD[i], angle(iv.a), ((iv.b - iv.a) / 36e5) * 15)}" class="arc s-${s.id}${on ? '' : ' off'}"/>`;
+    if (iv) arcs += `<path d="${arc(RING[i], angle(iv.a), ((iv.b - iv.a) / 36e5) * DEG_H)}" class="arc s-${s.id}${on ? '' : ' off'}"/>`;
     legend += `<span class="${on ? 'on' : ''}"><i class="b-${s.id}"></i>${s.name}</span>`;
   });
-  $('arcs').innerHTML = arcs;
-  $('legend').innerHTML = legend;
-  $('state').textContent = closed ? '土日は市場がお休み' : open.length ? `${open.join('・')} 取引中` : '';
+  el.arcs.innerHTML = arcs;
+  el.legend.innerHTML = legend;
+  el.state.textContent = closed ? '土日は市場がお休み' : open.length ? `${open.join('・')} 取引中` : '';
 
   let marks = '', list = '';
+  const [dotBig, dotMinor] = G['mark-dot'];
   for (const x of sc.list) {
-    const q = pt(159, angle(x.t));
-    marks += `<circle cx="${f2(q[0])}" cy="${f2(q[1])}" r="${x.ev.kind === 'minor' ? 1.8 : 2.8}" class="mark"/>`;
+    const m = pt(G['mark-r'], angle(x.t));
+    marks += `<circle cx="${f2(m[0])}" cy="${f2(m[1])}" r="${x.ev.kind === 'minor' ? dotMinor : dotBig}" class="mark"/>`;
     const past = x.t <= now, isNext = sc.next === x;
     const goto = x.ev.id === 'nakane' && isGotobi(x.t) ? '<small>ゴトー日</small>' : '';
     const cls = [past && 'past', isNext && 'next', x.ev.kind === 'minor' && 'minor'].filter(Boolean).join(' ');
     list += `<li class="${cls}"><time>${hm(x.t)}</time><span>${x.ev.name}${goto}</span><em>${isNext ? formatLeft(x.t - now) : ''}</em></li>`;
   }
-  $('marks').innerHTML = marks;
-  $('list').innerHTML = list;
+  el.marks.innerHTML = marks;
+  el.list.innerHTML = list;
 
   const same = dst.us.summer === dst.uk.summer;
   let d = same
@@ -85,24 +102,12 @@ function render() {
   d += dst.gapNow
     ? `いまはNYだけ夏時間（${shortDate(dst.first.p)}まで）`
     : `${dst.first.p.mo}/${dst.first.p.d}〜${dst.second.p.mo}/${dst.second.p.d} はNYだけ夏時間`;
-  $('dst').innerHTML = d;
+  el.dst.innerHTML = d;
 }
 
-function setupSkins() {
-  const root = $('dial');
-  const chips = document.querySelectorAll('.chip');
-  const apply = (skin) => {
-    root.dataset.skin = skin;
-    chips.forEach((c) => c.setAttribute('aria-pressed', c.dataset.skin === skin ? 'true' : 'false'));
-  };
-  try { const saved = localStorage.getItem('fx-tokei-skin'); if (saved) apply(saved); } catch (e) { /* 保存できない環境 */ }
-  chips.forEach((c) => c.addEventListener('click', () => {
-    apply(c.dataset.skin);
-    try { localStorage.setItem('fx-tokei-skin', c.dataset.skin); } catch (e) { /* 保存できない環境 */ }
-  }));
+// 形のえらぶ所の小さな絵（丸い文字盤）。c は [地の色, 針の色]
+function icon([c1, c2]) {
+  return `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="${c1}" stroke="${c2}" stroke-opacity=".5"/><circle cx="16" cy="16" r="10.5" fill="none" stroke="${c2}" stroke-width="1.6" stroke-dasharray="2.2 3.3"/><path d="M16 16 L16 6.5" stroke="${c2}" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="16" r="1.8" fill="${c2}"/></svg>`;
 }
 
-buildFace();
-setupSkins();
-render();
-setTimeout(() => { render(); setInterval(render, 1000); }, 1000 - (Date.now() % 1000));
+export default { id: 'dial', name: '文字盤', chip: 'round', icon, mount };

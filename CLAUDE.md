@@ -4,6 +4,7 @@ FX の大事な時間が出る、飾れる時計。sakutto-keisan.com/fx-tokei/ 
 
 ## 作り
 - app/ がそのまま /fx-tokei/ に置かれる中身（HTML・JS・CSS・SVG。画像なし・Canva の素材は使わない）
+- 形は app/forms.js の一覧（形ごとのファイルに mount と icon）。色と時計の大きさは app/skins.json だけ（`npm run skins` で skins.css・skins.js を作ってコミット。Swift のウィジェットも読む）。形のファイルと style.css に色や半径の数字を書かない
 - 時間の計算は app/time.js だけ。夏時間は Intl のタイムゾーンで自動（決め打ちの時差を書かない）
 - `npm test`（node --test）・`npm run build`（dist/fx-tokei/ に出す）
 - リンクと読み込みは相対パス。PWA の manifest と service worker の範囲は /fx-tokei/
