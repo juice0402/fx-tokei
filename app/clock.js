@@ -40,7 +40,7 @@ function faceSvg() {
 
 function mount(root) {
   root.className = 'page dial';
-  root.innerHTML = `<header class="top"><h1>FX時計</h1><span data-k="season"></span></header>
+  root.innerHTML = `<header class="top"><h1>FX時計</h1><div class="top-r"><span data-k="season"></span><span class="tools-slot"></span></div></header>
 <div class="body">
   <svg class="dial-svg" viewBox="0 0 ${G.view} ${G.view}" role="img" aria-label="日本時間の24時間の文字盤。色の輪が各市場の取引時間">${faceSvg()}</svg>
   <div class="side">

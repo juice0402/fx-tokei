@@ -2,6 +2,7 @@
 import { FORMS } from './forms.js';
 import { SKINS } from './skins.js';
 import { tickContext } from './time.js';
+import { makeTools } from './tools.js';
 
 const KEY = 'fx-tokei-skin';
 const IDS = Object.keys(SKINS);
@@ -29,6 +30,11 @@ function pickHtml() {
 <div class="pick-row"><div class="pick-colors" role="group" aria-label="色">${colors}</div><span class="pick-name">${form.name}・${SKINS[skin].name}</span></div>`;
 }
 
+const tools = makeTools();
+const credit = document.createElement('p');
+credit.className = 'credit';
+credit.innerHTML = 'フォント：Shippori Mincho B1・Zen Kaku Gothic New・BIZ UDPGothic（<a href="./fonts/OFL.txt">SIL OFL 1.1</a>）';
+
 const pick = document.createElement('nav');
 pick.className = 'pick';
 pick.setAttribute('aria-label', '形と色');
@@ -55,6 +61,8 @@ function apply(id, byUser) {
     stage.replaceChildren(root);
     render = f.mount(root);
     root.querySelector('.pick-slot').append(pick);
+    root.querySelector('.tools-slot').append(tools);
+    root.append(credit);
     render(tickContext(Date.now()));
   }
   const meta = document.querySelector('meta[name="theme-color"]');
@@ -69,3 +77,8 @@ function apply(id, byUser) {
 apply(skin, false);
 const tick = () => render(tickContext(Date.now()));
 setTimeout(() => { tick(); setInterval(tick, 1000); }, 1000 - (Date.now() % 1000));
+
+// 電波がなくても開けるように（http・https のときだけ。アプリの中で使えないときは何もしない）
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
