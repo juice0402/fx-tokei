@@ -4,29 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FX時計｜仲値・ロンドンフィックス・NYオープンの日本時間</title>
-<meta name="description" content="仲値9:55、ロンドンオープン、NYオープン、ロンドンフィックスまでの残り時間を、日本時間の24時間の文字盤で表示します。夏時間は自動で切りかわり、次の切りかえ日も出ます。">
+<meta name="description" content="仲値9:55、ロンドンオープン、NYオープン、ロンドンフィックスまでの残り時間を、日本時間の24時間の文字盤か時刻表で表示します。夏時間は自動で切りかわり、次の切りかえ日も出ます。">
+<meta name="theme-color" content="#0b1628">
+<script>try { var s = localStorage.getItem('fx-tokei-skin'); if (s) document.documentElement.dataset.skin = s; } catch (e) {}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<link rel="stylesheet" href="./skins.css">
 <link rel="stylesheet" href="./style.css">
-<script type="module" src="./clock.js"></script>
+<script type="module" src="./main.js"></script>
 </head>
 <body>
-<main class="dial" id="dial" data-skin="kon">
-  <header class="top"><h1>FX時計</h1><span id="season"></span></header>
-  <div class="body">
-    <svg id="face" viewBox="0 0 360 360" role="img" aria-label="日本時間の24時間の文字盤。色の輪が各市場の取引時間"></svg>
-    <div class="side">
-      <div class="legend" id="legend"></div>
-      <ul class="list" id="list"></ul>
-      <p class="dst" id="dst"></p>
-      <div class="chips" role="group" aria-label="文字盤の色">
-        <button class="chip c-kon" type="button" id="skin-kon" data-skin="kon" aria-pressed="true" aria-label="紺と真鍮"></button>
-        <button class="chip c-hakuji" type="button" id="skin-hakuji" data-skin="hakuji" aria-pressed="false" aria-label="白磁"></button>
-        <button class="chip c-midori" type="button" id="skin-midori" data-skin="midori" aria-pressed="false" aria-label="深緑"></button>
-      </div>
-    </div>
-  </div>
-</main>
+<div id="stage"></div>
 </body>
 </html>
