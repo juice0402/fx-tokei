@@ -6,6 +6,9 @@
   "scripts": {
     "test": "node --test test/*.test.mjs",
     "build": "node scripts/build.mjs",
-    "skins": "node scripts/gen-skins.mjs"
+    "skins": "node scripts/gen-skins.mjs",
+    "fonts": "python3 scripts/gen-fonts.py",
+    "icons": "python3 scripts/gen-icons.py",
+    "sw": "node scripts/gen-sw.mjs"
   }
 }

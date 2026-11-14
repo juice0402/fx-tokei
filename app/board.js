@@ -34,7 +34,7 @@ function dia(now) {
 
 function mount(root) {
   root.className = 'page board';
-  root.innerHTML = `<header class="b-top"><h1 class="b-brand">FX時計<small>ドル円の時刻表</small></h1><span class="b-date" data-k="date"></span></header>
+  root.innerHTML = `<header class="b-top"><h1 class="b-brand">FX時計<small>ドル円の時刻表</small></h1><div class="top-r"><span class="b-date" data-k="date"></span><span class="tools-slot"></span></div></header>
 <div class="b-now"><div class="b-time" data-k="time"></div><div class="b-next" data-k="next"></div></div>
 <div class="b-dia" data-k="dia"></div>
 <table class="tt"><caption>大事な時間の時刻表（日本時間）</caption><tbody data-k="table"></tbody></table>

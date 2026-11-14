@@ -1,4 +1,11 @@
 /* 形ごとの見た目。色と時計の大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+/* 文字は画面で使う分だけにしぼって中に入れた（scripts/gen-fonts.py・SIL OFL 1.1） */
+@font-face { font-family: "Shippori Mincho B1"; src: url("./fonts/shippori-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Shippori Mincho B1"; src: url("./fonts/shippori-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Zen Kaku Gothic New"; src: url("./fonts/zenkaku-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Zen Kaku Gothic New"; src: url("./fonts/zenkaku-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "BIZ UDPGothic"; src: url("./fonts/bizud-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "BIZ UDPGothic"; src: url("./fonts/bizud-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 :root {
   --f-dial: "Shippori Mincho B1", "Hiragino Mincho ProN", "Noto Serif JP", serif;
   --f-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
@@ -32,9 +39,25 @@ body { background: var(--bg); color: var(--ink); }
 .chip.rect { width: 40px; height: 28px; border-radius: 7px; }
 .pick-name { font-size: 12px; color: var(--sub); }
 
+/* ===== 右上の2つのボタンと、いちばん下のフォントの表示（どの形も同じ部品） ===== */
+.top-r { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.tools { display: flex; gap: 2px; margin-right: -6px; }
+.tool { width: 34px; height: 34px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--sub); cursor: pointer; display: grid; place-items: center; -webkit-tap-highlight-color: transparent; }
+.tool svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.tool:focus-visible { outline: 2px dashed var(--ink); outline-offset: 1px; }
+.tool:active svg { transform: scale(.9); }
+.tool[aria-pressed="true"] { color: var(--ink); }
+.tool-wake .ray { display: none; }
+.tool-wake[aria-pressed="true"] .ray { display: inline; }
+.tool-wake[aria-pressed="true"] .fill { fill: currentColor; fill-opacity: .3; }
+.tool-full .in, .tool-full[aria-pressed="true"] .out { display: none; }
+.tool-full[aria-pressed="true"] .in { display: inline; }
+.credit { margin: 14px 0 0; font-family: var(--f-ui); font-size: 10.5px; color: var(--sub); text-align: center; }
+.credit a { color: inherit; }
+
 /* ===== 文字盤 ===== */
 .dial { font-family: var(--f-dial); display: flex; flex-direction: column; gap: 10px; }
-.top { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--dial-f-top); color: var(--sub); }
+.top { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: var(--dial-f-top); color: var(--sub); }
 .top h1 { margin: 0; font-size: var(--dial-f-brand); letter-spacing: .12em; color: var(--ink); }
 
 .body { display: grid; gap: 12px; flex: 1; align-content: start; }
@@ -83,7 +106,8 @@ body { background: var(--bg); color: var(--ink); }
 
 /* ===== 時刻表（見本B） ===== */
 .board { font-family: var(--f-board); display: flex; flex-direction: column; gap: 8px; }
-.b-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; border-bottom: calc(var(--board-s-rule) * 1px) solid var(--ink); padding-bottom: 6px; flex-wrap: wrap; }
+.board .credit { margin-top: auto; padding-top: 6px; }
+.b-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom: calc(var(--board-s-rule) * 1px) solid var(--ink); padding-bottom: 6px; flex-wrap: wrap; }
 .b-brand { margin: 0; font-weight: 700; font-size: var(--board-f-brand); letter-spacing: .06em; }
 .b-brand small { font-weight: 400; font-size: var(--board-f-brand-sub); letter-spacing: 0; margin-left: 6px; color: var(--sub); }
 .b-date { font-size: var(--board-f-date); color: var(--sub); }
@@ -126,8 +150,8 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .board {
     display: grid; justify-content: center; align-content: start;
     grid-template-columns: minmax(0, 560px) minmax(0, 460px);
-    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "pick tt" "down down";
-    grid-template-rows: auto 1fr auto auto auto auto 1fr;
+    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "pick tt" "down down" "credit credit";
+    grid-template-rows: auto 1fr auto auto auto auto 1fr auto;
     column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
   }
   .b-top { grid-area: top; }
@@ -136,6 +160,7 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .tt { grid-area: tt; align-self: start; }
   .b-foot { grid-area: foot; }
   .board .pick-slot { grid-area: pick; }
+  .board .credit { grid-area: credit; }
   .board .pick { align-items: flex-start; }
   .board .pick-row { justify-content: flex-start; }
   .b-time { font-size: var(--board-f-time-wide); }
@@ -149,4 +174,4 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .tt .rel { font-size: var(--board-f-rel-wide); }
 }
 
-@media (prefers-reduced-motion: reduce) { .fchip:active svg, .chip:active { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fchip:active svg, .chip:active, .tool:active svg { transform: none; } }
