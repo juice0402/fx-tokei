@@ -1,6 +1,6 @@
 // 形「時刻表」（見本B）。計算は time.js、色と大きさは skins.json（skins.js）、ここは描くだけ
 import {
-  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, formatLeft, seasonLabel, diaRange, timetableRows, withIndicators,
+  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, formatLeft, seasonLabel, diaRange, timetableRows, withIndicators, marketHoliday,
 } from './time.js';
 import { SIZE } from './skins.js';
 
@@ -11,7 +11,7 @@ const ld = (p) => `${p.mo}月${p.d}日（${WD[p.wd]}）`;
 const dir = (c) => (c.summer ? '夏時間へ' : '冬時間へ');
 
 // 市場のダイヤ：7時〜翌7時の4本の帯と、いまの赤い線
-function dia(now) {
+function dia(now, hol) {
   const { from, to } = diaRange(now, G['start-hour']);
   const L = G['lane-x0'], R = G['lane-x1'], px = (R - L) / 24, Y = G['lane-y'], H = G['lane-h'];
   let s = '';
@@ -19,7 +19,8 @@ function dia(now) {
     s += `<text x="0" y="${Y[i] + G['lab-dy']}" class="st-lab">${se.name}</text><rect x="${L}" y="${Y[i]}" width="${R - L}" height="${H}" class="st-lane"/>`;
     for (const iv of sessionIntervals(se, from, to)) {
       const a = Math.max(iv.a, from), b = Math.min(iv.b, to);
-      if (b > a) s += `<rect x="${f2(L + ((a - from) / 36e5) * px)}" y="${Y[i]}" width="${f2(((b - a) / 36e5) * px)}" height="${H}" class="f-${se.id}"/>`;
+      const rest = marketHoliday(se.id, iv.a, hol) ? ' hol' : '';
+      if (b > a) s += `<rect x="${f2(L + ((a - from) / 36e5) * px)}" y="${Y[i]}" width="${f2(((b - a) / 36e5) * px)}" height="${H}" class="f-${se.id}${rest}"/>`;
     }
   });
   const [g0, g1] = G['grid-y'];
@@ -38,6 +39,7 @@ function mount(root) {
 <div class="b-now"><div class="b-time" data-k="time"></div><div class="b-next" data-k="next"></div></div>
 <div class="b-dia" data-k="dia"></div>
 <table class="tt"><caption>大事な時間の時刻表（日本時間）</caption><tbody data-k="table"></tbody></table>
+<div class="hol-slot"></div>
 <p class="b-foot" data-k="foot"></p>
 <div class="events-slot"></div>
 <div class="pick-slot"></div>`;
@@ -46,18 +48,18 @@ function mount(root) {
   return (ctx) => render(el, ctx);
 }
 
-function render(el, { now, p, sc, dst, closed, ind }) {
+function render(el, { now, p, sc, dst, closed, ind, hol }) {
   el.date.textContent = `${ld(p)} ${seasonLabel(dst)}`;
   el.time.innerHTML = `${p.h}:${pad(p.mi)}<small>${pad(p.s)}</small>`;
   if (sc.next) {
     el.next.innerHTML = `${closed ? '土日はお休み・次は' : '次は'}<strong>${hm(sc.next.t)} ${sc.next.ev.name}</strong><span class="b-left">${formatLeft(sc.next.t - now)}</span>`;
   }
-  el.dia.innerHTML = dia(now);
+  el.dia.innerHTML = dia(now, hol);
 
   let html = '';
-  for (const r of timetableRows(withIndicators(sc, ind), now)) {
+  for (const r of timetableRows(withIndicators(sc, ind), now, hol)) {
     if (r.type === 'day') { html += `<tr class="day"><td colspan="2">${r.label}</td></tr>`; continue; }
-    const ents = r.items.map((it) => `<span class="ent ${it.ev.kind}${it.ev.imp >= 3 ? ' imp3' : ''}"><b>${it.ev.approx ? 'ごろ' : pad(it.mi)}</b><span>${it.ev.name}${it.gotobi ? '<em>ゴトー日</em>' : ''}</span></span>`).join('');
+    const ents = r.items.map((it) => `<span class="ent ${it.ev.kind}${it.ev.imp >= 3 ? ' imp3' : ''}"><b>${it.ev.approx ? 'ごろ' : pad(it.mi)}</b><span>${it.ev.name}${it.gotobi ? `<em>${it.gotobi}</em>` : ''}${it.off ? `<small class="off">${it.off}</small>` : ''}</span></span>`).join('');
     const rel = r.next ? `<span class="rel">${formatLeft(sc.next.t - now)}</span>` : '';
     html += `<tr class="${r.past ? 'past' : r.next ? 'next' : ''}"><th scope="row">${r.h}</th><td><div class="row">${ents}${rel}</div></td></tr>`;
   }

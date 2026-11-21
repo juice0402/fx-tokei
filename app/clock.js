@@ -1,6 +1,6 @@
 // 形「文字盤」。計算は time.js、色と大きさは skins.json（skins.js）、ここは描くだけ
 import {
-  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, isSessionOpen, isGotobi, formatLeft, seasonLabel, indicatorsIn,
+  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, isSessionOpen, gotobiMark, marketHoliday, formatLeft, seasonLabel, indicatorsIn,
 } from './time.js';
 import { SIZE } from './skins.js';
 
@@ -46,6 +46,7 @@ function mount(root) {
   <div class="side">
     <div class="legend" data-k="legend"></div>
     <ul class="list" data-k="list"></ul>
+    <div class="hol-slot"></div>
     <p class="dst" data-k="dst"></p>
     <div class="events-slot"></div>
     <div class="pick-slot"></div>
@@ -56,7 +57,7 @@ function mount(root) {
   return (ctx) => render(el, ctx);
 }
 
-function render(el, { now, p, sc, dst, closed, ind }) {
+function render(el, { now, p, sc, dst, closed, ind, hol }) {
   el.season.textContent = seasonLabel(dst);
   el.date.textContent = `${p.mo}月${p.d}日（${WD[p.wd]}）`;
   el.time.textContent = `${p.h}:${pad(p.mi)}`;
@@ -74,9 +75,10 @@ function render(el, { now, p, sc, dst, closed, ind }) {
   const open = [];
   SESSIONS.forEach((s, i) => {
     const iv = sessionIntervals(s, now, now + 3 * 864e5)[0];
-    const on = isSessionOpen(s, now);
+    const on = isSessionOpen(s, now, hol);
     if (on) open.push(s.name);
-    if (iv) arcs += `<path d="${arc(RING[i], angle(iv.a), ((iv.b - iv.a) / 36e5) * DEG_H)}" class="arc s-${s.id}${on ? '' : ' off'}"/>`;
+    const rest = iv && marketHoliday(s.id, iv.a, hol) ? ' hol' : '';
+    if (iv) arcs += `<path d="${arc(RING[i], angle(iv.a), ((iv.b - iv.a) / 36e5) * DEG_H)}" class="arc s-${s.id}${on ? '' : ' off'}${rest}"/>`;
     legend += `<span class="${on ? 'on' : ''}"><i class="b-${s.id}"></i>${s.name}</span>`;
   });
   el.arcs.innerHTML = arcs;
@@ -87,11 +89,12 @@ function render(el, { now, p, sc, dst, closed, ind }) {
   const [dotBig, dotMinor] = G['mark-dot'];
   for (const x of sc.list) {
     const m = pt(G['mark-r'], angle(x.t));
-    marks += `<circle cx="${f2(m[0])}" cy="${f2(m[1])}" r="${x.ev.kind === 'minor' ? dotMinor : dotBig}" class="mark"/>`;
+    marks += `<circle cx="${f2(m[0])}" cy="${f2(m[1])}" r="${x.ev.kind === 'minor' ? dotMinor : dotBig}" class="mark${x.off ? ' off' : ''}"/>`;
     const past = x.t <= now, isNext = sc.next === x;
-    const goto = x.ev.id === 'nakane' && isGotobi(x.t) ? '<small>ゴトー日</small>' : '';
-    const cls = [past && 'past', isNext && 'next', x.ev.kind === 'minor' && 'minor'].filter(Boolean).join(' ');
-    list += `<li class="${cls}"><time>${hm(x.t)}</time><span>${x.ev.name}${goto}</span><em>${isNext ? formatLeft(x.t - now) : ''}</em></li>`;
+    const gm = x.ev.id === 'nakane' && !x.off ? gotobiMark(x.t, hol) : null;
+    const goto = gm ? `<small>${gm}</small>` : '';
+    const cls = [past && 'past', isNext && 'next', x.ev.kind === 'minor' && 'minor', x.off && 'off'].filter(Boolean).join(' ');
+    list += `<li class="${cls}"><time>${hm(x.t)}</time><span>${x.ev.name}${goto}</span><em>${x.off || (isNext ? formatLeft(x.t - now) : '')}</em></li>`;
   }
   el.marks.innerHTML = marks;
 

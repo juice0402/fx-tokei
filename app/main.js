@@ -4,6 +4,7 @@ import { SKINS } from './skins.js';
 import { tickContext } from './time.js';
 import { makeTools } from './tools.js';
 import { makeEvents } from './events.js';
+import { makeHolidays } from './holidays.js';
 
 const KEY = 'fx-tokei-skin';
 const IDS = Object.keys(SKINS);
@@ -33,8 +34,9 @@ function pickHtml() {
 
 const tools = makeTools();
 const events = makeEvents();
-// 1秒ごとに形へ渡す分：時間の計算と、しぼり込んだ指標の予定
-const ctxAt = (now) => ({ ...tickContext(now), ind: events.current() });
+const holidays = makeHolidays();
+// 1秒ごとに形へ渡す分：時間の計算（休みをふくむ）と、しぼり込んだ指標の予定
+const ctxAt = (now) => ({ ...tickContext(now, holidays.current()), ind: events.current() });
 const credit = document.createElement('p');
 credit.className = 'credit';
 credit.innerHTML = 'フォント：Shippori Mincho B1・Zen Kaku Gothic New・BIZ UDPGothic（<a href="./fonts/OFL.txt">SIL OFL 1.1</a>）';
@@ -67,6 +69,7 @@ function apply(id, byUser) {
     root.querySelector('.pick-slot').append(pick);
     root.querySelector('.tools-slot').append(tools);
     root.querySelector('.events-slot').append(events.el);
+    root.querySelector('.hol-slot').append(holidays.el);
     root.append(credit);
     render(ctxAt(Date.now()));
   }
@@ -81,7 +84,8 @@ function apply(id, byUser) {
 
 apply(skin, false);
 events.update(Date.now());
-const tick = () => { const now = Date.now(); render(ctxAt(now)); events.update(now); };
+holidays.update(Date.now());
+const tick = () => { const now = Date.now(); render(ctxAt(now)); events.update(now); holidays.update(now); };
 setTimeout(() => { tick(); setInterval(tick, 1000); }, 1000 - (Date.now() % 1000));
 
 // 電波がなくても開けるように（http・https のときだけ。アプリの中で使えないときは何もしない）

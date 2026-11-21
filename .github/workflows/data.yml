@@ -1,6 +1,6 @@
 name: 毎日の更新
 
-# 指標の予定（app/data/events.json）を公式から読み、変わった日だけ main にコミットする（scripts/fetch-events.mjs）
+# 指標の予定（app/data/events.json）と日米英の休み（app/data/holidays.json）を公式から読み、変わった日だけ main にコミットする（scripts/fetch-events.mjs・fetch-holidays.mjs）
 # 読めないページ・会合の日程のちがいなどは mihari の issue（GITHUB_TOKEN だけ・Secrets は使わない）
 on:
   schedule:
@@ -34,9 +34,14 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
         run: node scripts/fetch-events.mjs
+      - name: 休みの予定を読む
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: node scripts/fetch-holidays.mjs
       - name: 変わったときだけコミット
         run: |
-          for f in app/data/events.json state/events-state.json; do
+          for f in app/data/events.json app/data/holidays.json state/events-state.json state/holidays-state.json; do
             if [ -f "$f" ]; then git add "$f"; fi
           done
           if git diff --cached --quiet; then
