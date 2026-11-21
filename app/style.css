@@ -8,6 +8,9 @@
 @font-face { font-family: "BIZ UDPGothic"; src: url("./fonts/bizud-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "Barlow Condensed"; src: url("./fonts/barlow-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Barlow Condensed"; src: url("./fonts/barlow-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("./fonts/cormorant-500i.woff2") format("woff2"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "M PLUS Rounded 1c"; src: url("./fonts/mplusr-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "M PLUS Rounded 1c"; src: url("./fonts/mplusr-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "DotGothic16"; src: url("./fonts/dotgothic-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 :root {
   --f-dial: "Shippori Mincho B1", "Hiragino Mincho ProN", "Noto Serif JP", serif;
@@ -15,6 +18,8 @@
   --f-board: "BIZ UDPGothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
   --f-cond: "Barlow Condensed", "Arial Narrow", "Zen Kaku Gothic New", sans-serif;
   --f-dot: "DotGothic16", "BIZ UDPGothic", monospace;
+  --f-ele: "Cormorant Garamond", "Times New Roman", serif;
+  --f-round: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Zen Kaku Gothic New", sans-serif;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
@@ -38,7 +43,11 @@ body { background: var(--bg); color: var(--ink); }
 .pick button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 3px; }
 .pick button:focus-visible { outline: 2px dashed var(--ink); outline-offset: 3px; }
 .fchip { border: 0; background: none; line-height: 0; border-radius: 50%; }
-.fchip[data-form="board"], .fchip[data-form="dep"], .fchip[data-form="line"] { border-radius: 6px; }
+.fchip[data-form="board"], .fchip[data-form="dep"], .fchip[data-form="line"], .fchip[data-form="world"] { border-radius: 6px; }
+
+/* 針の時計の上の行（アナログの形で同じ部品） */
+.an-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 34px; }
+.an-date { font-size: 12px; color: var(--sub); }
 .fchip svg { height: 30px; width: auto; display: block; }
 .fchip:active svg, .chip:active { transform: scale(.92); }
 .chip { width: 30px; height: 30px; border: 1px solid var(--line); background: linear-gradient(135deg, var(--c1) 50%, var(--c2) 50%); }

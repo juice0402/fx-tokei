@@ -76,6 +76,147 @@ export const TABLE = {
         "face": 0.8
       }
     },
+    "classic": {
+      "name": "アナログ・クラシック",
+      "geo": {
+        "view": 360,
+        "rim-r": 177,
+        "ring-r": 169,
+        "face-r": 158,
+        "tick": [
+          150,
+          156
+        ],
+        "hmark": [
+          -3,
+          -154,
+          6,
+          24
+        ],
+        "hmark12": [
+          [
+            -8,
+            -154,
+            6,
+            26
+          ],
+          [
+            2,
+            -154,
+            6,
+            26
+          ]
+        ],
+        "mark-rx": 1.2,
+        "brand-y": 112,
+        "sub-y": 126,
+        "date-box": [
+          226,
+          170,
+          34,
+          20
+        ],
+        "date-rx": 2,
+        "date-text": [
+          243,
+          185
+        ],
+        "goto-text": [
+          243,
+          204
+        ],
+        "sub-c": [
+          180,
+          250
+        ],
+        "sub-r": 31,
+        "sub-track-r": 24,
+        "sn-y": 244,
+        "sl-y": 261,
+        "mark-r": 163.5,
+        "mark-dot": [
+          3.2,
+          2,
+          4.4
+        ],
+        "hand-h": "M-4.5 18 L-3.4 -80 L0 -90 L3.4 -80 L4.5 18Z",
+        "hand-m": "M-3 22 L-2.2 -126 L0 -136 L2.2 -126 L3 22Z",
+        "hand-s": [
+          30,
+          -142
+        ],
+        "cap-r": [
+          4.2,
+          1.8
+        ],
+        "max": 340,
+        "max-wide": 480
+      },
+      "font": {
+        "brand": 12,
+        "sub": 8.5,
+        "day": 13,
+        "goto": 9.5,
+        "sn": 8,
+        "sl": 14,
+        "date": 12,
+        "next": 13,
+        "next-strong": 16,
+        "next-left": 15,
+        "lamps": 12
+      },
+      "stroke": {
+        "tick": 0.8,
+        "track": 4,
+        "sec": 1.4
+      }
+    },
+    "rose": {
+      "name": "アナログ・ローズ",
+      "geo": {
+        "view": 360,
+        "rim-r": 177,
+        "face-r": 168,
+        "num-r": 146,
+        "num-dy": 12,
+        "dot-at": 148,
+        "dot-r": 4,
+        "arc-r0": 130,
+        "arc-step": 7,
+        "hours": 12,
+        "brand-y": 120,
+        "n-y": 236,
+        "l-y": 258,
+        "hand-h": "M-3.2 14 Q-3.8 -40 0 -80 Q3.8 -40 3.2 14Z",
+        "hand-m": "M-2.3 16 Q-2.7 -60 0 -120 Q2.7 -60 2.3 16Z",
+        "hand-s": [
+          24,
+          -104
+        ],
+        "heart": "M0,-3 C-2,-7 -7,-6 -7,-2 C-7,1 -3,3.5 0,6.5 C3,3.5 7,1 7,-2 C7,-6 2,-7 0,-3Z",
+        "heart-at": -112,
+        "heart-k": 0.95,
+        "cap-r": [
+          5,
+          2
+        ],
+        "max": 340,
+        "max-wide": 480
+      },
+      "font": {
+        "num": 36,
+        "brand": 12,
+        "n": 12,
+        "l": 17,
+        "chip": 12,
+        "date": 12
+      },
+      "stroke": {
+        "arc": 4.5,
+        "sec": 1.2,
+        "dot": 0.7
+      }
+    },
     "board": {
       "name": "時刻表（1時間ごと）",
       "geo": {
@@ -218,6 +359,46 @@ export const TABLE = {
         "now": 2,
         "tile-r": 4,
         "mini-r": 2
+      }
+    },
+    "world": {
+      "name": "世界時計",
+      "geo": {
+        "view": 120,
+        "bezel-r": 58,
+        "face-r": 53,
+        "tick": [
+          41,
+          44,
+          49
+        ],
+        "hand-h": "M-2.6 6 L-2 -28 L0 -32 L2 -28 L2.6 6Z",
+        "hand-m": "M-1.8 7 L-1.3 -42 L0 -46 L1.3 -42 L1.8 7Z",
+        "hand-s": [
+          9,
+          -46
+        ],
+        "cap-r": 2.6,
+        "max": 118,
+        "max-wide": 180
+      },
+      "font": {
+        "brand": 15,
+        "brand-sub": 12,
+        "date": 12,
+        "name": 14,
+        "dig": 20,
+        "st": 11.5,
+        "sea": 10.5,
+        "next": 13,
+        "next-time": 16,
+        "name-wide": 17,
+        "dig-wide": 28
+      },
+      "stroke": {
+        "tick": 1.3,
+        "tick-big": 2.6,
+        "sec": 1.1
       }
     },
     "line": {
@@ -733,6 +914,252 @@ export const TABLE = {
         "s-tky": "#d77400",
         "s-ldn": "#0f8a8a",
         "s-ny": "#2457c5"
+      }
+    },
+    "classic-kon": {
+      "form": "classic",
+      "name": "紺",
+      "scheme": "light",
+      "chip": [
+        "#0c1730",
+        "#e3e7eb"
+      ],
+      "color": {
+        "bg": "#e7e9ec",
+        "ink": "#1b2433",
+        "sub": "#5a6474",
+        "line": "#cfd4da",
+        "acc": "#1d4ea8",
+        "face1": "#25406b",
+        "face2": "#0c1730",
+        "rim1": "#f4f6f8",
+        "rim2": "#9aa3ad",
+        "rim3": "#e3e7eb",
+        "rim4": "#7d8792",
+        "ring": "#0a1222",
+        "tick": "#c9d1dc",
+        "hmark": "#e3e8ee",
+        "dtext": "#e3e8ee",
+        "dsub": "#8ea2c0",
+        "datebg": "#f4f6f8",
+        "dateline": "#6d7784",
+        "dateink": "#141a24",
+        "goto": "#ff7b6e",
+        "subbg": "rgba(0,0,0,.28)",
+        "subline": "rgba(223,228,234,.35)",
+        "track": "rgba(255,255,255,.12)",
+        "prog": "#9ec2ff",
+        "sn": "#c3cddb",
+        "sl": "#ffffff",
+        "hand-h": "#e6eaef",
+        "hand-m": "#f2f4f7",
+        "sec": "#ff5a4a",
+        "cap": "#10151d",
+        "k-fix": "#ff6b5e",
+        "k-open": "#7fb2ff",
+        "k-close": "#9aa3ad",
+        "k-minor": "#7d8fa8",
+        "k-ind": "#f3d98a",
+        "lamp": "#b9c0ca",
+        "lamp-on": "#25a05a",
+        "lamp-glow": "rgba(37,160,90,.18)"
+      }
+    },
+    "classic-shiro": {
+      "form": "classic",
+      "name": "白",
+      "scheme": "light",
+      "chip": [
+        "#f7f7f5",
+        "#1f4fa8"
+      ],
+      "color": {
+        "bg": "#e7e9ec",
+        "ink": "#1b2433",
+        "sub": "#5a6474",
+        "line": "#cfd4da",
+        "acc": "#1f4fa8",
+        "face1": "#f7f7f5",
+        "face2": "#e9ebee",
+        "rim1": "#f4f6f8",
+        "rim2": "#9aa3ad",
+        "rim3": "#e3e7eb",
+        "rim4": "#7d8792",
+        "ring": "#d3d8df",
+        "tick": "#1b2433",
+        "hmark": "#1b2433",
+        "dtext": "#1b2433",
+        "dsub": "#5a6474",
+        "datebg": "#e3e6ea",
+        "dateline": "#9aa3ad",
+        "dateink": "#1b2433",
+        "goto": "#d9433a",
+        "subbg": "rgba(27,36,51,.04)",
+        "subline": "rgba(27,36,51,.25)",
+        "track": "rgba(27,36,51,.1)",
+        "prog": "#1f4fa8",
+        "sn": "#5a6474",
+        "sl": "#1b2433",
+        "hand-h": "#1f4fa8",
+        "hand-m": "#1f4fa8",
+        "sec": "#d9433a",
+        "cap": "#f7f7f5",
+        "k-fix": "#d9433a",
+        "k-open": "#1f4fa8",
+        "k-close": "#7d8792",
+        "k-minor": "#9aa3ae",
+        "k-ind": "#1b2433",
+        "lamp": "#b9c0ca",
+        "lamp-on": "#25a05a",
+        "lamp-glow": "rgba(37,160,90,.18)"
+      }
+    },
+    "rose": {
+      "form": "rose",
+      "name": "ローズ",
+      "scheme": "light",
+      "chip": [
+        "#fffaf8",
+        "#c98b76"
+      ],
+      "color": {
+        "bg": "#f5e8e5",
+        "ink": "#6f4a43",
+        "sub": "#a07a70",
+        "line": "#ecd1ca",
+        "face1": "#fffaf8",
+        "face2": "#f4dcd6",
+        "rim1": "#f6d6c8",
+        "rim2": "#c98b76",
+        "rim3": "#f2cdbd",
+        "rim4": "#b8775f",
+        "num": "#8c5b50",
+        "dot": "#f6e2da",
+        "dotline": "#d9a898",
+        "brand": "#b07f73",
+        "nlabel": "#8c5b50",
+        "left": "#c4706a",
+        "hand": "#b97c6a",
+        "sec": "#d98c82",
+        "heart": "#e2918a",
+        "cap": "#fffaf8",
+        "chip-bg": "#fbf3f1",
+        "chip-ink": "#8c5b50",
+        "chip-line": "#ecd1ca",
+        "chip-next": "#d98c82",
+        "chip-next-ink": "#ffffff",
+        "chip-g": "#ffffff",
+        "chip-g-ink": "#c4706a",
+        "chip-g-line": "#e7a99f",
+        "s-syd": "#9ccbd9",
+        "s-tky": "#f2a7a0",
+        "s-ldn": "#b5d6a7",
+        "s-ny": "#c7b5e5"
+      }
+    },
+    "lavender": {
+      "form": "rose",
+      "name": "ラベンダー",
+      "scheme": "light",
+      "chip": [
+        "#fbf9ff",
+        "#a99ac9"
+      ],
+      "color": {
+        "bg": "#efeaf6",
+        "ink": "#5a4a7d",
+        "sub": "#8a7fa3",
+        "line": "#ddd3ef",
+        "face1": "#fbf9ff",
+        "face2": "#e9e2f7",
+        "rim1": "#e3dcef",
+        "rim2": "#a99ac9",
+        "rim3": "#efe9f8",
+        "rim4": "#8f80b3",
+        "num": "#6d5a96",
+        "dot": "#f1ecfa",
+        "dotline": "#c5b8e0",
+        "brand": "#8f80b3",
+        "nlabel": "#6d5a96",
+        "left": "#8a6cc4",
+        "hand": "#6d5a96",
+        "sec": "#b59ce0",
+        "heart": "#b59ce0",
+        "cap": "#fbf9ff",
+        "chip-bg": "#f8f5fd",
+        "chip-ink": "#6d5a96",
+        "chip-line": "#ddd3ef",
+        "chip-next": "#b59ce0",
+        "chip-next-ink": "#ffffff",
+        "chip-g": "#ffffff",
+        "chip-g-ink": "#8a6cc4",
+        "chip-g-line": "#c9b8ea",
+        "s-syd": "#9ccbd9",
+        "s-tky": "#f2a7a0",
+        "s-ldn": "#b5d6a7",
+        "s-ny": "#c7b5e5"
+      }
+    },
+    "kabe": {
+      "form": "world",
+      "name": "黒の壁",
+      "scheme": "dark",
+      "chip": [
+        "#202326",
+        "#f6f6f3"
+      ],
+      "color": {
+        "bg": "#202326",
+        "grain": "none",
+        "ink": "#eef0f2",
+        "sub": "#9aa2ab",
+        "line": "#3a3f45",
+        "bezel": "#3a3f45",
+        "face": "#f6f6f3",
+        "face-n": "#2c323b",
+        "tick": "#20242a",
+        "tick-n": "#e9edf2",
+        "hand": "#16191d",
+        "hand-n": "#f2f4f7",
+        "sec": "#d9433a",
+        "lamp": "#555c64",
+        "on": "#7fe0a3",
+        "lamp-on": "#3ccf73",
+        "soon": "#ffc35a",
+        "lamp-soon": "#ffb020",
+        "sea": "#8b939c",
+        "first": "#ffd28a"
+      }
+    },
+    "kurumi": {
+      "form": "world",
+      "name": "くるみ材",
+      "scheme": "dark",
+      "chip": [
+        "#4a3426",
+        "#f3ece4"
+      ],
+      "color": {
+        "bg": "#4a3426",
+        "grain": "repeating-linear-gradient(100deg, rgba(255,255,255,.03) 0 2px, transparent 2px 9px, rgba(0,0,0,.06) 9px 11px, transparent 11px 23px)",
+        "ink": "#f3ece4",
+        "sub": "#c9b8a6",
+        "line": "#6a4f3d",
+        "bezel": "#2e2018",
+        "face": "#f6f6f3",
+        "face-n": "#2c323b",
+        "tick": "#20242a",
+        "tick-n": "#e9edf2",
+        "hand": "#16191d",
+        "hand-n": "#f2f4f7",
+        "sec": "#d9433a",
+        "lamp": "#7a6352",
+        "on": "#9be8b6",
+        "lamp-on": "#3ccf73",
+        "soon": "#ffc35a",
+        "lamp-soon": "#ffb020",
+        "sea": "#b9a692",
+        "first": "#ffd28a"
       }
     },
     "flap": {
