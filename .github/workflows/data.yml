@@ -1,0 +1,50 @@
+name: 毎日の更新
+
+# 指標の予定（app/data/events.json）を公式から読み、変わった日だけ main にコミットする（scripts/fetch-events.mjs）
+# 読めないページ・会合の日程のちがいなどは mihari の issue（GITHUB_TOKEN だけ・Secrets は使わない）
+on:
+  schedule:
+    - cron: '47 20 * * *' # 日本時間 5:47
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'true のときは issue を作らない（作るはずの題をログに出す）'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 指標の予定を読む
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: node scripts/fetch-events.mjs
+      - name: 変わったときだけコミット
+        run: |
+          for f in app/data/events.json state/events-state.json; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "変わりなし"
+            exit 0
+          fi
+          npm test > /dev/null # 形やフォントがこわれた events.json は入れない
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "data: 指標の予定を更新"
+          git push -q

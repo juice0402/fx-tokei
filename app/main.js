@@ -3,6 +3,7 @@ import { FORMS } from './forms.js';
 import { SKINS } from './skins.js';
 import { tickContext } from './time.js';
 import { makeTools } from './tools.js';
+import { makeEvents } from './events.js';
 
 const KEY = 'fx-tokei-skin';
 const IDS = Object.keys(SKINS);
@@ -31,6 +32,9 @@ function pickHtml() {
 }
 
 const tools = makeTools();
+const events = makeEvents();
+// 1秒ごとに形へ渡す分：時間の計算と、しぼり込んだ指標の予定
+const ctxAt = (now) => ({ ...tickContext(now), ind: events.current() });
 const credit = document.createElement('p');
 credit.className = 'credit';
 credit.innerHTML = 'フォント：Shippori Mincho B1・Zen Kaku Gothic New・BIZ UDPGothic（<a href="./fonts/OFL.txt">SIL OFL 1.1</a>）';
@@ -62,8 +66,9 @@ function apply(id, byUser) {
     render = f.mount(root);
     root.querySelector('.pick-slot').append(pick);
     root.querySelector('.tools-slot').append(tools);
+    root.querySelector('.events-slot').append(events.el);
     root.append(credit);
-    render(tickContext(Date.now()));
+    render(ctxAt(Date.now()));
   }
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.content = SKINS[id].color.bg;
@@ -75,7 +80,8 @@ function apply(id, byUser) {
 }
 
 apply(skin, false);
-const tick = () => render(tickContext(Date.now()));
+events.update(Date.now());
+const tick = () => { const now = Date.now(); render(ctxAt(now)); events.update(now); };
 setTimeout(() => { tick(); setInterval(tick, 1000); }, 1000 - (Date.now() % 1000));
 
 // 電波がなくても開けるように（http・https のときだけ。アプリの中で使えないときは何もしない）

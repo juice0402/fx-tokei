@@ -6,7 +6,9 @@ import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // ためない物：sw.js 自身と、画面が読みこまない元の表・文字の一覧
-const SKIP = new Set(['sw.js', 'skins.json', 'fonts/chars.txt']);
+const SKIP = new Set(['sw.js', 'skins.json', 'fonts/chars.txt', 'data/meetings.json']);
+// 毎朝 Actions が書きかえるデータ：先にためるが、版（中身の印）には入れない（データだけ変わった日に sw.js を作り直さなくてよい）
+export const isData = (f) => f.startsWith('data/');
 
 export function appFiles(dir = 'app') {
   const out = [];
@@ -27,7 +29,10 @@ export function appFiles(dir = 'app') {
 export function generate(dir = 'app') {
   const files = appFiles(dir);
   const h = createHash('sha256');
-  for (const f of files) h.update(f).update('\0').update(readFileSync(join(dir, f))).update('\0');
+  for (const f of files) {
+    h.update(f).update('\0');
+    if (!isData(f)) h.update(readFileSync(join(dir, f))).update('\0');
+  }
   const version = h.digest('hex').slice(0, 12);
   return `// scripts/gen-sw.mjs が作る。手で直さない（npm run sw）
 // 範囲は ./（＝/fx-tokei/）。app の中のファイルを先にためて、電波がなくても開ける。

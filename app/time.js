@@ -240,3 +240,103 @@ export function formatLeft(ms) {
   if (m >= 10) return 'あと' + m + '分';
   return 'あと' + m + '分' + pad(sec) + '秒';
 }
+
+// ===== 指標の予定（app/data/events.json）=====
+// events.json の行：{ id, name, imp, t（UTC の ISO）, src, approx, tentative, sub? }
+// ここでは ms に直した行（t が数）を使う。読みこみと形の点検は normalizeEvents
+export const IMP_CHOICES = [
+  { v: 3, label: '★3だけ' },
+  { v: 2, label: '★2以上' },
+  { v: 1, label: '全部' },
+];
+export const IMP_DEFAULT = 2;
+export const STALE_DAYS = 14;
+
+// 読んだ JSON を画面で使う形に。形がおかしいときは null（画面は止めずに「読めませんでした」）
+export function normalizeEvents(json) {
+  if (!json || typeof json !== 'object' || !Array.isArray(json.events)) return null;
+  const events = [];
+  for (const e of json.events) {
+    if (!e || typeof e.name !== 'string' || typeof e.id !== 'string' || /[<>&"]/.test(e.name)) continue;
+    const t = Date.parse(e.t);
+    if (!Number.isFinite(t)) continue;
+    const imp = [1, 2, 3].includes(e.imp) ? e.imp : 1;
+    const sub = e.sub && typeof e.sub.name === 'string' && !/[<>&"]/.test(e.sub.name) && Number.isFinite(Date.parse(e.sub.t))
+      ? { name: e.sub.name, t: Date.parse(e.sub.t) } : null;
+    events.push({ id: e.id, name: e.name, imp, t, approx: !!e.approx, tentative: !!e.tentative, sub });
+  }
+  events.sort((a, b) => a.t - b.t || b.imp - a.imp);
+  const sources = Array.isArray(json.sources)
+    ? json.sources.filter((s) => s && typeof s.name === 'string' && /^https:\/\//.test(s.url || '')) : [];
+  return { updated: typeof json.updated === 'string' ? json.updated : '', sources, events };
+}
+
+export const filterEvents = (events, minImp) => events.filter((e) => e.imp >= minImp);
+
+// いまより後で、いちばん近い指標
+export function nextIndicator(events, now, minImp) {
+  return events.find((e) => e.imp >= minImp && e.t > now) || null;
+}
+
+// 日本時間のきょうから days 日先まで（きょうの終わった分もふくむ）を、日ごとにまとめる
+export function indicatorDays(events, now, minImp, days = 7) {
+  const p = parts(now, TZ.tky);
+  const from = zonedTime(p.y, p.mo, p.d, 0, 0, TZ.tky);
+  const e = addDays(p, days + 1);
+  const to = zonedTime(e.y, e.mo, e.d, 0, 0, TZ.tky);
+  const out = [];
+  for (const ev of events) {
+    if (ev.imp < minImp || ev.t < from || ev.t >= to) continue;
+    const q = parts(ev.t, TZ.tky);
+    const label = `${q.mo}/${q.d}（${WD[q.wd]}）`;
+    let day = out[out.length - 1];
+    if (!day || day.label !== label) { day = { label, items: [] }; out.push(day); }
+    day.items.push(ev);
+  }
+  return out;
+}
+
+// from〜to に入る指標（形の中に混ぜる分）
+export function indicatorsIn(events, from, to, minImp) {
+  return events.filter((e) => e.imp >= minImp && e.t >= from && e.t < to);
+}
+
+// 時刻の書き方：日銀の結果のように時刻が決まっていないものは「お昼ごろ」
+export function indicatorTime(ev) {
+  if (!ev.approx) return hm(ev.t);
+  const h = parts(ev.t, TZ.tky).h;
+  return h >= 11 && h <= 13 ? 'お昼ごろ' : hm(ev.t) + 'ごろ';
+}
+
+export function indicatorLeft(ev, now) {
+  if (!ev.approx) return formatLeft(ev.t - now);
+  const s = Math.max(0, Math.floor((ev.t - now) / 1000));
+  const h = Math.floor(s / 3600);
+  if (h >= 24) return 'あと' + Math.floor(h / 24) + '日' + (h % 24) + '時間ごろ';
+  if (h > 0) return 'あと' + h + '時間ごろ';
+  return 'もうすぐ';
+}
+
+export const stars = (imp) => '★'.repeat(imp);
+
+// 予定が古いか：updated（日本時間「2026-11-21 05:47」）から STALE_DAYS 日より前
+export function staleInfo(updated, now) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(updated || '');
+  if (!m) return { stale: true, label: '' };
+  const t = zonedTime(+m[1], +m[2], +m[3], 0, 0, TZ.tky);
+  return { stale: now - t > STALE_DAYS * 864e5, label: `${+m[2]}月${+m[3]}日` };
+}
+
+// 時刻表に指標を混ぜた並び（その日の範囲＝前の NY クローズから次の NY クローズまで）。会見は小さな行
+export function withIndicators(sc, ind) {
+  if (!ind || !ind.length || !sc.list.length) return sc;
+  const to = sc.list[sc.list.length - 1].t;
+  const add = [];
+  for (const e of ind) {
+    const ev = { id: e.id, name: e.name + (e.tentative ? '（予定）' : ''), kind: 'ind', imp: e.imp, approx: e.approx };
+    if (e.t > sc.start && e.t <= to) add.push({ ev, t: e.t });
+    if (e.sub && e.sub.t > sc.start && e.sub.t <= to) add.push({ ev: { id: e.id + '-sub', name: e.sub.name, kind: 'minor' }, t: e.sub.t });
+  }
+  if (!add.length) return sc;
+  return { ...sc, list: [...sc.list, ...add].sort((x, y) => x.t - y.t) };
+}

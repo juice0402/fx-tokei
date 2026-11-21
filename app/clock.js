@@ -1,6 +1,6 @@
 // 形「文字盤」。計算は time.js、色と大きさは skins.json（skins.js）、ここは描くだけ
 import {
-  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, isSessionOpen, isGotobi, formatLeft, seasonLabel,
+  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, isSessionOpen, isGotobi, formatLeft, seasonLabel, indicatorsIn,
 } from './time.js';
 import { SIZE } from './skins.js';
 
@@ -31,7 +31,7 @@ function faceSvg() {
     const p = pt(G['num-r'], h * DEG_H);
     s += `<text x="${p[0].toFixed(1)}" y="${(p[1] + G['num-dy']).toFixed(1)}" class="num">${h}</text>`;
   }
-  s += `<g data-k="arcs"></g><g data-k="marks"></g><g data-k="ptr"></g><circle data-k="sec" r="${G['sec-dot']}" class="sec" cx="${C}" cy="${C - G['sec-r']}"/>`;
+  s += `<g data-k="arcs"></g><g data-k="marks"></g><g data-k="ind"></g><g data-k="ptr"></g><circle data-k="sec" r="${G['sec-dot']}" class="sec" cx="${C}" cy="${C - G['sec-r']}"/>`;
   s += `<text data-k="date" x="${C}" y="${G['date-y']}" class="date"></text><text data-k="time" x="${C}" y="${G['time-y']}" class="time"></text>`;
   s += `<text data-k="nextName" x="${C}" y="${G['next-name-y']}" class="next-name"></text><text data-k="nextLeft" x="${C}" y="${G['next-left-y']}" class="next-left"></text>`;
   s += `<text data-k="state" x="${C}" y="${G['state-y']}" class="state"></text>`;
@@ -47,15 +47,16 @@ function mount(root) {
     <div class="legend" data-k="legend"></div>
     <ul class="list" data-k="list"></ul>
     <p class="dst" data-k="dst"></p>
+    <div class="events-slot"></div>
     <div class="pick-slot"></div>
   </div>
 </div>`;
   const q = (k) => root.querySelector(`[data-k="${k}"]`);
-  const el = Object.fromEntries(['season', 'arcs', 'marks', 'ptr', 'sec', 'date', 'time', 'nextName', 'nextLeft', 'state', 'legend', 'list', 'dst'].map((k) => [k, q(k)]));
+  const el = Object.fromEntries(['season', 'arcs', 'marks', 'ptr', 'sec', 'date', 'time', 'nextName', 'nextLeft', 'state', 'legend', 'list', 'dst', 'ind'].map((k) => [k, q(k)]));
   return (ctx) => render(el, ctx);
 }
 
-function render(el, { now, p, sc, dst, closed }) {
+function render(el, { now, p, sc, dst, closed, ind }) {
   el.season.textContent = seasonLabel(dst);
   el.date.textContent = `${p.mo}月${p.d}日（${WD[p.wd]}）`;
   el.time.textContent = `${p.h}:${pad(p.mi)}`;
@@ -93,6 +94,15 @@ function render(el, { now, p, sc, dst, closed }) {
     list += `<li class="${cls}"><time>${hm(x.t)}</time><span>${x.ev.name}${goto}</span><em>${isNext ? formatLeft(x.t - now) : ''}</em></li>`;
   }
   el.marks.innerHTML = marks;
+
+  // 指標：輪の上に小さなひし形（★3は少し大きく）。その日の範囲（前の NY クローズから24時間）だけ
+  let im = '';
+  const [indBig, indSmall] = G['ind-dot'];
+  for (const e of indicatorsIn(ind || [], sc.start, sc.start + 864e5, 1)) {
+    const [x, y] = pt(G['mark-r'], angle(e.t)), r = e.imp >= 3 ? indBig : indSmall;
+    im += `<path d="M${f2(x)} ${f2(y - r)}L${f2(x + r)} ${f2(y)}L${f2(x)} ${f2(y + r)}L${f2(x - r)} ${f2(y)}Z" class="ind${e.imp >= 3 ? ' ind3' : ''}"/>`;
+  }
+  el.ind.innerHTML = im;
   el.list.innerHTML = list;
 
   const same = dst.us.summer === dst.uk.summer;

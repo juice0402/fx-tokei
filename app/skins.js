@@ -34,6 +34,10 @@ export const TABLE = {
           2.8,
           1.8
         ],
+        "ind-dot": [
+          3.8,
+          2.8
+        ],
         "date-y": 128,
         "time-y": 170,
         "next-name-y": 197,

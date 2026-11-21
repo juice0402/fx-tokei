@@ -55,6 +55,31 @@ body { background: var(--bg); color: var(--ink); }
 .credit { margin: 14px 0 0; font-family: var(--f-ui); font-size: 10.5px; color: var(--sub); text-align: center; }
 .credit a { color: inherit; }
 
+/* ===== 指標の予定（どの形も同じ部品・app/events.js） ===== */
+.ev { font-family: var(--f-ui); font-size: 13px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; }
+.ev-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+.ev h2 { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .08em; }
+.ev-imp { font: inherit; font-size: 16px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px dotted var(--sub); padding: 0 2px; }
+.ev-imp option { color: initial; }
+.ev-next { margin: 0; line-height: 1.5; }
+.ev-next b { margin: 0 6px; }
+.ev-next span { white-space: nowrap; font-weight: 700; }
+.ev-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.ev-day { font-size: 11.5px; color: var(--sub); padding-top: 4px; }
+.ev-row { display: grid; grid-template-columns: 4.6em 1fr auto; gap: 8px; align-items: baseline; padding: 2px 0; }
+.ev-row time { font-variant-numeric: tabular-nums; text-align: right; }
+.ev-row small { display: block; font-size: 11.5px; color: var(--sub); }
+.ev-row i { font-style: normal; font-size: 10.5px; color: var(--sub); letter-spacing: -.05em; }
+.ev-row.imp3 span { font-weight: 700; }
+.ev-row.imp1 { color: var(--sub); }
+.ev-row.past { opacity: .4; }
+.ev-none, .ev-note { font-size: 11.5px; color: var(--sub); margin: 0; }
+.ev-note:empty { display: none; }
+.ev-src { font-size: 11.5px; color: var(--sub); }
+.ev-src summary { cursor: pointer; }
+.ev-src ul { margin: 4px 0 0; padding-left: 1.2em; line-height: 1.6; }
+.ev-src a { color: inherit; }
+
 /* ===== 文字盤 ===== */
 .dial { font-family: var(--f-dial); display: flex; flex-direction: column; gap: 10px; }
 .top { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: var(--dial-f-top); color: var(--sub); }
@@ -79,6 +104,9 @@ body { background: var(--bg); color: var(--ink); }
 .arc.off { opacity: .42; }
 .s-syd { stroke: var(--s-syd); } .s-tky { stroke: var(--s-tky); } .s-ldn { stroke: var(--s-ldn); } .s-ny { stroke: var(--s-ny); }
 .mark, .ptr-dot, .sec { fill: var(--metal); }
+.ind { fill: var(--face); stroke: var(--ink); stroke-width: var(--dial-s-tick); }
+.ind3 { stroke: var(--metal); stroke-width: var(--dial-s-tick-big); }
+.dial .ev-next span, .dial .ev-row.next { color: var(--metal); }
 .ptr { stroke: var(--metal); stroke-width: var(--dial-s-ptr); stroke-linecap: round; }
 .date { fill: var(--sub); font-size: var(--dial-f-date); text-anchor: middle; }
 .time { fill: var(--ink); font-size: var(--dial-f-time); font-weight: 500; text-anchor: middle; letter-spacing: .02em; }
@@ -136,6 +164,10 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
 .ent.fix b, .ent.fix span { color: var(--red); }
 .ent.minor b { font-size: var(--board-f-min-minor); color: var(--sub); }
 .ent.minor span { font-size: var(--board-f-name-minor); color: var(--sub); }
+.ent.ind b { font-size: var(--board-f-min-minor); }
+.ent.ind span { font-weight: 700; }
+.ent.ind.imp3 span { text-decoration: underline; text-underline-offset: 3px; }
+.board .ev-next span, .board .ev-row.next { color: var(--red); }
 .ent em { font-style: normal; font-size: var(--board-f-goto); font-weight: 700; color: var(--red); border: 1px solid var(--red); padding: 0 3px; margin-left: 4px; }
 .tt .rel { margin-left: auto; font-size: var(--board-f-rel); font-weight: 700; color: var(--red); }
 .tt tr.past { opacity: .35; }
@@ -150,8 +182,8 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .board {
     display: grid; justify-content: center; align-content: start;
     grid-template-columns: minmax(0, 560px) minmax(0, 460px);
-    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "pick tt" "down down" "credit credit";
-    grid-template-rows: auto 1fr auto auto auto auto 1fr auto;
+    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "ev tt" "pick tt" "down down" "credit credit";
+    grid-template-rows: auto 1fr auto auto auto auto auto 1fr auto;
     column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
   }
   .b-top { grid-area: top; }
@@ -159,6 +191,7 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .b-dia { grid-area: dia; }
   .tt { grid-area: tt; align-self: start; }
   .b-foot { grid-area: foot; }
+  .board .events-slot { grid-area: ev; }
   .board .pick-slot { grid-area: pick; }
   .board .credit { grid-area: credit; }
   .board .pick { align-items: flex-start; }
