@@ -1,0 +1,79 @@
+/* 形「時刻表（1時間ごと）」の見た目。色と大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+/* ===== 時刻表（見本B） ===== */
+.board { font-family: var(--f-board); display: flex; flex-direction: column; gap: 8px; }
+.board .credit { margin-top: auto; padding-top: 6px; }
+.b-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom: calc(var(--board-s-rule) * 1px) solid var(--ink); padding-bottom: 6px; flex-wrap: wrap; }
+.b-brand { margin: 0; font-weight: 700; font-size: var(--board-f-brand); letter-spacing: .06em; }
+.b-brand small { font-weight: 400; font-size: var(--board-f-brand-sub); letter-spacing: 0; margin-left: 6px; color: var(--sub); }
+.b-date { font-size: var(--board-f-date); color: var(--sub); }
+.b-now { display: flex; align-items: flex-end; gap: 6px 16px; flex-wrap: wrap; padding-top: 2px; }
+.b-time { font-size: var(--board-f-time); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+.b-time small { font-size: var(--board-f-time-sec); font-weight: 700; margin-left: 2px; color: var(--sub); }
+.b-next { font-size: var(--board-f-next); line-height: 1.4; padding-bottom: 4px; min-width: 0; }
+.b-next strong { display: block; font-size: var(--board-f-next-strong); }
+.b-next .b-left { color: var(--red); font-weight: 700; font-size: var(--board-f-left); }
+.b-dia svg { display: block; width: 100%; height: auto; }
+.st-lane { fill: var(--lane); }
+.st-lab, .st-hr { fill: var(--sub); font-family: var(--f-board); font-size: var(--board-f-dia); }
+.st-hr { text-anchor: middle; }
+.st-grid { stroke: var(--line); stroke-width: var(--board-s-grid); }
+.st-now { stroke: var(--red); stroke-width: var(--board-s-now); }
+.st-nowtip { fill: var(--red); }
+rect.hol { opacity: .3; }
+.f-syd { fill: var(--s-syd); } .f-tky { fill: var(--s-tky); } .f-ldn { fill: var(--s-ldn); } .f-ny { fill: var(--s-ny); }
+table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-s-rule) * 1px) solid var(--ink); }
+.tt caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tt th { width: 2.3em; background: var(--hour); color: var(--hour-ink); font-size: var(--board-f-hour); font-weight: 700; text-align: center; border-bottom: 1px solid var(--line); padding: 2px 0; font-variant-numeric: tabular-nums; }
+.tt td { border-bottom: 1px solid var(--line); padding: 5px 8px; }
+.tt .row { display: flex; align-items: baseline; gap: 4px 14px; flex-wrap: wrap; }
+.ent { display: inline-flex; align-items: baseline; gap: 6px; }
+.ent b { font-size: var(--board-f-min); font-variant-numeric: tabular-nums; }
+.ent span { font-size: var(--board-f-name); }
+.ent.fix b, .ent.fix span { color: var(--red); }
+.ent.minor b { font-size: var(--board-f-min-minor); color: var(--sub); }
+.ent.minor span { font-size: var(--board-f-name-minor); color: var(--sub); }
+.ent small.off { margin-left: 6px; font-size: var(--board-f-goto); color: var(--sub); }
+.ent.ind b { font-size: var(--board-f-min-minor); }
+.ent.ind span { font-weight: 700; }
+.ent.ind.imp3 span { text-decoration: underline; text-underline-offset: 3px; }
+.board .ev-next span, .board .ev-row.next { color: var(--red); }
+.ent em { font-style: normal; font-size: var(--board-f-goto); font-weight: 700; color: var(--red); border: 1px solid var(--red); padding: 0 3px; margin-left: 4px; }
+.tt .rel { margin-left: auto; font-size: var(--board-f-rel); font-weight: 700; color: var(--red); }
+.tt tr.past { opacity: .35; }
+.tt tr.next th { background: var(--ink); color: var(--bg); }
+.tt tr.day td { font-size: var(--board-f-day); color: var(--sub); padding: 2px 8px; text-align: center; letter-spacing: .3em; }
+.b-foot { font-size: var(--board-f-foot); color: var(--sub); line-height: 1.65; margin: 0; }
+.b-foot b { color: var(--red); }
+.b-foot .gap { color: var(--red); font-weight: 700; }
+
+/* パソコンでは2列：左に時刻とダイヤ、右に時刻表 */
+@media (min-width: 900px) {
+  .board {
+    display: grid; justify-content: center; align-content: start;
+    grid-template-columns: minmax(0, 560px) minmax(0, 460px);
+    grid-template-areas: "top top" "up up" "now tt" "dia tt" "dots tt" "foot tt" "hol tt" "ev tt" "pick tt" "down down" "credit credit";
+    grid-template-rows: auto 1fr auto auto auto auto auto auto auto 1fr auto;
+    column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
+  }
+  .b-top { grid-area: top; }
+  .b-now { grid-area: now; }
+  .b-dia { grid-area: dia; }
+  .tt { grid-area: tt; align-self: start; }
+  .b-foot { grid-area: foot; }
+  .board .events-slot { grid-area: ev; }
+  .board .hol-slot { grid-area: hol; }
+  .board .pick-slot { grid-area: pick; }
+  .board .dots-slot { grid-area: dots; }
+  .board .credit { grid-area: credit; }
+  .board .pick { align-items: flex-start; }
+  .board .pick-row { justify-content: flex-start; }
+  .b-time { font-size: var(--board-f-time-wide); }
+  .b-time small { font-size: var(--board-f-time-sec-wide); }
+  .tt th { font-size: var(--board-f-hour-wide); padding: 4px 0; }
+  .tt td { padding: 8px 10px; }
+  .ent b { font-size: var(--board-f-min-wide); }
+  .ent span { font-size: var(--board-f-name-wide); }
+  .ent.minor b { font-size: var(--board-f-min-minor-wide); }
+  .ent.minor span { font-size: var(--board-f-name-minor-wide); }
+  .tt .rel { font-size: var(--board-f-rel-wide); }
+}

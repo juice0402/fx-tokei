@@ -1,8 +1,6 @@
-// 形「時刻表」（見本B）。計算は time.js、色と大きさは skins.json（skins.js）、ここは描くだけ
-import {
-  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, formatLeft, seasonLabel, diaRange, timetableRows, withIndicators, marketHoliday,
-} from './time.js';
-import { SIZE } from './skins.js';
+// 形「時刻表（1時間ごと）」（見本B）。計算は time.js（ctx）、色と大きさは skins.json（skins.js）、ここは描くだけ
+import { WD, pad, hm, formatLeft, seasonLabel, diaBands } from '../time.js';
+import { SIZE } from '../skins.js';
 
 const G = SIZE.board.geo;
 const f2 = (n) => n.toFixed(2);
@@ -12,15 +10,13 @@ const dir = (c) => (c.summer ? '夏時間へ' : '冬時間へ');
 
 // 市場のダイヤ：7時〜翌7時の4本の帯と、いまの赤い線
 function dia(now, hol) {
-  const { from, to } = diaRange(now, G['start-hour']);
+  const d = diaBands(now, G['start-hour'], hol);
   const L = G['lane-x0'], R = G['lane-x1'], px = (R - L) / 24, Y = G['lane-y'], H = G['lane-h'];
   let s = '';
-  SESSIONS.forEach((se, i) => {
+  d.bands.forEach((se, i) => {
     s += `<text x="0" y="${Y[i] + G['lab-dy']}" class="st-lab">${se.name}</text><rect x="${L}" y="${Y[i]}" width="${R - L}" height="${H}" class="st-lane"/>`;
-    for (const iv of sessionIntervals(se, from, to)) {
-      const a = Math.max(iv.a, from), b = Math.min(iv.b, to);
-      const rest = marketHoliday(se.id, iv.a, hol) ? ' hol' : '';
-      if (b > a) s += `<rect x="${f2(L + ((a - from) / 36e5) * px)}" y="${Y[i]}" width="${f2(((b - a) / 36e5) * px)}" height="${H}" class="f-${se.id}${rest}"/>`;
+    for (const g of se.segs) {
+      s += `<rect x="${f2(L + g.a * px)}" y="${Y[i]}" width="${f2((g.b - g.a) * px)}" height="${H}" class="f-${se.id}${g.rest ? ' hol' : ''}"/>`;
     }
   });
   const [g0, g1] = G['grid-y'];
@@ -28,27 +24,28 @@ function dia(now, hol) {
     const x = L + off * px;
     s += `<line x1="${f2(x)}" y1="${g0}" x2="${f2(x)}" y2="${g1}" class="st-grid"/><text x="${f2(x)}" y="${G['hour-y']}" class="st-hr">${(G['start-hour'] + off) % 24}</text>`;
   }
-  const nx = L + ((now - from) / 36e5) * px, [n0, n1] = G['now-y'], w = G['now-tip-w'] / 2;
+  const nx = L + d.now * px, [n0, n1] = G['now-y'], w = G['now-tip-w'] / 2;
   s += `<line x1="${f2(nx)}" y1="${n0}" x2="${f2(nx)}" y2="${n1}" class="st-now"/><path d="M${f2(nx - w)} 0H${f2(nx + w)}L${f2(nx)} ${G['now-tip-h']}Z" class="st-nowtip"/>`;
   return `<svg viewBox="0 0 ${G['dia-w']} ${G['dia-h']}" role="img" aria-label="きょうの市場の時間帯（${G['start-hour']}時から翌${G['start-hour']}時）。赤い線がいま">${s}</svg>`;
 }
 
-function mount(root) {
+function build(root) {
   root.className = 'page board';
   root.innerHTML = `<header class="b-top"><h1 class="b-brand">FX時計<small>ドル円の時刻表</small></h1><div class="top-r"><span class="b-date" data-k="date"></span><span class="tools-slot"></span></div></header>
-<div class="b-now"><div class="b-time" data-k="time"></div><div class="b-next" data-k="next"></div></div>
-<div class="b-dia" data-k="dia"></div>
+<div class="b-now swipe"><div class="b-time" data-k="time"></div><div class="b-next" data-k="next"></div></div>
+<div class="b-dia swipe" data-k="dia"></div>
+<div class="dots-slot"></div>
 <table class="tt"><caption>大事な時間の時刻表（日本時間）</caption><tbody data-k="table"></tbody></table>
 <div class="hol-slot"></div>
 <p class="b-foot" data-k="foot"></p>
 <div class="events-slot"></div>
 <div class="pick-slot"></div>`;
   const q = (k) => root.querySelector(`[data-k="${k}"]`);
-  const el = Object.fromEntries(['date', 'time', 'next', 'dia', 'table', 'foot'].map((k) => [k, q(k)]));
-  return (ctx) => render(el, ctx);
+  root._k = Object.fromEntries(['date', 'time', 'next', 'dia', 'table', 'foot'].map((k) => [k, q(k)]));
 }
 
-function render(el, { now, p, sc, dst, closed, ind, hol }) {
+function render(root, { now, p, sc, dst, closed, rows, hol }) {
+  const el = root._k;
   el.date.textContent = `${ld(p)} ${seasonLabel(dst)}`;
   el.time.innerHTML = `${p.h}:${pad(p.mi)}<small>${pad(p.s)}</small>`;
   if (sc.next) {
@@ -57,7 +54,7 @@ function render(el, { now, p, sc, dst, closed, ind, hol }) {
   el.dia.innerHTML = dia(now, hol);
 
   let html = '';
-  for (const r of timetableRows(withIndicators(sc, ind), now, hol)) {
+  for (const r of rows) {
     if (r.type === 'day') { html += `<tr class="day"><td colspan="2">${r.label}</td></tr>`; continue; }
     const ents = r.items.map((it) => `<span class="ent ${it.ev.kind}${it.ev.imp >= 3 ? ' imp3' : ''}"><b>${it.ev.approx ? 'ごろ' : pad(it.mi)}</b><span>${it.ev.name}${it.gotobi ? `<em>${it.gotobi}</em>` : ''}${it.off ? `<small class="off">${it.off}</small>` : ''}</span></span>`).join('');
     const rel = r.next ? `<span class="rel">${formatLeft(sc.next.t - now)}</span>` : '';
@@ -77,4 +74,4 @@ function icon([c1, c2]) {
   return `<svg viewBox="0 0 40 30" aria-hidden="true"><rect x=".5" y=".5" width="39" height="29" rx="5" fill="${c1}" stroke="${c2}" stroke-opacity=".5"/><rect x="5" y="6" width="7" height="18" fill="${c2}" opacity=".85"/><path d="M15 9.5h20M15 15h14M15 20.5h18" stroke="${c2}" stroke-width="2"/></svg>`;
 }
 
-export default { id: 'board', name: '時刻表', chip: 'rect', icon, mount };
+export default { id: 'board', name: '時刻表（1時間ごと）', group: 'business', chip: 'rect', icon, build, render };

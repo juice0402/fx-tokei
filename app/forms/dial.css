@@ -1,0 +1,64 @@
+/* 形「24時間の輪」の見た目。色と大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+/* ===== 文字盤 ===== */
+.dial { font-family: var(--f-dial); display: flex; flex-direction: column; gap: 10px; }
+.top { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: var(--dial-f-top); color: var(--sub); }
+.top h1 { margin: 0; font-size: var(--dial-f-brand); letter-spacing: .12em; color: var(--ink); }
+
+.body { display: grid; gap: 12px; flex: 1; align-content: start; }
+.dial-svg { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto; }
+.side { display: flex; flex-direction: column; gap: 10px; min-width: 0; width: 100%; max-width: 420px; margin: 0 auto; }
+@media (min-width: 900px) {
+  .body { grid-template-columns: minmax(0, 560px) 360px; justify-content: center; align-content: center; gap: 48px; }
+  .dial-svg { max-width: 560px; }
+}
+
+.dial-svg .panel { fill: var(--panel); }
+.dial-svg .screw { fill: var(--screw); stroke: var(--line); stroke-width: 1; }
+.dial-svg .screw-slot { stroke: var(--bg); stroke-width: 1.8; stroke-linecap: round; }
+.dial-svg .grain { fill: none; stroke: var(--grain); }
+.dial-svg .hair { stroke-width: .35; }
+.dial-svg .fiber { stroke-linecap: round; }
+.list time { font-family: var(--font); }
+.bezel { fill: var(--bg2); stroke: var(--line); stroke-width: var(--dial-s-bezel); }
+.face { fill: var(--face); stroke: var(--line); stroke-width: var(--dial-s-face); }
+.track { fill: none; stroke: var(--track); stroke-width: var(--dial-s-ring); }
+.tk { stroke: var(--bink); stroke-width: calc(var(--dial-s-tick) * var(--tkw)); opacity: var(--tko); }
+.tk-big { stroke-width: calc(var(--dial-s-tick-big) * var(--tkw)); opacity: 1; }
+.tk-q { stroke-width: calc(var(--dial-s-tick-q) * var(--tkw)); opacity: var(--tkq); }
+.num { fill: var(--bink); font-family: var(--font); font-size: var(--numf); font-weight: var(--numw); text-anchor: middle; }
+.num.long { font-size: calc(var(--numf) * .81); letter-spacing: -.04em; }
+.arc { fill: none; stroke-width: var(--dial-s-ring); }
+.arc.off { opacity: var(--off); }
+.arc.hol { opacity: .16; }
+.mark.off { opacity: .3; }
+.list li.off em { color: var(--sub); }
+.s-syd { stroke: var(--s-syd); } .s-tky { stroke: var(--s-tky); } .s-ldn { stroke: var(--s-ldn); } .s-ny { stroke: var(--s-ny); }
+.mark, .sec { fill: var(--metal); }
+.ptr-dot { fill: var(--ptr); }
+.ind { fill: var(--face); stroke: var(--ink); stroke-width: var(--dial-s-tick); }
+.ind3 { stroke: var(--metal); stroke-width: var(--dial-s-tick-big); }
+.dial .ev-next span, .dial .ev-row.next { color: var(--metal); }
+.ptr { stroke: var(--ptr); stroke-width: var(--dial-s-ptr); stroke-linecap: round; }
+.date { fill: var(--sub); font-size: var(--dial-f-date); text-anchor: middle; }
+.time { fill: var(--ink); font-family: var(--font); font-size: var(--tsz); font-weight: var(--timew); text-anchor: middle; letter-spacing: .02em; }
+.next-name { fill: var(--ink); font-size: var(--dial-f-next-name); text-anchor: middle; font-family: var(--f-ui); }
+.next-left { fill: var(--metal); font-size: var(--dial-f-next-left); font-weight: 700; text-anchor: middle; font-family: var(--f-ui); }
+.state { fill: var(--sub); font-size: var(--dial-f-state); text-anchor: middle; font-family: var(--f-ui); }
+
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font-size: var(--dial-f-legend); color: var(--sub); font-family: var(--f-ui); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 14px; height: 4px; display: inline-block; }
+.legend .on { color: var(--ink); font-weight: 700; }
+.b-syd { background: var(--s-syd); } .b-tky { background: var(--s-tky); } .b-ldn { background: var(--s-ldn); } .b-ny { background: var(--s-ny); }
+
+.list { list-style: none; margin: 0; padding: 0 4px; display: grid; gap: 2px; font-size: var(--dial-f-list); }
+.list li { display: grid; grid-template-columns: 3.3em 1fr auto; gap: 8px; align-items: baseline; padding: 4px 0; border-bottom: 1px solid var(--track); }
+.list time { font-variant-numeric: tabular-nums; text-align: right; }
+.list li.minor { font-size: var(--dial-f-list-minor); color: var(--sub); }
+.list li.past { opacity: .4; }
+.list li.next { color: var(--metal); font-weight: 700; }
+.list em { font-style: normal; font-family: var(--f-ui); font-size: var(--dial-f-list-left); }
+.list small { margin-left: 6px; font-size: var(--dial-f-goto); color: var(--metal); font-family: var(--f-ui); font-weight: 700; }
+
+.dst { font-family: var(--f-ui); font-size: var(--dial-f-dst); color: var(--sub); text-align: center; line-height: 1.6; margin: 0; }
+.dst b { color: var(--ink); font-weight: 700; }

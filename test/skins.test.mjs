@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { generate, readTable } from '../scripts/gen-skins.mjs';
 import { SKINS, SIZE } from '../app/skins.js';
-import { FORMS } from '../app/forms.js';
+import { FORMS } from '../app/forms/index.js';
 
 const table = readTable();
 
@@ -13,10 +13,10 @@ test('skins.css と skins.js が skins.json と合っている（npm run skins �
   assert.equal(readFileSync('app/skins.js', 'utf8'), js);
 });
 
-test('6つの色が形ごとに3つずつ・はじめは紺と真鍮', () => {
+test('24時間の輪は9色・時刻表は3色・はじめは紺と真鍮', () => {
   const ids = Object.keys(SKINS);
   assert.equal(ids[0], 'kon');
-  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'dial'), ['kon', 'hakuji', 'midori']);
+  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'dial'), ['kon', 'hakuji', 'midori', 'sakura', 'washi', 'yakou', 'neon', 'koku', 'sus']);
   assert.deepEqual(ids.filter((id) => SKINS[id].form === 'board'), ['eki', 'yako', 'wakakusa']);
 });
 
@@ -39,16 +39,17 @@ test('形の一覧と表がそろっている', () => {
   assert.deepEqual(FORMS.map((f) => f.id), Object.keys(SIZE));
   for (const f of FORMS) {
     assert.equal(f.name, SIZE[f.id].name);
-    assert.equal(typeof f.mount, 'function');
+    assert.equal(typeof f.build, 'function');
+    assert.equal(typeof f.render, 'function');
     assert.match(f.icon(['#000', '#fff']), /^<svg /);
   }
 });
 
 test('形と色のファイルに色や半径の数字を直接書かない', () => {
-  for (const file of ['app/clock.js', 'app/board.js', 'app/style.css']) {
+  for (const file of ['app/forms/dial.js', 'app/forms/board.js', 'app/forms/index.js', 'app/forms/dial.css', 'app/forms/board.css', 'app/style.css']) {
     const src = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
     assert.doesNotMatch(src, /#[0-9a-fA-F]{3,8}\b|rgba?\(/, file);
   }
-  const js = readFileSync('app/clock.js', 'utf8');
-  for (const r of SIZE.dial.geo['ring-r']) assert.doesNotMatch(js, new RegExp(`\\b${r}\\b`), `clock.js の ${r}`);
+  const js = readFileSync('app/forms/dial.js', 'utf8');
+  for (const r of SIZE.dial.geo['ring-r']) assert.doesNotMatch(js, new RegExp(`\\b${r}\\b`), `dial.js の ${r}`);
 });
