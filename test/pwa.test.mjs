@@ -47,10 +47,10 @@ test('画面の文字が全部フォントに入っている（漢字を足し�
 });
 
 test('外のドメインから読みこまない・リンクは相対パス', () => {
-  for (const f of ['app/index.html', 'app/style.css', 'app/main.js', 'app/forms/index.js', 'app/forms/dial.js', 'app/forms/board.js', 'app/forms/dial.css', 'app/forms/board.css', 'app/tools.js', 'app/events.js', 'app/holidays.js', 'app/sw.js', 'app/skins.css']) {
+  for (const f of ['app/index.html', 'app/style.css', 'app/main.js', 'app/forms/index.js', 'app/forms/dial.js', 'app/forms/board.js', 'app/forms/dep.js', 'app/forms/line.js', 'app/forms/dial.css', 'app/forms/board.css', 'app/forms/dep.css', 'app/forms/line.css', 'app/tools.js', 'app/events.js', 'app/holidays.js', 'app/sw.js', 'app/skins.css']) {
     assert.doesNotMatch(read(f), /https?:\/\/|\/\/fonts|src="\/|href="\//, f);
   }
   const fonts = readdirSync('app/fonts').filter((n) => n.endsWith('.woff2'));
-  assert.equal(fonts.length, 8);
+  assert.equal(fonts.length, 9);
   assert.match(read('app/fonts/OFL.txt'), /SIL OPEN FONT LICENSE Version 1\.1/);
 });

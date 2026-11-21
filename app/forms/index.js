@@ -4,6 +4,8 @@
 import { SKINS } from '../skins.js';
 import dial from './dial.js';
 import board from './board.js';
+import dep from './dep.js';
+import line from './line.js';
 
 export const GROUPS = [
   { id: 'analog', name: 'アナログ' },
@@ -18,5 +20,7 @@ const colorsOf = (id) => Object.entries(SKINS).filter(([, s]) => s.form === id).
 export const FORMS = [
   dial,
   board,
+  dep,
+  line,
 ].map((f) => ({ ...f, colors: colorsOf(f.id) }))
   .sort((a, b) => GROUPS.findIndex((g) => g.id === a.group) - GROUPS.findIndex((g) => g.id === b.group));

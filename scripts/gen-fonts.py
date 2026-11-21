@@ -29,8 +29,9 @@ FONTS = [
     ('bizudpgothic', 'BIZUDPGothic-Bold.ttf', 'bizud-700.woff2'),
     ('barlowcondensed', 'BarlowCondensed-Medium.ttf', 'barlow-500.woff2'),
     ('barlowcondensed', 'BarlowCondensed-SemiBold.ttf', 'barlow-600.woff2'),
+    ('dotgothic16', 'DotGothic16-Regular.ttf', 'dotgothic-400.woff2'),
 ]
-LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed')]
+LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed'), ('dotgothic16', 'DotGothic16')]
 
 # いつも入れる文字：英数と記号・ひらがな・カタカナ・日本語の記号・全角の英数
 RANGES = [

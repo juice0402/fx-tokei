@@ -469,3 +469,36 @@ export function diaBands(now, startHour, hol = null) {
   }));
   return { bands, now: h(now) };
 }
+
+// 横に流れる帯：いまの before 時間前から after 時間後まで（日本時間）の、市場の時間帯と大事な時間＋指標の並び
+// 位置はどれも from からの時間（0〜before+after）。並びは schedule と withIndicators を日ごとにつないだもの（休みの off・ゴトー日もそのまま）
+export function bandWindow(now, before, after, hol = null, ind = []) {
+  const from = now - before * 36e5, to = now + after * 36e5;
+  const h = (t) => (t - from) / 36e5;
+  const bands = SESSIONS.map((s) => ({
+    id: s.id,
+    name: s.name,
+    segs: sessionIntervals(s, from, to)
+      .filter((iv) => isWeekday(parts(iv.a, s.tz).wd)) // 窓が週末をまたぐので、土日の回は出さない
+      .map((iv) => ({ a: h(Math.max(iv.a, from)), b: h(Math.min(iv.b, to)), rest: !!marketHoliday(s.id, iv.a, hol), past: iv.b <= now }))
+      .filter((x) => x.b > x.a),
+  }));
+  const seen = new Set();
+  const items = [];
+  let at = from;
+  for (let n = 0; n < 8; n++) {
+    const day = withIndicators(schedule(at, hol), ind);
+    if (!day.list.length) break;
+    for (const x of day.list) {
+      const k = x.ev.id + '@' + x.t;
+      if (x.t >= from && x.t <= to && !seen.has(k)) { seen.add(k); items.push({ ...x, at: h(x.t) }); }
+    }
+    const last = day.list[day.list.length - 1].t;
+    if (last >= to || last <= at) break;
+    at = last;
+  }
+  items.sort((x, y) => x.t - y.t);
+  const hours = [];
+  for (let t = Math.ceil(from / 36e5) * 36e5; t <= to; t += 36e5) hours.push({ at: h(t), h: parts(t, TZ.tky).h });
+  return { from, to, now: before, span: before + after, bands, items, hours };
+}
