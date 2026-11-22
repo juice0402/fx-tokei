@@ -29,8 +29,14 @@ FONTS = [
     ('bizudpgothic', 'BIZUDPGothic-Bold.ttf', 'bizud-700.woff2'),
     ('barlowcondensed', 'BarlowCondensed-Medium.ttf', 'barlow-500.woff2'),
     ('barlowcondensed', 'BarlowCondensed-SemiBold.ttf', 'barlow-600.woff2'),
+    ('mplusrounded1c', 'MPLUSRounded1c-Regular.ttf', 'mplus-400.woff2'),
+    ('mplusrounded1c', 'MPLUSRounded1c-Bold.ttf', 'mplus-700.woff2'),
+    ('kleeone', 'KleeOne-Regular.ttf', 'klee-400.woff2'),
+    ('kleeone', 'KleeOne-SemiBold.ttf', 'klee-600.woff2'),
 ]
-LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed')]
+LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed'), ('mplusrounded1c', 'M PLUS Rounded 1c'), ('kleeone', 'Klee One')]
+# google/fonts に OFL.txt がない字体：METADATA.pb の著作権の行と、ほかの字体の OFL の本文（同じ SIL OFL 1.1）から作る
+NO_OFL = {'mplusrounded1c': 'Copyright 2016 The Rounded M+ Project Authors.'}
 
 # いつも入れる文字：英数と記号・ひらがな・カタカナ・日本語の記号・全角の英数
 RANGES = [
@@ -82,8 +88,10 @@ def main():
         subset.save_font(font, str(OUT / out), opts)
         print(f'{out}: {os.path.getsize(OUT / out) // 1024}KB')
     parts = []
+    body = fetch('kleeone/OFL.txt').read_text(encoding='utf-8').split('\n', 1)[1]
     for folder, title in LICENSES:
-        parts.append(f'===== {title} =====\n\n' + fetch(f'{folder}/OFL.txt').read_text(encoding='utf-8').strip() + '\n')
+        text = NO_OFL[folder] + '\n' + body if folder in NO_OFL else fetch(f'{folder}/OFL.txt').read_text(encoding='utf-8')
+        parts.append(f'===== {title} =====\n\n' + text.strip() + '\n')
     (OUT / 'OFL.txt').write_text('\n'.join(parts), encoding='utf-8')
     print(f'chars.txt: {len(text)} 文字')
 

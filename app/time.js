@@ -305,6 +305,17 @@ export function formatLeft(ms) {
   return 'あと' + m + '分' + pad(sec) + '秒';
 }
 
+// 残りを 時:分:秒（大きな数字・ロック画面）と 時:分（タイルの輪）で
+const secs = (ms) => Math.max(0, Math.floor(ms / 1000));
+export function formatHms(ms) {
+  const s = secs(ms);
+  return Math.floor(s / 3600) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60);
+}
+export function formatHmShort(ms) {
+  const s = secs(ms);
+  return Math.floor(s / 3600) + ':' + pad(Math.floor((s % 3600) / 60));
+}
+
 // ===== 指標の予定（app/data/events.json）=====
 // events.json の行：{ id, name, imp, t（UTC の ISO）, src, approx, tentative, sub? }
 // ここでは ms に直した行（t が数）を使う。読みこみと形の点検は normalizeEvents
@@ -392,17 +403,43 @@ export function staleInfo(updated, now) {
 }
 
 // 時刻表に指標を混ぜた並び（その日の範囲＝前の NY クローズから次の NY クローズまで）。会見は小さな行
+// 指標の行を大事な時間の並びと同じ形にする（lo より後・hi まで）
+function indicatorItems(ind, lo, hi) {
+  const add = [];
+  for (const e of ind || []) {
+    const ev = { id: e.id, name: e.name + (e.tentative ? '（予定）' : ''), kind: 'ind', imp: e.imp, approx: e.approx };
+    if (e.t > lo && e.t <= hi) add.push({ ev, t: e.t });
+    if (e.sub && e.sub.t > lo && e.sub.t <= hi) add.push({ ev: { id: e.id + '-sub', name: e.sub.name, kind: 'minor' }, t: e.sub.t });
+  }
+  return add;
+}
+
 export function withIndicators(sc, ind) {
   if (!ind || !ind.length || !sc.list.length) return sc;
-  const to = sc.list[sc.list.length - 1].t;
-  const add = [];
-  for (const e of ind) {
-    const ev = { id: e.id, name: e.name + (e.tentative ? '（予定）' : ''), kind: 'ind', imp: e.imp, approx: e.approx };
-    if (e.t > sc.start && e.t <= to) add.push({ ev, t: e.t });
-    if (e.sub && e.sub.t > sc.start && e.sub.t <= to) add.push({ ev: { id: e.id + '-sub', name: e.sub.name, kind: 'minor' }, t: e.sub.t });
-  }
+  const add = indicatorItems(ind, sc.start, sc.list[sc.list.length - 1].t);
   if (!add.length) return sc;
   return { ...sc, list: [...sc.list, ...add].sort((x, y) => x.t - y.t) };
+}
+
+// from〜to の大事な時間と指標（日をまたいでもよい）。大きな数字の一日の線・手帳の行に使う
+export function eventsBetween(from, to, hol = null, ind = []) {
+  const out = [];
+  for (const ev of EVENTS) {
+    let t = nextOccurrence(ev, from - 1);
+    for (let g = 0; t && t <= to && g < 12; g++) {
+      const off = eventHoliday(ev, t, hol);
+      out.push({ ev, t, off, gotobi: ev.id === 'nakane' && !off ? gotobiMark(t, hol) : null });
+      t = nextOccurrence(ev, t);
+    }
+  }
+  return [...out, ...indicatorItems(ind, from - 1, to)].sort((x, y) => x.t - y.t);
+}
+
+// いまの時の前 before 時間から、後ろ after 時間まで（日本時間のちょうどの時から。手帳のページ）
+export function hourWindow(now, before, after) {
+  const p = parts(now, TZ.tky);
+  const from = zonedTime(p.y, p.mo, p.d, p.h, 0, TZ.tky) - before * 36e5;
+  return { from, to: from + (before + after) * 36e5 };
 }
 
 // ===== 休みの予定（app/data/holidays.json）=====
@@ -459,13 +496,17 @@ export function holidayNotes(now, hol, failed, days = 7) {
 // 時刻表の「市場のダイヤ」：日本時間の startHour 時から24時間のうち、市場ごとの時間帯（0〜24 の時間の位置）と、いまの位置
 export function diaBands(now, startHour, hol = null) {
   const { from, to } = diaRange(now, startHour);
+  return { bands: bandsIn(from, to, hol), now: (now - from) / 36e5 };
+}
+
+// from〜to の4つの市場の帯（from からの時間で a・b。休みの帯は rest）
+export function bandsIn(from, to, hol = null) {
   const h = (t) => (t - from) / 36e5;
-  const bands = SESSIONS.map((s) => ({
+  return SESSIONS.map((s) => ({
     id: s.id,
     name: s.name,
     segs: sessionIntervals(s, from, to)
       .map((iv) => ({ a: h(Math.max(iv.a, from)), b: h(Math.min(iv.b, to)), rest: !!marketHoliday(s.id, iv.a, hol) }))
       .filter((x) => x.b > x.a),
   }));
-  return { bands, now: h(now) };
 }

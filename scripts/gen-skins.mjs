@@ -12,6 +12,8 @@ export function generate(table) {
   for (const [form, f] of Object.entries(table.forms)) {
     for (const [k, v] of Object.entries(f.font)) root.push(`--${form}-f-${k}:${v}px`);
     for (const [k, v] of Object.entries(f.stroke)) root.push(`--${form}-s-${k}:${v}`);
+    // 部品の大きさと角の丸み（px）。はじめの2つの形にはない
+    for (const [k, v] of Object.entries(f.size || {})) root.push(`--${form}-z-${k}:${v}px`);
   }
   css.push(`:root{${root.join(';')}}`);
   const ids = Object.keys(table.skins);

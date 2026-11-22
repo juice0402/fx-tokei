@@ -8,11 +8,18 @@
 @font-face { font-family: "BIZ UDPGothic"; src: url("./fonts/bizud-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "Barlow Condensed"; src: url("./fonts/barlow-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 @font-face { font-family: "Barlow Condensed"; src: url("./fonts/barlow-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
+@font-face { font-family: "M PLUS Rounded 1c"; src: url("./fonts/mplus-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "M PLUS Rounded 1c"; src: url("./fonts/mplus-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Klee One"; src: url("./fonts/klee-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Klee One"; src: url("./fonts/klee-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
 :root {
   --f-dial: "Shippori Mincho B1", "Hiragino Mincho ProN", "Noto Serif JP", serif;
   --f-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
   --f-board: "BIZ UDPGothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
   --f-cond: "Barlow Condensed", "Arial Narrow", "Zen Kaku Gothic New", sans-serif;
+  --f-round: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Zen Kaku Gothic New", sans-serif;
+  --f-hand: "Klee One", "Hiragino Sans", "Zen Kaku Gothic New", sans-serif;
+  --f-sys: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Zen Kaku Gothic New", sans-serif;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
@@ -36,7 +43,7 @@ body { background: var(--bg); color: var(--ink); }
 .pick button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 3px; }
 .pick button:focus-visible { outline: 2px dashed var(--ink); outline-offset: 3px; }
 .fchip { border: 0; background: none; line-height: 0; border-radius: 50%; }
-.fchip[data-form="board"] { border-radius: 6px; }
+.fchip[data-form="board"], .fchip[data-form="big"], .fchip[data-form="planner"], .fchip[data-form="widget"] { border-radius: 6px; }
 .fchip svg { height: 30px; width: auto; display: block; }
 .fchip:active svg, .chip:active { transform: scale(.92); }
 .chip { width: 30px; height: 30px; border: 1px solid var(--line); background: linear-gradient(135deg, var(--c1) 50%, var(--c2) 50%); }

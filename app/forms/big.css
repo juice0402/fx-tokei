@@ -1,0 +1,36 @@
+/* 形「大きな数字」の見た目。色と大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+.big { font-family: var(--f-ui); display: flex; flex-direction: column; gap: 10px; }
+.bg-head { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: var(--big-f-top); color: var(--sub); }
+.bg-head h1 { margin: 0; font-size: var(--big-f-brand); letter-spacing: .12em; color: var(--ink); }
+.bg-main { display: grid; gap: 14px; align-content: start; }
+.bg-clock { display: flex; flex-direction: column; gap: 14px; padding: 18px 4px 4px; min-width: 0; }
+.bg-next { margin: 0; font-size: var(--big-f-next); color: var(--sub); }
+.bg-next b { color: var(--ink); font-size: var(--big-f-next-strong); margin-inline: 4px; }
+.bg-num { font-family: var(--f-cond); font-weight: 600; font-size: clamp(var(--big-f-num), 26vw, var(--big-f-num-wide)); line-height: .9; letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bg-bar { height: calc(var(--big-s-bar) * 1px); background: var(--line); position: relative; }
+.bg-bar i { position: absolute; inset: 0 auto 0 0; background: var(--bar); }
+.bg-day svg { display: block; width: 100%; height: auto; }
+.bg-axis { stroke: var(--axis); stroke-width: var(--big-s-axis); }
+.bg-hr { fill: var(--sub); font-family: var(--f-cond); font-size: var(--big-f-hour); }
+.bg-mk { stroke: var(--ink); stroke-width: var(--big-s-mark); }
+.bg-mk.fix { stroke: var(--red); }
+.bg-mk.off { opacity: .3; }
+.bg-ind { fill: var(--bg); stroke: var(--ink); stroke-width: var(--big-s-axis); }
+.bg-ind.imp3 { fill: var(--ink); }
+.bg-now { fill: var(--ink); }
+.bg-foot { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: var(--big-f-foot); color: var(--sub); }
+.bg-foot b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.bg-foot .on { color: var(--on); font-weight: 700; }
+.bg-foot .g { color: var(--red); font-weight: 700; }
+.bg-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.big .ev-next span, .big .ev-row.next { color: var(--red); }
+
+/* パソコンでは2列：左に大きな数字、右に予定と切りかえ */
+@media (min-width: 900px) {
+  .bg-main { grid-template-columns: minmax(0, 640px) 360px; grid-template-areas: "clock side" "dots side"; justify-content: center; align-content: center; column-gap: 56px; flex: 1; }
+  .bg-clock { grid-area: clock; align-self: end; }
+  .big .dots-slot { grid-area: dots; align-self: start; }
+  .bg-side { grid-area: side; align-self: center; }
+  .bg-num { font-size: var(--big-f-num-wide); }
+  .bg-foot { font-size: var(--big-f-foot-wide); }
+}

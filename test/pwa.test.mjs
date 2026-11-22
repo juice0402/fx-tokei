@@ -51,6 +51,6 @@ test('外のドメインから読みこまない・リンクは相対パス', ()
     assert.doesNotMatch(read(f), /https?:\/\/|\/\/fonts|src="\/|href="\//, f);
   }
   const fonts = readdirSync('app/fonts').filter((n) => n.endsWith('.woff2'));
-  assert.equal(fonts.length, 8);
+  assert.equal(fonts.length, 12);
   assert.match(read('app/fonts/OFL.txt'), /SIL OPEN FONT LICENSE Version 1\.1/);
 });
