@@ -6,10 +6,13 @@
 @font-face { font-family: "Zen Kaku Gothic New"; src: url("./fonts/zenkaku-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "BIZ UDPGothic"; src: url("./fonts/bizud-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "BIZ UDPGothic"; src: url("./fonts/bizud-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("./fonts/barlow-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("./fonts/barlow-600.woff2") format("woff2"); font-weight: 600 700; font-display: swap; }
 :root {
   --f-dial: "Shippori Mincho B1", "Hiragino Mincho ProN", "Noto Serif JP", serif;
   --f-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
   --f-board: "BIZ UDPGothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --f-cond: "Barlow Condensed", "Arial Narrow", "Zen Kaku Gothic New", sans-serif;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; }
@@ -25,8 +28,10 @@ body { background: var(--bg); color: var(--ink); }
 
 /* ===== 形・色をえらぶ所（どの形も同じ部品） ===== */
 .pick { display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: var(--f-ui); padding-top: 4px; }
-.pick-row { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
-.pick-colors { display: flex; align-items: center; gap: 12px; }
+.pick-row { display: flex; align-items: center; justify-content: center; gap: 8px 22px; flex-wrap: wrap; }
+.pick-group { display: flex; align-items: center; gap: 12px; }
+.pick-gname { font-size: 11.5px; color: var(--sub); }
+.pick-colors { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; max-width: 360px; }
 .pick button { padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .pick button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 3px; }
 .pick button:focus-visible { outline: 2px dashed var(--ink); outline-offset: 3px; }
@@ -84,137 +89,20 @@ body { background: var(--bg); color: var(--ink); }
 .hol .ev-row { grid-template-columns: 6.4em 1fr auto; }
 .hol .ev-row time { text-align: left; }
 
-/* ===== 文字盤 ===== */
-.dial { font-family: var(--f-dial); display: flex; flex-direction: column; gap: 10px; }
-.top { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: var(--dial-f-top); color: var(--sub); }
-.top h1 { margin: 0; font-size: var(--dial-f-brand); letter-spacing: .12em; color: var(--ink); }
 
-.body { display: grid; gap: 12px; flex: 1; align-content: start; }
-.dial-svg { display: block; width: 100%; max-width: 420px; height: auto; margin: 0 auto; }
-.side { display: flex; flex-direction: column; gap: 10px; min-width: 0; width: 100%; max-width: 420px; margin: 0 auto; }
-@media (min-width: 900px) {
-  .body { grid-template-columns: minmax(0, 560px) 360px; justify-content: center; align-content: center; gap: 48px; }
-  .dial-svg { max-width: 560px; }
+/* ===== 形の切りかえ：時計の部分のスワイプと、下の点（どの形も同じ部品） ===== */
+.swipe { touch-action: pan-y; }
+.dots { display: flex; justify-content: center; gap: 2px; }
+.dots button { width: 22px; height: 22px; padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; -webkit-tap-highlight-color: transparent; }
+.dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--sub); opacity: .45; }
+.dots button[aria-current="true"]::before { background: var(--ink); opacity: 1; }
+.dots button:focus-visible { outline: 2px dashed var(--ink); }
+.enter-next .swipe { animation: from-right .18s ease-out; }
+.enter-prev .swipe { animation: from-left .18s ease-out; }
+@keyframes from-right { from { transform: translateX(28px); opacity: .4; } }
+@keyframes from-left { from { transform: translateX(-28px); opacity: .4; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fchip:active svg, .chip:active, .tool:active svg { transform: none; }
+  .enter-next .swipe, .enter-prev .swipe { animation: none; }
 }
-
-.bezel { fill: var(--bg2); stroke: var(--line); stroke-width: var(--dial-s-bezel); }
-.face { fill: var(--face); stroke: var(--line); stroke-width: var(--dial-s-face); }
-.track { fill: none; stroke: var(--track); stroke-width: var(--dial-s-ring); }
-.tk { stroke: var(--ink); stroke-width: var(--dial-s-tick); opacity: .7; }
-.tk-big { stroke-width: var(--dial-s-tick-big); opacity: 1; }
-.tk-q { stroke-width: var(--dial-s-tick-q); opacity: .32; }
-.num { fill: var(--ink); font-family: var(--f-dial); font-size: var(--dial-f-num); font-weight: 500; text-anchor: middle; }
-.arc { fill: none; stroke-width: var(--dial-s-ring); }
-.arc.off { opacity: .42; }
-.arc.hol { opacity: .16; }
-.mark.off { opacity: .3; }
-.list li.off em { color: var(--sub); }
-.s-syd { stroke: var(--s-syd); } .s-tky { stroke: var(--s-tky); } .s-ldn { stroke: var(--s-ldn); } .s-ny { stroke: var(--s-ny); }
-.mark, .ptr-dot, .sec { fill: var(--metal); }
-.ind { fill: var(--face); stroke: var(--ink); stroke-width: var(--dial-s-tick); }
-.ind3 { stroke: var(--metal); stroke-width: var(--dial-s-tick-big); }
-.dial .ev-next span, .dial .ev-row.next { color: var(--metal); }
-.ptr { stroke: var(--metal); stroke-width: var(--dial-s-ptr); stroke-linecap: round; }
-.date { fill: var(--sub); font-size: var(--dial-f-date); text-anchor: middle; }
-.time { fill: var(--ink); font-size: var(--dial-f-time); font-weight: 500; text-anchor: middle; letter-spacing: .02em; }
-.next-name { fill: var(--ink); font-size: var(--dial-f-next-name); text-anchor: middle; font-family: var(--f-ui); }
-.next-left { fill: var(--metal); font-size: var(--dial-f-next-left); font-weight: 700; text-anchor: middle; font-family: var(--f-ui); }
-.state { fill: var(--sub); font-size: var(--dial-f-state); text-anchor: middle; font-family: var(--f-ui); }
-
-.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; font-size: var(--dial-f-legend); color: var(--sub); font-family: var(--f-ui); }
-.legend span { display: inline-flex; align-items: center; gap: 5px; }
-.legend i { width: 14px; height: 4px; display: inline-block; }
-.legend .on { color: var(--ink); font-weight: 700; }
-.b-syd { background: var(--s-syd); } .b-tky { background: var(--s-tky); } .b-ldn { background: var(--s-ldn); } .b-ny { background: var(--s-ny); }
-
-.list { list-style: none; margin: 0; padding: 0 4px; display: grid; gap: 2px; font-size: var(--dial-f-list); }
-.list li { display: grid; grid-template-columns: 3.3em 1fr auto; gap: 8px; align-items: baseline; padding: 4px 0; border-bottom: 1px solid var(--track); }
-.list time { font-variant-numeric: tabular-nums; text-align: right; }
-.list li.minor { font-size: var(--dial-f-list-minor); color: var(--sub); }
-.list li.past { opacity: .4; }
-.list li.next { color: var(--metal); font-weight: 700; }
-.list em { font-style: normal; font-family: var(--f-ui); font-size: var(--dial-f-list-left); }
-.list small { margin-left: 6px; font-size: var(--dial-f-goto); color: var(--metal); font-family: var(--f-ui); font-weight: 700; }
-
-.dst { font-family: var(--f-ui); font-size: var(--dial-f-dst); color: var(--sub); text-align: center; line-height: 1.6; margin: 0; }
-.dst b { color: var(--ink); font-weight: 700; }
-
-/* ===== 時刻表（見本B） ===== */
-.board { font-family: var(--f-board); display: flex; flex-direction: column; gap: 8px; }
-.board .credit { margin-top: auto; padding-top: 6px; }
-.b-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom: calc(var(--board-s-rule) * 1px) solid var(--ink); padding-bottom: 6px; flex-wrap: wrap; }
-.b-brand { margin: 0; font-weight: 700; font-size: var(--board-f-brand); letter-spacing: .06em; }
-.b-brand small { font-weight: 400; font-size: var(--board-f-brand-sub); letter-spacing: 0; margin-left: 6px; color: var(--sub); }
-.b-date { font-size: var(--board-f-date); color: var(--sub); }
-.b-now { display: flex; align-items: flex-end; gap: 6px 16px; flex-wrap: wrap; padding-top: 2px; }
-.b-time { font-size: var(--board-f-time); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: .01em; }
-.b-time small { font-size: var(--board-f-time-sec); font-weight: 700; margin-left: 2px; color: var(--sub); }
-.b-next { font-size: var(--board-f-next); line-height: 1.4; padding-bottom: 4px; min-width: 0; }
-.b-next strong { display: block; font-size: var(--board-f-next-strong); }
-.b-next .b-left { color: var(--red); font-weight: 700; font-size: var(--board-f-left); }
-.b-dia svg { display: block; width: 100%; height: auto; }
-.st-lane { fill: var(--lane); }
-.st-lab, .st-hr { fill: var(--sub); font-family: var(--f-board); font-size: var(--board-f-dia); }
-.st-hr { text-anchor: middle; }
-.st-grid { stroke: var(--line); stroke-width: var(--board-s-grid); }
-.st-now { stroke: var(--red); stroke-width: var(--board-s-now); }
-.st-nowtip { fill: var(--red); }
-rect.hol { opacity: .3; }
-.f-syd { fill: var(--s-syd); } .f-tky { fill: var(--s-tky); } .f-ldn { fill: var(--s-ldn); } .f-ny { fill: var(--s-ny); }
-table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-s-rule) * 1px) solid var(--ink); }
-.tt caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tt th { width: 2.3em; background: var(--hour); color: var(--hour-ink); font-size: var(--board-f-hour); font-weight: 700; text-align: center; border-bottom: 1px solid var(--line); padding: 2px 0; font-variant-numeric: tabular-nums; }
-.tt td { border-bottom: 1px solid var(--line); padding: 5px 8px; }
-.tt .row { display: flex; align-items: baseline; gap: 4px 14px; flex-wrap: wrap; }
-.ent { display: inline-flex; align-items: baseline; gap: 6px; }
-.ent b { font-size: var(--board-f-min); font-variant-numeric: tabular-nums; }
-.ent span { font-size: var(--board-f-name); }
-.ent.fix b, .ent.fix span { color: var(--red); }
-.ent.minor b { font-size: var(--board-f-min-minor); color: var(--sub); }
-.ent.minor span { font-size: var(--board-f-name-minor); color: var(--sub); }
-.ent small.off { margin-left: 6px; font-size: var(--board-f-goto); color: var(--sub); }
-.ent.ind b { font-size: var(--board-f-min-minor); }
-.ent.ind span { font-weight: 700; }
-.ent.ind.imp3 span { text-decoration: underline; text-underline-offset: 3px; }
-.board .ev-next span, .board .ev-row.next { color: var(--red); }
-.ent em { font-style: normal; font-size: var(--board-f-goto); font-weight: 700; color: var(--red); border: 1px solid var(--red); padding: 0 3px; margin-left: 4px; }
-.tt .rel { margin-left: auto; font-size: var(--board-f-rel); font-weight: 700; color: var(--red); }
-.tt tr.past { opacity: .35; }
-.tt tr.next th { background: var(--ink); color: var(--bg); }
-.tt tr.day td { font-size: var(--board-f-day); color: var(--sub); padding: 2px 8px; text-align: center; letter-spacing: .3em; }
-.b-foot { font-size: var(--board-f-foot); color: var(--sub); line-height: 1.65; margin: 0; }
-.b-foot b { color: var(--red); }
-.b-foot .gap { color: var(--red); font-weight: 700; }
-
-/* パソコンでは2列：左に時刻とダイヤ、右に時刻表 */
-@media (min-width: 900px) {
-  .board {
-    display: grid; justify-content: center; align-content: start;
-    grid-template-columns: minmax(0, 560px) minmax(0, 460px);
-    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "hol tt" "ev tt" "pick tt" "down down" "credit credit";
-    grid-template-rows: auto 1fr auto auto auto auto auto auto 1fr auto;
-    column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
-  }
-  .b-top { grid-area: top; }
-  .b-now { grid-area: now; }
-  .b-dia { grid-area: dia; }
-  .tt { grid-area: tt; align-self: start; }
-  .b-foot { grid-area: foot; }
-  .board .events-slot { grid-area: ev; }
-  .board .hol-slot { grid-area: hol; }
-  .board .pick-slot { grid-area: pick; }
-  .board .credit { grid-area: credit; }
-  .board .pick { align-items: flex-start; }
-  .board .pick-row { justify-content: flex-start; }
-  .b-time { font-size: var(--board-f-time-wide); }
-  .b-time small { font-size: var(--board-f-time-sec-wide); }
-  .tt th { font-size: var(--board-f-hour-wide); padding: 4px 0; }
-  .tt td { padding: 8px 10px; }
-  .ent b { font-size: var(--board-f-min-wide); }
-  .ent span { font-size: var(--board-f-name-wide); }
-  .ent.minor b { font-size: var(--board-f-min-minor-wide); }
-  .ent.minor span { font-size: var(--board-f-name-minor-wide); }
-  .tt .rel { font-size: var(--board-f-rel-wide); }
-}
-
-@media (prefers-reduced-motion: reduce) { .fchip:active svg, .chip:active, .tool:active svg { transform: none; } }

@@ -2,7 +2,7 @@
   "description": "FX時計の形と色の表（ここが元）。Swift のウィジェットもこの表を読む。直したら npm run skins で skins.css と skins.js を作り直す",
   "forms": {
     "dial": {
-      "name": "文字盤",
+      "name": "24時間の輪",
       "geo": {
         "view": 360,
         "bezel-r": 178,
@@ -22,6 +22,7 @@
         "mark-r": 159,
         "mark-dot": [2.8, 1.8],
         "ind-dot": [3.8, 2.8],
+        "panel-rx": 22, "screw-at": 17, "screw-r": 7.5, "screw-slot": 5, "hair-step": 1.6, "clip-r": 177,
         "date-y": 128,
         "time-y": 170,
         "next-name-y": 197,
@@ -55,7 +56,7 @@
       }
     },
     "board": {
-      "name": "時刻表",
+      "name": "時刻表（1時間ごと）",
       "geo": {
         "dia-w": 360,
         "dia-h": 76,
@@ -116,6 +117,8 @@
       "color": {
         "bg": "#0b1628", "bg2": "#0f1d36", "face": "#13243f", "line": "#2a3b5c",
         "ink": "#ebe1c8", "sub": "#8693ab", "metal": "#c9a660", "track": "rgba(235,225,200,.07)",
+        "bink": "#ebe1c8", "ptr": "#c9a660", "grain": "transparent", "panel": "transparent", "screw": "transparent",
+        "off": ".42", "font": "var(--f-dial)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
         "s-syd": "#6a9fb9", "s-tky": "#d27967", "s-ldn": "#84b089", "s-ny": "#ae97d2"
       }
     },
@@ -127,6 +130,8 @@
       "color": {
         "bg": "#dde2e8", "bg2": "#f6f6f4", "face": "#ffffff", "line": "#c6ccd5",
         "ink": "#1b2a48", "sub": "#6a7487", "metal": "#2c55a3", "track": "rgba(27,42,72,.06)",
+        "bink": "#1b2a48", "ptr": "#2c55a3", "grain": "transparent", "panel": "transparent", "screw": "transparent",
+        "off": ".42", "font": "var(--f-dial)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
         "s-syd": "#5f9fbf", "s-tky": "#cc6a59", "s-ldn": "#62a06c", "s-ny": "#8a74c0"
       }
     },
@@ -138,7 +143,93 @@
       "color": {
         "bg": "#0d2618", "bg2": "#12301f", "face": "#173a27", "line": "#2c5440",
         "ink": "#f0e8d2", "sub": "#88a594", "metal": "#d8b56b", "track": "rgba(240,232,210,.08)",
+        "bink": "#f0e8d2", "ptr": "#d8b56b", "grain": "transparent", "panel": "transparent", "screw": "transparent",
+        "off": ".42", "font": "var(--f-dial)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
         "s-syd": "#8cc3c9", "s-tky": "#e59580", "s-ldn": "#bcd88d", "s-ny": "#cab4e6"
+      }
+    },
+    "sakura": {
+      "form": "dial",
+      "name": "桜の木",
+      "scheme": "light",
+      "chip": ["#efe0c8", "#b33a2a"],
+      "deco": {"nums": "ar", "extra": "rings", "bez": ["#b98a62", "#d6ae87", "#c2946b", "#dab48e", "#b4855d"], "face": ["#f3e6d0", "#e6cfae"]},
+      "color": {
+        "bg": "#d9d6cf", "bg2": "#c99a72", "face": "#efe0c8", "line": "#8a6040",
+        "ink": "#2b1d13", "sub": "#6b5a49", "metal": "#b33a2a", "track": "rgba(58,38,22,.11)",
+        "bink": "#3a2616", "ptr": "#2b1d13", "grain": "rgba(140,95,55,.2)", "panel": "transparent", "screw": "transparent",
+        "off": ".42", "font": "var(--f-dial)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
+        "s-syd": "#4f8aa3", "s-tky": "#c4553f", "s-ldn": "#58894d", "s-ny": "#7a62a6"
+      }
+    },
+    "washi": {
+      "form": "dial",
+      "name": "和紙と墨",
+      "scheme": "light",
+      "chip": ["#f7f6f1", "#c7372c"],
+      "deco": {"nums": "kan", "extra": "fibers"},
+      "color": {
+        "bg": "#d6d5ce", "bg2": "#efeee8", "face": "#f7f6f1", "line": "#c6c3b9",
+        "ink": "#1f2328", "sub": "#686a6d", "metal": "#c7372c", "track": "rgba(31,35,40,.07)",
+        "bink": "#1f2328", "ptr": "#c7372c", "grain": "rgba(110,98,74,.3)", "panel": "transparent", "screw": "transparent",
+        "off": ".42", "font": "var(--f-dial)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
+        "s-syd": "#3c97a8", "s-tky": "#c84657", "s-ldn": "#5a9a68", "s-ny": "#8670b4"
+      }
+    },
+    "yakou": {
+      "form": "dial",
+      "name": "夜光",
+      "scheme": "dark",
+      "chip": ["#0b0e0f", "#9ef0b6"],
+      "deco": {"nums": "ar", "glow": 1.4, "glowOn": ["num", "ptr", "time"]},
+      "color": {
+        "bg": "#000000", "bg2": "#07090a", "face": "#0b0e0f", "line": "#1b2224",
+        "ink": "#bfe3cb", "sub": "#567562", "metal": "#9ef0b6", "track": "rgba(159,212,176,.07)",
+        "bink": "#9fd4b0", "ptr": "#b8ffcc", "grain": "transparent", "panel": "transparent", "screw": "transparent",
+        "off": ".3", "font": "var(--f-ui)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
+        "s-syd": "#2f6a77", "s-tky": "#7e463b", "s-ldn": "#41724a", "s-ny": "#5d527d"
+      }
+    },
+    "neon": {
+      "form": "dial",
+      "name": "ネオン",
+      "scheme": "dark",
+      "chip": ["#120a22", "#ff4fa3"],
+      "deco": {"nums": "ar", "glow": 2.4, "glowOn": ["arc", "ptr", "num", "mark", "time"]},
+      "color": {
+        "bg": "#07040f", "bg2": "#0c0718", "face": "#120a22", "line": "#2a1a48",
+        "ink": "#f3eaff", "sub": "#8c7bb0", "metal": "#ff4fa3", "track": "rgba(217,200,255,.06)",
+        "bink": "#d9c8ff", "ptr": "#ff4fa3", "grain": "transparent", "panel": "transparent", "screw": "transparent",
+        "off": ".35", "font": "var(--f-cond)", "tsz": "50px", "numf": "16px", "numw": "600", "timew": "500", "tkw": "1", "tko": ".7", "tkq": ".32",
+        "s-syd": "#39e6ff", "s-tky": "#ff5c8a", "s-ldn": "#88ff6a", "s-ny": "#b48cff"
+      }
+    },
+    "koku": {
+      "form": "dial",
+      "name": "航空計器",
+      "scheme": "dark",
+      "chip": ["#1d1e20", "#ff8a1f"],
+      "deco": {"nums": "ar", "extra": "screws"},
+      "color": {
+        "bg": "#0e0f10", "bg2": "#151618", "face": "#1d1e20", "line": "#30333a",
+        "ink": "#f2f2ee", "sub": "#8a8d91", "metal": "#ff8a1f", "track": "rgba(242,242,238,.06)",
+        "bink": "#f2f2ee", "ptr": "#ff8a1f", "grain": "transparent", "panel": "#1b1c1e", "screw": "#2a2c2f",
+        "off": ".42", "font": "var(--f-cond)", "tsz": "50px", "numf": "16px", "numw": "600", "timew": "500", "tkw": "1.5", "tko": ".9", "tkq": ".45",
+        "s-syd": "#4fa6c8", "s-tky": "#e9724f", "s-ldn": "#66b86a", "s-ny": "#a38bd9"
+      }
+    },
+    "sus": {
+      "form": "dial",
+      "name": "ステンレス",
+      "scheme": "light",
+      "chip": ["#eef1f4", "#c8102e"],
+      "deco": {"nums": "ar", "extra": "hairline", "bez": ["#f6f8fa", "#b4bbc4", "#eef1f4", "#99a2ad", "#e6e9ed"], "face": ["#f9fafc", "#dde2e8"]},
+      "color": {
+        "bg": "#e3e6ea", "bg2": "#d5dae0", "face": "#eef1f4", "line": "#98a0aa",
+        "ink": "#1c2a46", "sub": "#5d6878", "metal": "#c8102e", "track": "rgba(28,42,70,.07)",
+        "bink": "#1c2a46", "ptr": "#c8102e", "grain": "rgba(28,42,70,.07)", "panel": "transparent", "screw": "transparent",
+        "off": ".42", "font": "var(--f-ui)", "tsz": "var(--dial-f-time)", "numf": "var(--dial-f-num)", "numw": "500", "timew": "700", "tkw": "1", "tko": ".7", "tkq": ".32",
+        "s-syd": "#3b8db2", "s-tky": "#d0573f", "s-ldn": "#3f985a", "s-ny": "#6b57b4"
       }
     },
     "eki": {

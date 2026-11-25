@@ -1,25 +1,29 @@
 // scripts/gen-sw.mjs が作る。手で直さない（npm run sw）
 // 範囲は ./（＝/fx-tokei/）。app の中のファイルを先にためて、電波がなくても開ける。
 // 版が変わると、新しい版をためて古いためを消す（次に開いたときに新しい画面になる）
-const VERSION = '0ac59b62fb66';
+const VERSION = 'ffedd58b1efe';
 const CACHE = 'fx-tokei-' + VERSION;
 const FILES = [
   "./",
   "apple-touch-icon.png",
-  "board.js",
-  "clock.js",
   "data/events.json",
   "data/holidays.json",
   "events.js",
   "favicon-32.png",
   "fonts/OFL.txt",
+  "fonts/barlow-500.woff2",
+  "fonts/barlow-600.woff2",
   "fonts/bizud-400.woff2",
   "fonts/bizud-700.woff2",
   "fonts/shippori-500.woff2",
   "fonts/shippori-700.woff2",
   "fonts/zenkaku-400.woff2",
   "fonts/zenkaku-700.woff2",
-  "forms.js",
+  "forms/board.css",
+  "forms/board.js",
+  "forms/dial.css",
+  "forms/dial.js",
+  "forms/index.js",
   "holidays.js",
   "icon-192.png",
   "icon-512.png",

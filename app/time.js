@@ -120,7 +120,8 @@ export function schedule(now, hol = null) {
   const start = prevOccurrence(CLOSE, now);
   const list = EVENTS.map((ev) => {
     const t = nextOccurrence(ev, start);
-    return { ev, t, off: eventHoliday(ev, t, hol) };
+    const off = eventHoliday(ev, t, hol);
+    return { ev, t, off, gotobi: ev.id === 'nakane' && !off ? gotobiMark(t, hol) : null };
   }).sort((x, y) => x.t - y.t);
   const next = list.find((x) => x.t > now && !x.off) || null;
   return { start, list, next };
@@ -217,8 +218,32 @@ export function seasonLabel(dst) {
 }
 
 // 1秒ごとに形へ渡す計算の結果（どの形も同じものを使う）
-export function tickContext(now, hol = null) {
-  return { now, p: parts(now, TZ.tky), sc: schedule(now, hol), dst: dstInfo(now), closed: isMarketClosed(now), hol };
+// 形はこれだけを見て描く（形の中で時間の計算をしない）
+// now・p（日本時間の各部分）・sc（その日の大事な時間と次）・day（大事な時間＋指標の並び）・rows（時刻表の行）
+// progress（前の大事な時間から次までの進み 0〜1）・dst（夏時間）・gotobi（きょうのゴトー日の印）・closed（土日）
+// sessions（市場ごとに いま開いているか・次の時間帯・休み）・ind（しぼった指標）・indDay（その日の範囲の指標）・hol（休みの表）
+export function tickContext(now, hol = null, ind = []) {
+  const sc = schedule(now, hol);
+  const withInd = withIndicators(sc, ind);
+  const live = sc.list.filter((x) => !x.off);
+  const prev = [...live].reverse().find((x) => x.t <= now);
+  const from = prev ? prev.t : sc.start;
+  const progress = sc.next ? Math.min(1, Math.max(0, (now - from) / (sc.next.t - from))) : 0;
+  const sessions = SESSIONS.map((s) => {
+    const iv = sessionIntervals(s, now, now + 3 * 864e5)[0] || null;
+    return { ...s, open: isSessionOpen(s, now, hol), iv, rest: iv ? marketHoliday(s.id, iv.a, hol) : null };
+  });
+  return {
+    now, p: parts(now, TZ.tky), sc, day: withInd.list, rows: timetableRows(withInd, now, hol), progress,
+    dst: dstInfo(now), gotobi: gotobiMark(now, hol), closed: isMarketClosed(now), sessions,
+    ind, indDay: indicatorsIn(ind, sc.start, sc.start + 864e5, 1), hol,
+  };
+}
+
+// 日本時間の1日のうちの位置（0〜1）。文字盤の角度などに使う
+export function dayFraction(t) {
+  const p = parts(t, TZ.tky);
+  return (p.h + p.mi / 60 + p.s / 3600) / 24;
 }
 
 // 時刻表のダイヤの範囲：日本時間の startHour 時から次の日の startHour 時まで（いまをふくむ）
@@ -259,7 +284,7 @@ export function timetableRows(sc, now, hol = null) {
       rows.push(r);
     }
     date = d;
-    r.items.push({ ev: x.ev, t: x.t, mi: q.mi, off: x.off || null, gotobi: x.ev.id === 'nakane' && !x.off ? gotobiMark(x.t, hol) : null });
+    r.items.push({ ev: x.ev, t: x.t, mi: q.mi, off: x.off || null, gotobi: x.gotobi || null });
   }
   for (const r of rows) {
     if (r.type !== 'hour') continue;
@@ -429,4 +454,18 @@ export function holidayNotes(now, hol, failed, days = 7) {
     if (!hol.jpYears.has(p.y) || !hol.jpYears.has(e.y)) notes.push('来年の祝日は内閣府の発表待ち');
   }
   return notes;
+}
+
+// 時刻表の「市場のダイヤ」：日本時間の startHour 時から24時間のうち、市場ごとの時間帯（0〜24 の時間の位置）と、いまの位置
+export function diaBands(now, startHour, hol = null) {
+  const { from, to } = diaRange(now, startHour);
+  const h = (t) => (t - from) / 36e5;
+  const bands = SESSIONS.map((s) => ({
+    id: s.id,
+    name: s.name,
+    segs: sessionIntervals(s, from, to)
+      .map((iv) => ({ a: h(Math.max(iv.a, from)), b: h(Math.min(iv.b, to)), rest: !!marketHoliday(s.id, iv.a, hol) }))
+      .filter((x) => x.b > x.a),
+  }));
+  return { bands, now: h(now) };
 }
