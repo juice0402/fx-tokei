@@ -9,6 +9,7 @@ FX の大事な時間が出る、飾れる時計。sakutto-keisan.com/fx-tokei/ 
 - `npm test`（node --test）・`npm run build`（dist/fx-tokei/ に出す）。app を変えたら最後に `npm run sw`、画面に漢字を足したら先に `npm run fonts`（フォントは中に入れたもの・外から読みこまない）。電波なしの確かめは build のあと scripts/check-offline.py
 - リンクと読み込みは相対パス。PWA の manifest と service worker の範囲は /fx-tokei/
 - 版は RELEASES.md とタグ（v0.1.0 の形）
+- 指標の予定は Actions「毎日の更新」が毎朝 app/data/events.json を作る（README の「指標の予定」）。会合の表 app/data/meetings.json は手で入れる
 
 ## 決まり
 - 見た目・文章はプロジェクトの claude/site-principles.md

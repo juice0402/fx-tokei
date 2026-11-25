@@ -1,0 +1,19 @@
+<h2>消費者物価指数</h2>
+<div class="stat-head">全国</div>
+<ul>
+<li><span>2026年10月分</span> <span>公表日 2026-11-20 08:30</span></li>
+<li><span>2026年11月分</span> <span>公表日 2026-12-18 08:30</span></li>
+<li><span>2026年平均</span> <span>公表日 2027-01-22 08:30</span></li>
+<li><span>2026年12月分</span> <span>公表日 2027-01-22 08:30</span></li>
+<li><span>2027年1月分</span> <span>公表日 2027-02-19 08:30</span></li>
+<li><span>2027年2月分</span> <span>公表日 2027-03-19 08:30</span></li>
+</ul>
+<div class="stat-head">東京都区部（中旬速報値）</div>
+<ul>
+<li><span>2026年11月分</span> <span>公表日 2026-11-27 08:30</span></li>
+<li><span>2026年12月分</span> <span>公表日 2026-12-25 08:30</span></li>
+<li><span>2027年1月分</span> <span>公表日 2027-01-29 08:30</span></li>
+<li><span>2027年2月分</span> <span>公表日 2027-02-26 08:30</span></li>
+<li><span>2027年3月分</span> <span>公表日 2027-03-26 08:30</span></li>
+<li><span>2026年11月分（遡及）</span> <span>公表日 2027-03-26 08:30</span></li>
+</ul>

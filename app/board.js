@@ -1,6 +1,6 @@
 // 形「時刻表」（見本B）。計算は time.js、色と大きさは skins.json（skins.js）、ここは描くだけ
 import {
-  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, formatLeft, seasonLabel, diaRange, timetableRows,
+  TZ, WD, SESSIONS, parts, pad, hm, sessionIntervals, formatLeft, seasonLabel, diaRange, timetableRows, withIndicators,
 } from './time.js';
 import { SIZE } from './skins.js';
 
@@ -39,13 +39,14 @@ function mount(root) {
 <div class="b-dia" data-k="dia"></div>
 <table class="tt"><caption>大事な時間の時刻表（日本時間）</caption><tbody data-k="table"></tbody></table>
 <p class="b-foot" data-k="foot"></p>
+<div class="events-slot"></div>
 <div class="pick-slot"></div>`;
   const q = (k) => root.querySelector(`[data-k="${k}"]`);
   const el = Object.fromEntries(['date', 'time', 'next', 'dia', 'table', 'foot'].map((k) => [k, q(k)]));
   return (ctx) => render(el, ctx);
 }
 
-function render(el, { now, p, sc, dst, closed }) {
+function render(el, { now, p, sc, dst, closed, ind }) {
   el.date.textContent = `${ld(p)} ${seasonLabel(dst)}`;
   el.time.innerHTML = `${p.h}:${pad(p.mi)}<small>${pad(p.s)}</small>`;
   if (sc.next) {
@@ -54,9 +55,9 @@ function render(el, { now, p, sc, dst, closed }) {
   el.dia.innerHTML = dia(now);
 
   let html = '';
-  for (const r of timetableRows(sc, now)) {
+  for (const r of timetableRows(withIndicators(sc, ind), now)) {
     if (r.type === 'day') { html += `<tr class="day"><td colspan="2">${r.label}</td></tr>`; continue; }
-    const ents = r.items.map((it) => `<span class="ent ${it.ev.kind}"><b>${pad(it.mi)}</b><span>${it.ev.name}${it.gotobi ? '<em>ゴトー日</em>' : ''}</span></span>`).join('');
+    const ents = r.items.map((it) => `<span class="ent ${it.ev.kind}${it.ev.imp >= 3 ? ' imp3' : ''}"><b>${it.ev.approx ? 'ごろ' : pad(it.mi)}</b><span>${it.ev.name}${it.gotobi ? '<em>ゴトー日</em>' : ''}</span></span>`).join('');
     const rel = r.next ? `<span class="rel">${formatLeft(sc.next.t - now)}</span>` : '';
     html += `<tr class="${r.past ? 'past' : r.next ? 'next' : ''}"><th scope="row">${r.h}</th><td><div class="row">${ents}${rel}</div></td></tr>`;
   }
