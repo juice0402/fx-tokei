@@ -12,6 +12,7 @@ import pathlib
 import urllib.request
 
 from fontTools import subset
+from fontTools.varLib import instancer
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 APP = ROOT / 'app'
@@ -19,7 +20,7 @@ OUT = APP / 'fonts'
 CACHE = ROOT / '.cache' / 'fonts'
 BASE = 'https://raw.githubusercontent.com/google/fonts/main/ofl'
 
-# (google/fonts の場所, ファイル名, 書き出す名前)
+# (google/fonts の場所, ファイル名, 書き出す名前[, 可変フォントの軸の値])
 FONTS = [
     ('shipporiminchob1', 'ShipporiMinchoB1-Medium.ttf', 'shippori-500.woff2'),
     ('shipporiminchob1', 'ShipporiMinchoB1-Bold.ttf', 'shippori-700.woff2'),
@@ -29,14 +30,14 @@ FONTS = [
     ('bizudpgothic', 'BIZUDPGothic-Bold.ttf', 'bizud-700.woff2'),
     ('barlowcondensed', 'BarlowCondensed-Medium.ttf', 'barlow-500.woff2'),
     ('barlowcondensed', 'BarlowCondensed-SemiBold.ttf', 'barlow-600.woff2'),
-    ('mplusrounded1c', 'MPLUSRounded1c-Regular.ttf', 'mplus-400.woff2'),
-    ('mplusrounded1c', 'MPLUSRounded1c-Bold.ttf', 'mplus-700.woff2'),
+    ('dotgothic16', 'DotGothic16-Regular.ttf', 'dotgothic-400.woff2'),
+    ('cormorantgaramond', 'CormorantGaramond-Italic[wght].ttf', 'cormorant-500i.woff2', {'wght': 500}),
+    ('mplusrounded1c', 'MPLUSRounded1c-Regular.ttf', 'mplusr-400.woff2'),
+    ('mplusrounded1c', 'MPLUSRounded1c-Bold.ttf', 'mplusr-700.woff2'),
     ('kleeone', 'KleeOne-Regular.ttf', 'klee-400.woff2'),
     ('kleeone', 'KleeOne-SemiBold.ttf', 'klee-600.woff2'),
 ]
-LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed'), ('mplusrounded1c', 'M PLUS Rounded 1c'), ('kleeone', 'Klee One')]
-# google/fonts に OFL.txt がない字体：METADATA.pb の著作権の行と、ほかの字体の OFL の本文（同じ SIL OFL 1.1）から作る
-NO_OFL = {'mplusrounded1c': 'Copyright 2016 The Rounded M+ Project Authors.'}
+LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed'), ('dotgothic16', 'DotGothic16'), ('cormorantgaramond', 'Cormorant Garamond'), ('mplusrounded1c', 'M PLUS Rounded 1c'), ('kleeone', 'Klee One')]
 
 # いつも入れる文字：英数と記号・ひらがな・カタカナ・日本語の記号・全角の英数
 RANGES = [
@@ -65,6 +66,17 @@ def fetch(path):
     return dst
 
 
+# google/fonts に OFL.txt がないフォントは、METADATA の著作権の行＋OFL 1.1 の本文（ほかのフォントの OFL.txt から）で作る
+NO_OFL = {'mplusrounded1c': 'Copyright 2016 The Rounded M+ Project Authors.'}
+
+
+def license_text(folder):
+    if folder not in NO_OFL:
+        return fetch(f'{folder}/OFL.txt').read_text(encoding='utf-8')
+    body = fetch('barlowcondensed/OFL.txt').read_text(encoding='utf-8')
+    return NO_OFL[folder] + '\n\n' + body[body.index('This Font Software is licensed'):]
+
+
 def main():
     chars = app_chars()
     for a, b in RANGES:
@@ -72,7 +84,7 @@ def main():
     text = ''.join(sorted(chars))
     OUT.mkdir(exist_ok=True)
     (OUT / 'chars.txt').write_text(text + '\n', encoding='utf-8')
-    for folder, name, out in FONTS:
+    for folder, name, out, *axes in FONTS:
         src = fetch(f'{folder}/{name}')
         opts = subset.Options()
         opts.flavor = 'woff2'
@@ -82,16 +94,16 @@ def main():
         opts.name_IDs = ['*']
         opts.name_languages = ['*']
         font = subset.load_font(str(src), opts)
+        if axes:
+            font = instancer.instantiateVariableFont(font, axes[0])
         s = subset.Subsetter(opts)
         s.populate(text=text)
         s.subset(font)
         subset.save_font(font, str(OUT / out), opts)
         print(f'{out}: {os.path.getsize(OUT / out) // 1024}KB')
     parts = []
-    body = fetch('kleeone/OFL.txt').read_text(encoding='utf-8').split('\n', 1)[1]
     for folder, title in LICENSES:
-        text = NO_OFL[folder] + '\n' + body if folder in NO_OFL else fetch(f'{folder}/OFL.txt').read_text(encoding='utf-8')
-        parts.append(f'===== {title} =====\n\n' + text.strip() + '\n')
+        parts.append(f'===== {title} =====\n\n' + license_text(folder).strip() + '\n')
     (OUT / 'OFL.txt').write_text('\n'.join(parts), encoding='utf-8')
     print(f'chars.txt: {len(text)} 文字')
 

@@ -46,7 +46,7 @@ const holidays = makeHolidays();
 const ctxAt = (now) => tickContext(now, holidays.current(), events.current());
 const credit = document.createElement('p');
 credit.className = 'credit';
-credit.innerHTML = 'フォント：Shippori Mincho B1・Zen Kaku Gothic New・BIZ UDPGothic・Barlow Condensed・M PLUS Rounded 1c・Klee One（<a href="./fonts/OFL.txt">SIL OFL 1.1</a>）';
+credit.innerHTML = 'フォント：Shippori Mincho B1・Zen Kaku Gothic New・BIZ UDPGothic・Barlow Condensed・DotGothic16・Cormorant Garamond・M PLUS Rounded 1c・Klee One（<a href="./fonts/OFL.txt">SIL OFL 1.1</a>）';
 
 const pick = document.createElement('nav');
 pick.className = 'pick';

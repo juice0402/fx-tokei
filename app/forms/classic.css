@@ -1,0 +1,55 @@
+/* 形「アナログ・クラシック」の見た目。色と大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+/* ===== アナログ・クラシック（見本 forms の A） ===== */
+.classic { font-family: var(--f-ui); display: flex; flex-direction: column; gap: 12px; }
+.classic .credit { margin-top: auto; padding-top: 6px; }
+.cl-svg { display: block; width: 100%; max-width: calc(var(--cl-max) * 1px); height: auto; margin: 0 auto; }
+.cl-f1 { stop-color: var(--face1); } .cl-f2 { stop-color: var(--face2); }
+.cl-r1 { stop-color: var(--rim1); } .cl-r2 { stop-color: var(--rim2); } .cl-r3 { stop-color: var(--rim3); } .cl-r4 { stop-color: var(--rim4); }
+.cl-ring { fill: var(--ring); }
+.cl-tick { stroke: var(--tick); stroke-width: var(--classic-s-tick); }
+.cl-hmark { fill: var(--hmark); }
+.cl-brand { fill: var(--dtext); font-size: var(--classic-f-brand); letter-spacing: 4px; text-anchor: middle; }
+.cl-pair { fill: var(--dsub); font-family: var(--f-cond); font-size: var(--classic-f-sub); letter-spacing: 2px; text-anchor: middle; }
+.cl-datebox { fill: var(--datebg); stroke: var(--dateline); }
+.cl-day { fill: var(--dateink); font-family: var(--f-cond); font-weight: 700; font-size: var(--classic-f-day); text-anchor: middle; }
+.cl-goto { fill: var(--goto); font-weight: 700; font-size: var(--classic-f-goto); text-anchor: middle; }
+.cl-sub { fill: var(--subbg); stroke: var(--subline); }
+.cl-track { fill: none; stroke: var(--track); stroke-width: var(--classic-s-track); }
+.cl-prog { fill: none; stroke: var(--prog); stroke-width: var(--classic-s-track); stroke-linecap: round; }
+.cl-sn { fill: var(--sn); font-size: var(--classic-f-sn); text-anchor: middle; }
+.cl-sl { fill: var(--sl); font-family: var(--f-cond); font-weight: 700; font-size: var(--classic-f-sl); text-anchor: middle; }
+.cl-hand-h { fill: var(--hand-h); } .cl-hand-m { fill: var(--hand-m); }
+.cl-sec { stroke: var(--sec); stroke-width: var(--classic-s-sec); }
+.cl-secdot { fill: var(--sec); } .cl-cap { fill: var(--cap); }
+.cl-k { fill: var(--k-open); }
+.cl-k.fix { fill: var(--k-fix); } .cl-k.close { fill: var(--k-close); } .cl-k.minor { fill: var(--k-minor); } .cl-k.ind { fill: var(--k-ind); }
+.cl-k.off { opacity: .35; }
+.cl-next { margin: 0; font-size: var(--classic-f-next); text-align: center; line-height: 1.5; }
+.cl-next b { font-size: var(--classic-f-next-strong); }
+.cl-next span { display: block; color: var(--acc); font-weight: 700; font-size: var(--classic-f-next-left); }
+.cl-lamps { margin: 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 16px; font-size: var(--classic-f-lamps); color: var(--sub); }
+.cl-lamps i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lamp); margin-right: 5px; vertical-align: 1px; }
+.cl-lamps .on { color: var(--ink); font-weight: 700; }
+.cl-lamps .on i { background: var(--lamp-on); box-shadow: 0 0 0 3px var(--lamp-glow); }
+.cl-lamps .rest i { background: none; border: 1px solid var(--lamp); }
+
+/* パソコンでは2列：左に時計、右に指標と休み */
+@media (min-width: 900px) {
+  .classic {
+    display: grid; justify-content: center; align-content: start;
+    grid-template-columns: minmax(0, 480px) minmax(0, 420px);
+    grid-template-areas: "top top" "dial ev" "next ev" "lamps hol" "dots hol" "pick pick" "credit credit";
+    grid-template-rows: auto auto auto auto auto 1fr auto;
+    column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
+  }
+  .cl-svg { max-width: calc(var(--cl-max-wide) * 1px); }
+  .classic .an-top { grid-area: top; }
+  .cl-dial { grid-area: dial; }
+  .cl-next { grid-area: next; }
+  .cl-lamps { grid-area: lamps; }
+  .classic .dots-slot { grid-area: dots; }
+  .classic .events-slot { grid-area: ev; }
+  .classic .hol-slot { grid-area: hol; }
+  .classic .pick-slot { grid-area: pick; }
+  .classic .credit { grid-area: credit; }
+}

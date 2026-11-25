@@ -237,7 +237,43 @@ export function tickContext(now, hol = null, ind = []) {
     now, p: parts(now, TZ.tky), sc, day: withInd.list, rows: timetableRows(withInd, now, hol), progress,
     dst: dstInfo(now), gotobi: gotobiMark(now, hol), closed: isMarketClosed(now), sessions,
     ind, indDay: indicatorsIn(ind, sc.start, sc.start + 864e5, 1), hol,
+    cities: CITIES.map((c) => cityInfo(c, now, hol)),
   };
+}
+
+// ===== 針の時計（アナログ・世界時計）=====
+// 針の角度（度・12時が0）。p は parts の結果
+export function handAngles(p) {
+  return { h: ((p.h % 12) + p.mi / 60 + p.s / 3600) * 30, m: (p.mi + p.s / 60) * 6, s: p.s * 6 };
+}
+// 日本時間の12時間の文字盤の上の角度
+export const dial12 = (t) => handAngles(parts(t, TZ.tky)).h;
+// 残りを「1:23」（時間:分）で
+export function clockLeft(ms) {
+  const m = Math.max(0, Math.floor(ms / 60000));
+  return Math.floor(m / 60) + ':' + pad(m % 60);
+}
+
+// 世界時計の街：その街の時刻・夜（18時〜6時）・夏時間・市場のようす
+// state：open（取引中）・soon（開く1時間前から）・rest（その市場の休み）・closed（お休み）
+export const CITIES = [
+  { id: 'tky', name: '東京', tz: TZ.tky },
+  { id: 'ldn', name: 'ロンドン', tz: TZ.ldn },
+  { id: 'ny', name: 'ニューヨーク', tz: TZ.ny },
+];
+const STD_OFFSET = { [TZ.ldn]: 0, [TZ.ny]: -300 };
+export function cityInfo(c, now, hol = null) {
+  const p = parts(now, c.tz);
+  const s = SESSIONS.find((x) => x.id === c.id);
+  let state = 'closed';
+  if (isSessionOpen(s, now, hol)) state = 'open';
+  else if (!isMarketClosed(now) && isWeekday(p.wd) && marketHoliday(s.id, now, hol)) state = 'rest';
+  else {
+    const nx = sessionIntervals(s, now, now + 36e5).find((iv) => iv.a > now && iv.a - now <= 36e5);
+    if (nx && isSessionOpen(s, nx.a, hol)) state = 'soon';
+  }
+  const season = c.id === 'tky' ? null : offsetMin(now, c.tz) > STD_OFFSET[c.tz] ? '夏時間' : '冬時間';
+  return { ...c, p, night: p.h < 6 || p.h >= 18, state, season };
 }
 
 // 日本時間の1日のうちの位置（0〜1）。文字盤の角度などに使う
@@ -509,4 +545,37 @@ export function bandsIn(from, to, hol = null) {
       .map((iv) => ({ a: h(Math.max(iv.a, from)), b: h(Math.min(iv.b, to)), rest: !!marketHoliday(s.id, iv.a, hol) }))
       .filter((x) => x.b > x.a),
   }));
+}
+
+// 横に流れる帯：いまの before 時間前から after 時間後まで（日本時間）の、市場の時間帯と大事な時間＋指標の並び
+// 位置はどれも from からの時間（0〜before+after）。並びは schedule と withIndicators を日ごとにつないだもの（休みの off・ゴトー日もそのまま）
+export function bandWindow(now, before, after, hol = null, ind = []) {
+  const from = now - before * 36e5, to = now + after * 36e5;
+  const h = (t) => (t - from) / 36e5;
+  const bands = SESSIONS.map((s) => ({
+    id: s.id,
+    name: s.name,
+    segs: sessionIntervals(s, from, to)
+      .filter((iv) => isWeekday(parts(iv.a, s.tz).wd)) // 窓が週末をまたぐので、土日の回は出さない
+      .map((iv) => ({ a: h(Math.max(iv.a, from)), b: h(Math.min(iv.b, to)), rest: !!marketHoliday(s.id, iv.a, hol), past: iv.b <= now }))
+      .filter((x) => x.b > x.a),
+  }));
+  const seen = new Set();
+  const items = [];
+  let at = from;
+  for (let n = 0; n < 8; n++) {
+    const day = withIndicators(schedule(at, hol), ind);
+    if (!day.list.length) break;
+    for (const x of day.list) {
+      const k = x.ev.id + '@' + x.t;
+      if (x.t >= from && x.t <= to && !seen.has(k)) { seen.add(k); items.push({ ...x, at: h(x.t) }); }
+    }
+    const last = day.list[day.list.length - 1].t;
+    if (last >= to || last <= at) break;
+    at = last;
+  }
+  items.sort((x, y) => x.t - y.t);
+  const hours = [];
+  for (let t = Math.ceil(from / 36e5) * 36e5; t <= to; t += 36e5) hours.push({ at: h(t), h: parts(t, TZ.tky).h });
+  return { from, to, now: before, span: before + after, bands, items, hours };
 }

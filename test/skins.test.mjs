@@ -13,11 +13,16 @@ test('skins.css と skins.js が skins.json と合っている（npm run skins �
   assert.equal(readFileSync('app/skins.js', 'utf8'), js);
 });
 
-test('24時間の輪は9色・時刻表は3色・新しい形は2色ずつ・はじめは紺と真鍮', () => {
+test('24時間の輪は9色・時刻表は3色・ほかの形は2色ずつ・はじめは紺と真鍮', () => {
   const ids = Object.keys(SKINS);
   assert.equal(ids[0], 'kon');
   assert.deepEqual(ids.filter((id) => SKINS[id].form === 'dial'), ['kon', 'hakuji', 'midori', 'sakura', 'washi', 'yakou', 'neon', 'koku', 'sus']);
   assert.deepEqual(ids.filter((id) => SKINS[id].form === 'board'), ['eki', 'yako', 'wakakusa']);
+  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'dep').map((id) => SKINS[id].name), ['パタパタ', '電光掲示']);
+  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'line').map((id) => SKINS[id].name), ['夜', '昼']);
+  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'classic').map((id) => SKINS[id].name), ['紺', '白']);
+  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'rose').map((id) => SKINS[id].name), ['ローズ', 'ラベンダー']);
+  assert.deepEqual(ids.filter((id) => SKINS[id].form === 'world').map((id) => SKINS[id].name), ['黒の壁', 'くるみ材']);
   const two = (f) => ids.filter((id) => SKINS[id].form === f).map((id) => SKINS[id].name);
   assert.deepEqual(two('big'), ['白', '黒']);
   assert.deepEqual(two('donut'), ['ピンク', 'ミント']);
@@ -51,7 +56,7 @@ test('形の一覧と表がそろっている', () => {
 });
 
 test('形と色のファイルに色や半径の数字を直接書かない', () => {
-  const forms = ['dial', 'board', 'big', 'donut', 'planner', 'widget'].flatMap((f) => [`app/forms/${f}.js`, `app/forms/${f}.css`]);
+  const forms = ['dial', 'board', 'dep', 'line', 'classic', 'rose', 'world', 'big', 'donut', 'planner', 'widget'].flatMap((f) => [`app/forms/${f}.js`, `app/forms/${f}.css`]);
   for (const file of [...forms, 'app/forms/index.js', 'app/style.css']) {
     const src = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
     assert.doesNotMatch(src, /#[0-9a-fA-F]{3,8}\b|rgba?\(/, file);

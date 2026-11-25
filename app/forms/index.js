@@ -4,6 +4,11 @@
 import { SKINS } from '../skins.js';
 import dial from './dial.js';
 import board from './board.js';
+import dep from './dep.js';
+import line from './line.js';
+import classic from './classic.js';
+import rose from './rose.js';
+import world from './world.js';
 import big from './big.js';
 import donut from './donut.js';
 import planner from './planner.js';
@@ -22,6 +27,11 @@ const colorsOf = (id) => Object.entries(SKINS).filter(([, s]) => s.form === id).
 export const FORMS = [
   dial,
   board,
+  dep,
+  line,
+  classic,
+  rose,
+  world,
   big,
   donut,
   planner,

@@ -1,0 +1,47 @@
+/* 形「アナログ・ローズ」の見た目。色と大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+/* ===== アナログ・ローズ（見本 forms の B） ===== */
+.rose { font-family: var(--f-round); display: flex; flex-direction: column; gap: 12px; }
+.rose .credit { margin-top: auto; padding-top: 6px; }
+.ro-svg { display: block; width: 100%; max-width: calc(var(--ro-max) * 1px); height: auto; margin: 0 auto; }
+.ro-f1 { stop-color: var(--face1); } .ro-f2 { stop-color: var(--face2); }
+.ro-r1 { stop-color: var(--rim1); } .ro-r2 { stop-color: var(--rim2); } .ro-r3 { stop-color: var(--rim3); } .ro-r4 { stop-color: var(--rim4); }
+.ro-num { fill: var(--num); font-family: var(--f-ele); font-style: italic; font-weight: 500; font-size: var(--rose-f-num); text-anchor: middle; }
+.ro-dot { fill: var(--dot); stroke: var(--dotline); stroke-width: var(--rose-s-dot); }
+.ro-brand { fill: var(--brand); font-size: var(--rose-f-brand); letter-spacing: 3px; text-anchor: middle; }
+.ro-n { fill: var(--nlabel); font-size: var(--rose-f-n); text-anchor: middle; }
+.ro-l { fill: var(--left); font-size: var(--rose-f-l); font-weight: 700; text-anchor: middle; }
+.ro-hand { fill: var(--hand); }
+.ro-sec { stroke: var(--sec); stroke-width: var(--rose-s-sec); }
+.ro-heart { fill: var(--heart); }
+.ro-cap { fill: var(--cap); }
+.ro-arc { fill: none; stroke-width: var(--rose-s-arc); stroke-linecap: round; opacity: .7; }
+.ro-arc.open { opacity: 1; }
+.ro-arc.hol { opacity: .25; }
+.ro-syd { stroke: var(--s-syd); } .ro-tky { stroke: var(--s-tky); } .ro-ldn { stroke: var(--s-ldn); } .ro-ny { stroke: var(--s-ny); }
+.ro-chips { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.ro-chip { font-size: var(--rose-f-chip); padding: 3px 10px; border-radius: 999px; background: var(--chip-bg); color: var(--chip-ink); border: 1px solid var(--chip-line); white-space: nowrap; }
+.ro-chip.ind { font-weight: 700; }
+.ro-chip.next { background: var(--chip-next); color: var(--chip-next-ink); border-color: var(--chip-next); }
+.ro-chip.g { background: var(--chip-g); color: var(--chip-g-ink); border-color: var(--chip-g-line); }
+.ro-chip.off { opacity: .5; }
+.rose .ev-next span, .rose .ev-row.next { color: var(--left); }
+
+/* パソコンでは2列：左に時計、右に指標と休み */
+@media (min-width: 900px) {
+  .rose {
+    display: grid; justify-content: center; align-content: start;
+    grid-template-columns: minmax(0, 480px) minmax(0, 420px);
+    grid-template-areas: "top top" "dial ev" "chips ev" "dots hol" "pick pick" "credit credit";
+    grid-template-rows: auto auto auto auto 1fr auto;
+    column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
+  }
+  .ro-svg { max-width: calc(var(--ro-max-wide) * 1px); }
+  .rose .an-top { grid-area: top; }
+  .ro-dial { grid-area: dial; }
+  .ro-chips { grid-area: chips; }
+  .rose .dots-slot { grid-area: dots; }
+  .rose .events-slot { grid-area: ev; }
+  .rose .hol-slot { grid-area: hol; }
+  .rose .pick-slot { grid-area: pick; }
+  .rose .credit { grid-area: credit; }
+}
