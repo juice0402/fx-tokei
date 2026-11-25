@@ -106,6 +106,79 @@
         "grid": 1,
         "now": 2
       }
+    },
+    "dep": {
+      "name": "発着の掲示",
+      "geo": {
+        "dia-w": 360,
+        "dia-h": 76,
+        "lane-x0": 56,
+        "lane-x1": 354,
+        "lane-y": [4, 18, 32, 46],
+        "lane-h": 10,
+        "lab-dy": 8.5,
+        "start-hour": 7,
+        "hour-marks": [0, 5, 11, 17, 23],
+        "grid-y": [58, 62],
+        "hour-y": 72,
+        "now-y": [2, 60],
+        "now-tip-w": 8,
+        "now-tip-h": 5
+      },
+      "font": {
+        "brand": 15, "brand-sub": 12, "date": 12,
+        "tile": 46, "tile-sm": 22, "tile-wide": 76, "tile-sm-wide": 34,
+        "led": 50, "led-sm": 22, "led-wide": 84, "led-sm-wide": 34,
+        "next": 12.5, "next-strong": 17, "left": 14, "ticker": 14, "dia": 10.5,
+        "head": 11, "name": 13.5, "name-minor": 12, "state": 12.5,
+        "mini": 20, "mini-minor": 16, "mini-dot": 18, "mini-dot-minor": 15,
+        "badge": 10.5, "foot": 12,
+        "name-wide": 15.5, "state-wide": 14, "mini-wide": 24, "mini-dot-wide": 21
+      },
+      "stroke": {
+        "rule": 1,
+        "grid": 1,
+        "now": 2,
+        "tile-r": 4,
+        "mini-r": 2
+      }
+    },
+    "line": {
+      "name": "横に流れる帯",
+      "geo": {
+        "before": 2,
+        "after-min": 10,
+        "after-max": 22,
+        "px-min": 30,
+        "px-max": 48,
+        "h": 176,
+        "now-label-y": 11,
+        "now-y0": 14,
+        "shade-y": 20,
+        "label-y": [38, 56],
+        "label-pad": 6,
+        "dot-r": 3,
+        "lane-y0": 96,
+        "lane-step": 13,
+        "lane-h": 9,
+        "lane-rx": 2,
+        "axis-y": [150, 154],
+        "hour-y": 168,
+        "hour-every": 3,
+        "char-w": 1,
+        "digit-w": 0.56
+      },
+      "font": {
+        "brand": 15, "brand-sub": 12, "date": 12,
+        "time": 46, "time-wide": 64, "next": 12.5, "next-strong": 15, "next-left": 13,
+        "label": 10.5, "hour": 10.5, "now": 10, "legend": 11.5, "foot": 12
+      },
+      "stroke": {
+        "now": 2,
+        "mark": 1.5,
+        "mark-minor": 1,
+        "tick": 1
+      }
     }
   },
   "skins": {
@@ -263,6 +336,56 @@
         "bg": "#f3f8f0", "ink": "#15281c", "sub": "#566b5d", "line": "#c5d9c9",
         "hour": "#2f7a4c", "hour-ink": "#ffffff", "red": "#c42a2f", "lane": "#e2ede3",
         "s-syd": "#7d5bbd", "s-tky": "#d77400", "s-ldn": "#0f8a8a", "s-ny": "#2457c5"
+      }
+    },
+    "flap": {
+      "form": "dep",
+      "name": "パタパタ",
+      "scheme": "dark",
+      "chip": ["#121315", "#f5c400"],
+      "deco": {"clock": "flap"},
+      "color": {
+        "bg": "#121315", "ink": "#f3efe2", "sub": "#9a9da3", "line": "#2a2c30",
+        "tile": "#1d1f22", "tile2": "#26292d", "acc": "#f5c400", "next": "#f5c400", "lane": "#1b1d20",
+        "font": "var(--f-board)", "tfont": "var(--f-cond)", "tw": "700", "glow": "none", "dots": "none",
+        "s-syd": "#9a8cff", "s-tky": "#ffb000", "s-ldn": "#42c977", "s-ny": "#4aa3ff"
+      }
+    },
+    "led": {
+      "form": "dep",
+      "name": "電光掲示",
+      "scheme": "dark",
+      "chip": ["#0a0a0a", "#ffa21f"],
+      "deco": {"clock": "led"},
+      "color": {
+        "bg": "#0a0a0a", "ink": "#ffa21f", "sub": "#a8661a", "line": "#2a1d0e",
+        "tile": "transparent", "tile2": "transparent", "acc": "#ff4b3a", "next": "#44e26a", "lane": "#1a130a",
+        "font": "var(--f-dot)", "tfont": "var(--f-dot)", "tw": "400", "glow": "0 0 4px currentColor", "dots": "radial-gradient(rgba(255,255,255,.055) 1px, transparent 1.3px)",
+        "s-syd": "#ffb21a", "s-tky": "#ff4b3a", "s-ldn": "#44e26a", "s-ny": "#6ad4ff"
+      }
+    },
+    "yoru": {
+      "form": "line",
+      "name": "夜",
+      "scheme": "dark",
+      "chip": ["#0f1720", "#ff5a4a"],
+      "color": {
+        "bg": "#0f1720", "ink": "#e6edf5", "sub": "#8a9bb0", "line": "#22303f",
+        "lane": "#18222e", "past": "rgba(255,255,255,.035)", "now": "#ff5a4a", "tick": "#3a4a5e",
+        "mark": "#cfe0f5", "minor": "#5d6f86", "fix": "#ff7d6e", "left": "#ffb35c",
+        "s-syd": "#5aa9c9", "s-tky": "#ef7b5f", "s-ldn": "#5fbf72", "s-ny": "#9b87e0"
+      }
+    },
+    "hiru": {
+      "form": "line",
+      "name": "昼",
+      "scheme": "light",
+      "chip": ["#f4f6f9", "#e0463a"],
+      "color": {
+        "bg": "#f4f6f9", "ink": "#18202b", "sub": "#5e6b7c", "line": "#d3dae3",
+        "lane": "#e3e8ef", "past": "rgba(0,0,0,.04)", "now": "#e0463a", "tick": "#b3bdca",
+        "mark": "#2b3647", "minor": "#8d99a9", "fix": "#d93a2b", "left": "#b4521c",
+        "s-syd": "#3d8fb3", "s-tky": "#d9603f", "s-ldn": "#3f9a57", "s-ny": "#7a63c9"
       }
     }
   }
