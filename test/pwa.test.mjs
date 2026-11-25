@@ -47,7 +47,7 @@ test('画面の文字が全部フォントに入っている（漢字を足し�
 });
 
 test('外のドメインから読みこまない・リンクは相対パス', () => {
-  for (const f of ['app/index.html', 'app/style.css', 'app/main.js', 'app/clock.js', 'app/board.js', 'app/tools.js', 'app/events.js', 'app/sw.js', 'app/skins.css']) {
+  for (const f of ['app/index.html', 'app/style.css', 'app/main.js', 'app/clock.js', 'app/board.js', 'app/tools.js', 'app/events.js', 'app/holidays.js', 'app/sw.js', 'app/skins.css']) {
     assert.doesNotMatch(read(f), /https?:\/\/|\/\/fonts|src="\/|href="\//, f);
   }
   const fonts = readdirSync('app/fonts').filter((n) => n.endsWith('.woff2'));

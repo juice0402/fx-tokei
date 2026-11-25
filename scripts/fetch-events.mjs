@@ -7,6 +7,7 @@
 // - FIXTURES=<フォルダ>：ネットを見ずに、そのフォルダの見本（unit 名.txt）を読む（手元で確かめる用）
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { makeMihari, fetchText, readJson, trackFail } from './mihari-lib.mjs';
 import {
   UNITS, parseBlsIcs, parseBlsTable, parseBea, parseEstat, parseFomcPage, parseBojPage,
   compareMeetings, unknownNext, needsNextYear, buildEvents, makeJson, sameContent, jstStamp,
@@ -15,11 +16,9 @@ import {
 const EVENTS = 'app/data/events.json';
 const MEETINGS = 'app/data/meetings.json';
 const STATE = 'state/events-state.json';
-const UA = 'fx-tokei/1.0 (+https://github.com/juice0402/fx-tokei)';
 const DRY = process.argv.includes('--dry-run') || process.env.DRY_RUN === 'true';
 const FIX = process.env.FIXTURES || '';
 const NOW = process.env.NOW ? Date.parse(process.env.NOW) : Date.now();
-const today = jstStamp(NOW).slice(0, 10);
 const TITLE = {
   meet: '【見張り】FX時計：会合の日程が公式とちがう',
   year: '【見張り】FX時計：来年の会合の表を足して',
@@ -27,7 +26,7 @@ const TITLE = {
   shrink: (name) => `【見張り】FX時計：指標の予定の件数が急に減った（${name}）`,
 };
 
-const readJson = (f) => { try { return JSON.parse(readFileSync(f, 'utf8')); } catch (e) { return null; } };
+const { report, resolve, today } = makeMihari({ now: NOW, dry: DRY, by: 'scripts/fetch-events.mjs' });
 
 async function get(url, unit) {
   if (FIX) {
@@ -35,17 +34,7 @@ async function get(url, unit) {
     if (!existsSync(f)) throw new Error('見本なし');
     return readFileSync(f, 'utf8');
   }
-  let last;
-  for (let i = 0; i < 2; i++) {
-    try {
-      const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: '*/*' }, signal: AbortSignal.timeout(20000) });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.text();
-    } catch (e) {
-      last = e;
-    }
-  }
-  throw last;
+  return fetchText(url);
 }
 
 const PARSE = {
@@ -59,64 +48,6 @@ const PARSE = {
   'boj-sche': (t) => parseBojPage(t),
 };
 const count = (r) => (Array.isArray(r) ? r.length : Object.values(r).flat().length);
-
-// ---- GitHub の issue（mihari-spec のとおり）----
-const GH = process.env.GITHUB_TOKEN && process.env.GITHUB_REPOSITORY
-  ? { token: process.env.GITHUB_TOKEN, repo: process.env.GITHUB_REPOSITORY } : null;
-const RUN = process.env.GITHUB_RUN_ID
-  ? `${process.env.GITHUB_SERVER_URL || 'https://github.com'}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` : '（手元で動かした）';
-
-async function api(path, method = 'GET', body) {
-  const res = await fetch(`https://api.github.com/repos/${GH.repo}${path}`, {
-    method,
-    headers: { Authorization: `Bearer ${GH.token}`, Accept: 'application/vnd.github+json', 'User-Agent': UA, 'Content-Type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  if (!res.ok && res.status !== 422) throw new Error(`GitHub ${method} ${path}: ${res.status}`);
-  return res.status === 204 ? null : res.json();
-}
-
-async function openIssue(title) {
-  const list = await api('/issues?state=open&labels=mihari&per_page=100');
-  return list.find((i) => i.title === title && !i.pull_request) || null;
-}
-
-async function report(title, lines) {
-  const body = [...lines, `いつ：${jstStamp(NOW)}（日本時間）`, `実行：${RUN}`, '', '見張り（.github/workflows/data.yml の scripts/fetch-events.mjs）が作った'].join('\n');
-  if (DRY || !GH) { console.log(`[issue を作るはず] ${title}`); return; }
-  try {
-    const found = await openIssue(title);
-    if (found) {
-      const cs = await api(`/issues/${found.number}/comments?per_page=100`);
-      if (!cs.some((c) => c.body.startsWith('まだ続いている') && jstStamp(Date.parse(c.created_at)).startsWith(today))) {
-        await api(`/issues/${found.number}/comments`, 'POST', { body: `まだ続いている（${RUN}）` });
-      }
-      console.log(`issue #${found.number} はもうある：${title}`);
-      return;
-    }
-    await api('/labels', 'POST', { name: 'mihari', color: 'd93f0b', description: '見張りが見つけた。しょーくんに知らせるだけ' });
-    const made = await api('/issues', 'POST', { title, body, labels: ['mihari'] });
-    console.log(`issue #${made.number} を作った：${title}`);
-  } catch (e) {
-    console.log(`issue を作れなかった：${e.message}`);
-  }
-}
-
-async function resolve(title) {
-  if (DRY || !GH) return;
-  try {
-    const found = await openIssue(title);
-    if (!found) return;
-    await api(`/issues/${found.number}/comments`, 'POST', { body: `直った（${RUN}）` });
-    await api(`/issues/${found.number}`, 'PATCH', { state: 'closed', state_reason: 'completed' });
-    console.log(`issue #${found.number} を閉じた：${title}`);
-  } catch (e) {
-    console.log(`issue を閉じられなかった：${e.message}`);
-  }
-}
-
-// 1行に1件（差分が読みやすいように）
-const toText = (j) => `{\n "updated": ${JSON.stringify(j.updated)},\n "sources": [\n${j.sources.map((x) => '  ' + JSON.stringify(x)).join(',\n')}\n ],\n "events": [\n${j.events.map((x) => '  ' + JSON.stringify(x)).join(',\n')}\n ]\n}\n`;
 
 // ---- 本体 ----
 const meetings = readJson(MEETINGS);
@@ -145,13 +76,11 @@ const { events, shrunk } = buildEvents({ results, meetings, prev, prevCounts, no
 // 読めた日・読めない日の数え（7日続けて読めなければ issue）
 for (const [unit, def] of Object.entries(UNITS)) {
   const st = state.units[unit];
+  const days = trackFail(st, !!results[unit], today);
   if (results[unit]) {
-    st.firstFail = null;
     if (!shrunk.includes(unit)) st.count = count(results[unit]);
     await resolve(TITLE.fail(def.name));
   } else {
-    st.firstFail = st.firstFail || today;
-    const days = Math.round((Date.parse(today) - Date.parse(st.firstFail)) / 864e5) + 1;
     if (days >= 7) await report(TITLE.fail(def.name), [`${def.name}（${def.url}）を ${st.firstFail} から ${days} 日続けて読めない。events.json は前の分のまま。`]);
   }
   if (shrunk.includes(unit)) {

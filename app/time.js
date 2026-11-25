@@ -105,8 +105,9 @@ export function isMarketClosed(now) {
   return (p.wd === 5 && m >= 1020) || p.wd === 6 || (p.wd === 0 && m < 1020);
 }
 
-export function isSessionOpen(s, now) {
+export function isSessionOpen(s, now, hol = null) {
   if (isMarketClosed(now)) return false;
+  if (marketHoliday(s.id, now, hol)) return false;
   const p = parts(now, s.tz);
   if (!isWeekday(p.wd)) return false;
   const m = p.h * 60 + p.mi;
@@ -114,23 +115,61 @@ export function isSessionOpen(s, now) {
 }
 
 // その日（前の NY クローズから次の NY クローズまで）の大事な時間の並び
-export function schedule(now) {
+// 休みで止まる回は off（「NY休み」など）にして、次の大事な時間（カウントダウン）からはずす
+export function schedule(now, hol = null) {
   const start = prevOccurrence(CLOSE, now);
-  const list = EVENTS.map((ev) => ({ ev, t: nextOccurrence(ev, start) })).sort((x, y) => x.t - y.t);
-  const next = list.find((x) => x.t > now) || null;
+  const list = EVENTS.map((ev) => {
+    const t = nextOccurrence(ev, start);
+    return { ev, t, off: eventHoliday(ev, t, hol) };
+  }).sort((x, y) => x.t - y.t);
+  const next = list.find((x) => x.t > now && !x.off) || null;
   return { start, list, next };
 }
 
-// ゴトー日：5・10・15・20・25・30日と月末。土日なら前の金曜（祝日は未対応）
+// ===== 休み（app/data/holidays.json）とゴトー日 =====
+// hol は normalizeHolidays の結果（読めないときは null。土日と年末年始だけで判定する）
+export const ymdKey = (p) => `${p.y}-${pad(p.mo)}-${pad(p.d)}`;
 const lastDay = (y, mo) => new Date(Date.UTC(y, mo, 0)).getUTCDate();
+// 5・10・15・20・25・30日と月末（31日の月は30日と31日、2月は月末）
 const isGotobiDate = (q) => q.d % 5 === 0 || q.d === lastDay(q.y, q.mo);
-export function isGotobi(t) {
-  const p = parts(t, TZ.tky);
-  if (!isWeekday(p.wd)) return false;
-  if (isGotobiDate(p)) return true;
-  if (p.wd === 5) return isGotobiDate(addDays(p, 1)) || isGotobiDate(addDays(p, 2));
-  return false;
+
+// 日本の銀行の休み：土日・祝日・12/31〜1/3（銀行法施行令）。この日は仲値なし
+export function isJpBankHoliday(q, hol) {
+  if (!isWeekday(q.wd)) return true;
+  if ((q.mo === 12 && q.d === 31) || (q.mo === 1 && q.d <= 3)) return true;
+  return !!(hol && hol.jp.has(ymdKey(q)));
 }
+
+// ゴトー日の印：その日がゴトー日なら「ゴトー日」、その日から次の営業日までのあいだにゴトー日があれば「ゴトー日（前倒し）」
+// いくつ重なっても印は1つ。銀行の休みの日は null
+export function gotobiMark(t, hol) {
+  const p = parts(t, TZ.tky);
+  if (isJpBankHoliday(p, hol)) return null;
+  if (isGotobiDate(p)) return 'ゴトー日';
+  for (let n = 1; n <= 10; n++) {
+    const q = addDays(p, n);
+    if (!isJpBankHoliday(q, hol)) return null;
+    if (isGotobiDate(q)) return 'ゴトー日（前倒し）';
+  }
+  return null;
+}
+export const isGotobi = (t, hol) => !!gotobiMark(t, hol);
+
+// 市場ごとの休み（その市場の日付で見る）。東京＝日本の銀行の休み（祝日・年末年始）、ロンドン＝英国の祝日、NY＝FRB の休み
+const HOL_LABEL = { tky: '東京休み', ldn: 'ロンドン休み', ny: 'NY休み' };
+export function marketHoliday(market, t, hol) {
+  if (market === 'tky') {
+    const q = parts(t, TZ.tky);
+    return isWeekday(q.wd) && isJpBankHoliday(q, hol) ? HOL_LABEL.tky : null;
+  }
+  if (!hol || (market !== 'ldn' && market !== 'ny')) return null;
+  const q = parts(t, market === 'ldn' ? TZ.ldn : TZ.ny);
+  return isWeekday(q.wd) && hol[market === 'ldn' ? 'uk' : 'us'].has(ymdKey(q)) ? HOL_LABEL[market] : null;
+}
+
+// 大事な時間ごとに、どの市場の休みで止まるか（NYクローズはスワップの切りかえなので止めない）
+const EV_MARKET = { nakane: 'tky', ldn: 'ldn', fix: 'ldn', ny: 'ny', nys: 'ny' };
+export const eventHoliday = (ev, t, hol) => (EV_MARKET[ev.id] ? marketHoliday(EV_MARKET[ev.id], t, hol) : null);
 
 // 次の夏時間・冬時間の切りかえ（その地域の日付と、夏時間へかどうか）
 export function nextDstChange(tz, now) {
@@ -178,8 +217,8 @@ export function seasonLabel(dst) {
 }
 
 // 1秒ごとに形へ渡す計算の結果（どの形も同じものを使う）
-export function tickContext(now) {
-  return { now, p: parts(now, TZ.tky), sc: schedule(now), dst: dstInfo(now), closed: isMarketClosed(now) };
+export function tickContext(now, hol = null) {
+  return { now, p: parts(now, TZ.tky), sc: schedule(now, hol), dst: dstInfo(now), closed: isMarketClosed(now), hol };
 }
 
 // 時刻表のダイヤの範囲：日本時間の startHour 時から次の日の startHour 時まで（いまをふくむ）
@@ -199,7 +238,7 @@ const dayLabel = (p) => `${p.mo}/${p.d}（${WD[p.wd]}）`;
 
 // 時刻表の行：日本時間の「時」ごとにまとめ、日付が変わる所に区切りを入れる
 // 並びがきょうから始まるときの区切りは「翌日」、週末などで先の日から始まるときは日付
-export function timetableRows(sc, now) {
+export function timetableRows(sc, now, hol = null) {
   const today = parts(now, TZ.tky);
   const key = (p) => `${p.y}-${p.mo}-${p.d}`;
   const rows = [];
@@ -220,11 +259,11 @@ export function timetableRows(sc, now) {
       rows.push(r);
     }
     date = d;
-    r.items.push({ ev: x.ev, t: x.t, mi: q.mi, gotobi: x.ev.id === 'nakane' && isGotobi(x.t) });
+    r.items.push({ ev: x.ev, t: x.t, mi: q.mi, off: x.off || null, gotobi: x.ev.id === 'nakane' && !x.off ? gotobiMark(x.t, hol) : null });
   }
   for (const r of rows) {
     if (r.type !== 'hour') continue;
-    r.past = r.items.every((it) => it.t <= now);
+    r.past = r.items.every((it) => it.t <= now || it.off);
     r.next = !!sc.next && r.items.some((it) => it.t === sc.next.t && it.ev === sc.next.ev);
   }
   return rows;
@@ -339,4 +378,55 @@ export function withIndicators(sc, ind) {
   }
   if (!add.length) return sc;
   return { ...sc, list: [...sc.list, ...add].sort((x, y) => x.t - y.t) };
+}
+
+// ===== 休みの予定（app/data/holidays.json）=====
+// { updated, sources, jpYears, jp: [[日付, 名前]…], uk, us } → { jp: Map, uk: Map, us: Map, jpYears: Set, sources }
+export function normalizeHolidays(json) {
+  if (!json || typeof json !== 'object') return null;
+  const map = (a) => new Map((Array.isArray(a) ? a : [])
+    .filter((x) => Array.isArray(x) && /^\d{4}-\d{2}-\d{2}$/.test(x[0]) && typeof x[1] === 'string' && !/[<>&"]/.test(x[1])));
+  if (!Array.isArray(json.jp) || !Array.isArray(json.uk) || !Array.isArray(json.us)) return null;
+  const sources = Array.isArray(json.sources)
+    ? json.sources.filter((s) => s && typeof s.name === 'string' && /^https:\/\//.test(s.url || '')) : [];
+  return {
+    updated: typeof json.updated === 'string' ? json.updated : '',
+    jp: map(json.jp), uk: map(json.uk), us: map(json.us),
+    jpYears: new Set((json.jpYears || []).filter(Number.isInteger)),
+    sources,
+  };
+}
+
+// 日本時間のきょうから days 日先までの休み（日付・国・名前）。土日は出さない
+export function holidayDays(now, hol, days = 7) {
+  const p = parts(now, TZ.tky);
+  const out = [];
+  for (let n = 0; n <= days; n++) {
+    const q = addDays(p, n);
+    if (!isWeekday(q.wd)) continue;
+    const k = ymdKey(q);
+    const label = `${q.mo}/${q.d}（${WD[q.wd]}）`;
+    const jp = hol && hol.jp.get(k);
+    if (jp) out.push({ label, key: k, where: '日本', name: jp });
+    else if ((q.mo === 12 && q.d === 31) || (q.mo === 1 && q.d <= 3)) out.push({ label, key: k, where: '日本', name: '銀行の休み（年末年始）' });
+    if (hol && hol.uk.has(k)) out.push({ label, key: k, where: '英国', name: hol.uk.get(k) });
+    if (hol && hol.us.has(k)) out.push({ label, key: k, where: '米国', name: hol.us.get(k) });
+  }
+  return out;
+}
+
+// 大事な時間の下に出す小さなお知らせ（日本時間のきょうで見る）
+export function holidayNotes(now, hol, failed, days = 7) {
+  const p = parts(now, TZ.tky);
+  const notes = [];
+  if (isWeekday(p.wd) && isJpBankHoliday(p, hol)) notes.push('きょうは仲値なし（東京休み）');
+  if (p.mo === 12 && p.d === 25) notes.push('主な休み：クリスマス（取引時間は FX 会社ごとにちがいます）');
+  if (p.mo === 1 && p.d === 1) notes.push('主な休み：元日（取引時間は FX 会社ごとにちがいます）');
+  if ((p.mo === 12 && p.d === 24) || (p.mo === 12 && p.d === 31)) notes.push('取引時間が変わる会社があります');
+  if (failed) notes.push('祝日の予定を読めませんでした');
+  else if (hol) {
+    const e = addDays(p, days);
+    if (!hol.jpYears.has(p.y) || !hol.jpYears.has(e.y)) notes.push('来年の祝日は内閣府の発表待ち');
+  }
+  return notes;
 }

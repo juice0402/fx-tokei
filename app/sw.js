@@ -1,7 +1,7 @@
 // scripts/gen-sw.mjs が作る。手で直さない（npm run sw）
 // 範囲は ./（＝/fx-tokei/）。app の中のファイルを先にためて、電波がなくても開ける。
 // 版が変わると、新しい版をためて古いためを消す（次に開いたときに新しい画面になる）
-const VERSION = '35d243a00ea8';
+const VERSION = '0ac59b62fb66';
 const CACHE = 'fx-tokei-' + VERSION;
 const FILES = [
   "./",
@@ -9,6 +9,7 @@ const FILES = [
   "board.js",
   "clock.js",
   "data/events.json",
+  "data/holidays.json",
   "events.js",
   "favicon-32.png",
   "fonts/OFL.txt",
@@ -19,6 +20,7 @@ const FILES = [
   "fonts/zenkaku-400.woff2",
   "fonts/zenkaku-700.woff2",
   "forms.js",
+  "holidays.js",
   "icon-192.png",
   "icon-512.png",
   "icon.svg",

@@ -79,6 +79,10 @@ body { background: var(--bg); color: var(--ink); }
 .ev-src summary { cursor: pointer; }
 .ev-src ul { margin: 4px 0 0; padding-left: 1.2em; line-height: 1.6; }
 .ev-src a { color: inherit; }
+.hol-notes { list-style: none; margin: 0; padding: 0; font-size: 12.5px; line-height: 1.6; }
+.hol-notes:empty { display: none; }
+.hol .ev-row { grid-template-columns: 6.4em 1fr auto; }
+.hol .ev-row time { text-align: left; }
 
 /* ===== 文字盤 ===== */
 .dial { font-family: var(--f-dial); display: flex; flex-direction: column; gap: 10px; }
@@ -102,6 +106,9 @@ body { background: var(--bg); color: var(--ink); }
 .num { fill: var(--ink); font-family: var(--f-dial); font-size: var(--dial-f-num); font-weight: 500; text-anchor: middle; }
 .arc { fill: none; stroke-width: var(--dial-s-ring); }
 .arc.off { opacity: .42; }
+.arc.hol { opacity: .16; }
+.mark.off { opacity: .3; }
+.list li.off em { color: var(--sub); }
 .s-syd { stroke: var(--s-syd); } .s-tky { stroke: var(--s-tky); } .s-ldn { stroke: var(--s-ldn); } .s-ny { stroke: var(--s-ny); }
 .mark, .ptr-dot, .sec { fill: var(--metal); }
 .ind { fill: var(--face); stroke: var(--ink); stroke-width: var(--dial-s-tick); }
@@ -152,6 +159,7 @@ body { background: var(--bg); color: var(--ink); }
 .st-grid { stroke: var(--line); stroke-width: var(--board-s-grid); }
 .st-now { stroke: var(--red); stroke-width: var(--board-s-now); }
 .st-nowtip { fill: var(--red); }
+rect.hol { opacity: .3; }
 .f-syd { fill: var(--s-syd); } .f-tky { fill: var(--s-tky); } .f-ldn { fill: var(--s-ldn); } .f-ny { fill: var(--s-ny); }
 table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-s-rule) * 1px) solid var(--ink); }
 .tt caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -164,6 +172,7 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
 .ent.fix b, .ent.fix span { color: var(--red); }
 .ent.minor b { font-size: var(--board-f-min-minor); color: var(--sub); }
 .ent.minor span { font-size: var(--board-f-name-minor); color: var(--sub); }
+.ent small.off { margin-left: 6px; font-size: var(--board-f-goto); color: var(--sub); }
 .ent.ind b { font-size: var(--board-f-min-minor); }
 .ent.ind span { font-weight: 700; }
 .ent.ind.imp3 span { text-decoration: underline; text-underline-offset: 3px; }
@@ -182,8 +191,8 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .board {
     display: grid; justify-content: center; align-content: start;
     grid-template-columns: minmax(0, 560px) minmax(0, 460px);
-    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "ev tt" "pick tt" "down down" "credit credit";
-    grid-template-rows: auto 1fr auto auto auto auto auto 1fr auto;
+    grid-template-areas: "top top" "up up" "now tt" "dia tt" "foot tt" "hol tt" "ev tt" "pick tt" "down down" "credit credit";
+    grid-template-rows: auto 1fr auto auto auto auto auto auto 1fr auto;
     column-gap: 56px; row-gap: 14px; padding-top: max(28px, env(safe-area-inset-top, 0px));
   }
   .b-top { grid-area: top; }
@@ -192,6 +201,7 @@ table.tt { width: 100%; border-collapse: collapse; border-top: calc(var(--board-
   .tt { grid-area: tt; align-self: start; }
   .b-foot { grid-area: foot; }
   .board .events-slot { grid-area: ev; }
+  .board .hol-slot { grid-area: hol; }
   .board .pick-slot { grid-area: pick; }
   .board .credit { grid-area: credit; }
   .board .pick { align-items: flex-start; }

@@ -17,3 +17,9 @@
 - 読めない日は前の分を残す。7日続けて読めない・件数が前の半分より少ない → mihari の issue。数えた記録は `state/events-state.json`
 - ネットなしで確かめる：`FIXTURES=test/fixtures/events node scripts/fetch-events.mjs --dry-run`（手で書いた見本を読む）
 - データだけが変わった日は sw.js を作り直さなくてよい（data/ は版の印に入れない）
+
+## 休みの予定（app/data/holidays.json）
+- 同じ「毎日の更新」で `node scripts/fetch-holidays.mjs`：日本＝内閣府の祝日の CSV、英国＝gov.uk（イングランドとウェールズ）、米国＝FRB の休み（K.8。土曜の祝日は休みなし・日曜の祝日は次の月曜）
+- 日本の銀行の休み（土日・祝日・12/31〜1/3）は仲値なし・ゴトー日は前の営業日に前倒し（app/time.js の gotobiMark）
+- 読めないときは土日と年末年始だけで判定する。見張りは指標と同じ（数えた記録は `state/holidays-state.json`）
+- ネットなしで確かめる：`FIXTURES=test/fixtures/holidays node scripts/fetch-holidays.mjs --dry-run`
