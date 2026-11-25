@@ -6,6 +6,9 @@ import dial from './dial.js';
 import board from './board.js';
 import dep from './dep.js';
 import line from './line.js';
+import classic from './classic.js';
+import rose from './rose.js';
+import world from './world.js';
 
 export const GROUPS = [
   { id: 'analog', name: 'アナログ' },
@@ -22,5 +25,8 @@ export const FORMS = [
   board,
   dep,
   line,
+  classic,
+  rose,
+  world,
 ].map((f) => ({ ...f, colors: colorsOf(f.id) }))
   .sort((a, b) => GROUPS.findIndex((g) => g.id === a.group) - GROUPS.findIndex((g) => g.id === b.group));

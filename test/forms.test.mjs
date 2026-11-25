@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { FORMS, GROUPS } from '../app/forms/index.js';
 import { SKINS } from '../app/skins.js';
-import { tickContext, dayFraction, diaBands, normalizeHolidays, bandWindow } from '../app/time.js';
+import { tickContext, dayFraction, diaBands, normalizeHolidays, bandWindow, handAngles, dial12, clockLeft, parts, TZ } from '../app/time.js';
 import { windowSize, placeLabels } from '../app/forms/line.js';
 
 const jst = (s) => Date.parse(s + '+09:00');
@@ -10,7 +10,7 @@ const jst = (s) => Date.parse(s + '+09:00');
 test('形の一覧：id がかぶらない・色が1つ以上・分け方の順', () => {
   const ids = FORMS.map((f) => f.id);
   assert.equal(new Set(ids).size, ids.length);
-  assert.deepEqual(ids, ['dial', 'board', 'dep', 'line']);
+  assert.deepEqual(ids, ['dial', 'classic', 'rose', 'board', 'dep', 'world', 'line']);
   for (const f of FORMS) {
     assert.ok(GROUPS.some((g) => g.id === f.group), f.id);
     assert.ok(f.colors.length >= 1, f.id);
@@ -77,4 +77,30 @@ test('横に流れる帯の名前：重なるときは2段目へ、どちらも�
   const s = placeLabels([m(100), m(110), m(130)], 600);
   assert.equal(s[2].row, 0);
   assert.ok(s[2].lx - s[0].lx > 100); // 3つめは重ならないところまで右へ
+});
+
+test('針の角度：日本時間で正しく動く（10:10:30 と 午後の時刻）', () => {
+  const a = handAngles(parts(jst('2026-11-20T10:10:30'), TZ.tky));
+  assert.deepEqual([a.h.toFixed(2), a.m, a.s], ['305.25', 63, 180]);
+  assert.equal(dial12(jst('2026-11-20T15:00:00')), 90);
+  assert.equal(dial12(jst('2026-11-20T21:30:00')), 285);
+  assert.equal(clockLeft(83 * 60000 + 59000), '1:23');
+});
+
+test('世界時計の街：その街の時刻・夏時間・夜・ランプ（取引中・まもなく・休み・お休み）', () => {
+  const hol = normalizeHolidays({ jp: [['2026-11-23', '勤労感謝の日']], uk: [], us: [['2026-11-26', '感謝祭']], jpYears: [2026] });
+  const at = (s) => Object.fromEntries(tickContext(jst(s), hol, []).cities.map((c) => [c.id, c]));
+  const a = at('2026-11-20T21:47:00');
+  assert.deepEqual([a.tky.state, a.ldn.state, a.ny.state], ['closed', 'open', 'soon']);
+  assert.equal(a.ny.p.h, 7);
+  assert.equal(a.ldn.p.h, 12);
+  assert.deepEqual([a.tky.night, a.ldn.night, a.ny.night], [true, false, false]);
+  assert.deepEqual([a.tky.season, a.ldn.season, a.ny.season], [null, '冬時間', '冬時間']);
+  const s = at('2027-07-01T21:30:00');
+  assert.deepEqual([s.ldn.season, s.ny.season, s.ny.p.h], ['夏時間', '夏時間', 8]);
+  assert.equal(at('2026-11-23T10:00:00').tky.state, 'rest');
+  assert.equal(at('2026-11-26T23:00:00').ny.state, 'rest');
+  const w = at('2026-11-21T12:00:00'); // 土曜
+  assert.deepEqual([w.tky.state, w.ldn.state, w.ny.state], ['closed', 'closed', 'closed']);
+  assert.equal(at('2026-11-23T08:30:00').tky.state, 'rest'); // 休みの日の開く前は「まもなく」にしない
 });

@@ -1,7 +1,7 @@
 // scripts/gen-sw.mjs が作る。手で直さない（npm run sw）
 // 範囲は ./（＝/fx-tokei/）。app の中のファイルを先にためて、電波がなくても開ける。
 // 版が変わると、新しい版をためて古いためを消す（次に開いたときに新しい画面になる）
-const VERSION = '463e5d546365';
+const VERSION = 'ed0d9b77fd57';
 const CACHE = 'fx-tokei-' + VERSION;
 const FILES = [
   "./",
@@ -15,13 +15,18 @@ const FILES = [
   "fonts/barlow-600.woff2",
   "fonts/bizud-400.woff2",
   "fonts/bizud-700.woff2",
+  "fonts/cormorant-500i.woff2",
   "fonts/dotgothic-400.woff2",
+  "fonts/mplusr-400.woff2",
+  "fonts/mplusr-700.woff2",
   "fonts/shippori-500.woff2",
   "fonts/shippori-700.woff2",
   "fonts/zenkaku-400.woff2",
   "fonts/zenkaku-700.woff2",
   "forms/board.css",
   "forms/board.js",
+  "forms/classic.css",
+  "forms/classic.js",
   "forms/dep.css",
   "forms/dep.js",
   "forms/dial.css",
@@ -29,6 +34,10 @@ const FILES = [
   "forms/index.js",
   "forms/line.css",
   "forms/line.js",
+  "forms/rose.css",
+  "forms/rose.js",
+  "forms/world.css",
+  "forms/world.js",
   "holidays.js",
   "icon-192.png",
   "icon-512.png",
