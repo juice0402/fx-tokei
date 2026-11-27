@@ -9,6 +9,10 @@ import line from './line.js';
 import classic from './classic.js';
 import rose from './rose.js';
 import world from './world.js';
+import big from './big.js';
+import donut from './donut.js';
+import planner from './planner.js';
+import widget from './widget.js';
 
 export const GROUPS = [
   { id: 'analog', name: 'アナログ' },
@@ -28,5 +32,9 @@ export const FORMS = [
   classic,
   rose,
   world,
+  big,
+  donut,
+  planner,
+  widget,
 ].map((f) => ({ ...f, colors: colorsOf(f.id) }))
   .sort((a, b) => GROUPS.findIndex((g) => g.id === a.group) - GROUPS.findIndex((g) => g.id === b.group));

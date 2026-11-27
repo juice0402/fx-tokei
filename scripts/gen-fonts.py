@@ -34,8 +34,10 @@ FONTS = [
     ('cormorantgaramond', 'CormorantGaramond-Italic[wght].ttf', 'cormorant-500i.woff2', {'wght': 500}),
     ('mplusrounded1c', 'MPLUSRounded1c-Regular.ttf', 'mplusr-400.woff2'),
     ('mplusrounded1c', 'MPLUSRounded1c-Bold.ttf', 'mplusr-700.woff2'),
+    ('kleeone', 'KleeOne-Regular.ttf', 'klee-400.woff2'),
+    ('kleeone', 'KleeOne-SemiBold.ttf', 'klee-600.woff2'),
 ]
-LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed'), ('dotgothic16', 'DotGothic16'), ('cormorantgaramond', 'Cormorant Garamond'), ('mplusrounded1c', 'M PLUS Rounded 1c')]
+LICENSES = [('shipporiminchob1', 'Shippori Mincho B1'), ('zenkakugothicnew', 'Zen Kaku Gothic New'), ('bizudpgothic', 'BIZ UDPGothic'), ('barlowcondensed', 'Barlow Condensed'), ('dotgothic16', 'DotGothic16'), ('cormorantgaramond', 'Cormorant Garamond'), ('mplusrounded1c', 'M PLUS Rounded 1c'), ('kleeone', 'Klee One')]
 
 # いつも入れる文字：英数と記号・ひらがな・カタカナ・日本語の記号・全角の英数
 RANGES = [

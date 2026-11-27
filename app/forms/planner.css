@@ -1,0 +1,47 @@
+/* 形「手帳」の見た目。色と大きさは skins.css（app/skins.json から作る）の変数だけを使う */
+.planner {
+  font-family: var(--f-hand); display: flex; flex-direction: column; gap: 8px;
+  background-image: radial-gradient(var(--grid) 1px, transparent 1.2px);
+  background-size: calc(var(--planner-s-grid) * 1px) calc(var(--planner-s-grid) * 1px);
+}
+.pl-top { display: flex; justify-content: space-between; align-items: center; min-height: 34px; font-size: var(--planner-f-top); color: var(--sub); }
+.pl-top h1 { margin: 0; font-size: var(--planner-f-brand); letter-spacing: .12em; color: var(--ink); font-weight: 600; }
+.pl-main { display: grid; gap: 12px; align-content: start; }
+.pl-sheet { display: flex; flex-direction: column; gap: 8px; min-width: 0; width: 100%; max-width: 480px; margin: 0 auto; }
+.pl-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pl-date { font-size: var(--planner-f-date); font-weight: 600; }
+.pl-date small { display: block; font-size: var(--planner-f-date-sub); font-weight: 400; color: var(--sub); }
+.pl-stamp { width: var(--planner-z-stamp); height: var(--planner-z-stamp); flex: none; border-radius: 50%; border: calc(var(--planner-s-stamp) * 1px) solid var(--stamp); color: var(--stamp); display: grid; place-content: center; font-size: var(--planner-f-stamp); font-weight: 600; line-height: 1.15; text-align: center; }
+.pl-stamp small { display: block; font-size: .8em; }
+.pl-stamp.plain { border-color: var(--stamp-plain); color: var(--stamp-plain); }
+.pl-svg { display: block; width: 100%; height: auto; }
+.pl-svg text { font-family: var(--f-hand); }
+.pl-line { stroke: var(--line); }
+.pl-half { stroke: var(--half); }
+.pl-hr { fill: var(--sub); font-size: var(--planner-f-hour); }
+.pl-b-syd { fill: var(--s-syd); } .pl-b-tky { fill: var(--s-tky); } .pl-b-ldn { fill: var(--s-ldn); } .pl-b-ny { fill: var(--s-ny); }
+.pl-svg rect.rest { opacity: .3; }
+.pl-pen { fill: var(--pen); opacity: .85; }
+.pl-dot { fill: var(--dot-open); }
+.pl-dot.d-fix { fill: var(--dot-fix); }
+.pl-dot.d-minor, .pl-dot.d-close { fill: var(--dot-minor); }
+.pl-dot.d-ind { fill: var(--ink); }
+.pl-tx { fill: var(--ink); font-size: var(--planner-f-item); font-weight: 600; }
+.pl-it.minor .pl-tx { font-size: var(--planner-f-item-minor); }
+.pl-it.past, .pl-it.off { opacity: .45; }
+.pl-now { stroke: var(--now); stroke-width: var(--planner-s-now); }
+.pl-nowdot { fill: var(--now); }
+.pl-nowtx { fill: var(--now); font-size: var(--planner-f-now); text-anchor: end; }
+.pl-leg { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: var(--planner-f-legend); color: var(--sub); }
+.pl-leg i { display: inline-block; width: var(--planner-z-swatch); height: var(--planner-z-swatch); border-radius: var(--planner-z-swatch-r); margin-right: 4px; vertical-align: -1px; }
+.pl-k-syd { background: var(--s-syd); } .pl-k-tky { background: var(--s-tky); } .pl-k-ldn { background: var(--s-ldn); } .pl-k-ny { background: var(--s-ny); }
+.pl-leg u { text-decoration: none; color: var(--ink); background: linear-gradient(transparent 45%, var(--pen) 45%); }
+.pl-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; width: 100%; max-width: 480px; margin: 0 auto; }
+.planner .ev-next span, .planner .ev-row.next { color: var(--now); }
+
+@media (min-width: 900px) {
+  .pl-main { grid-template-columns: minmax(0, 520px) 380px; grid-template-areas: "sheet side" "dots side"; justify-content: center; align-content: center; column-gap: 56px; flex: 1; }
+  .pl-sheet { grid-area: sheet; max-width: none; }
+  .planner .dots-slot { grid-area: dots; }
+  .pl-side { grid-area: side; align-self: center; }
+}

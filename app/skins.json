@@ -211,6 +211,119 @@
         "sec": 1.1
       }
     },
+    "big": {
+      "name": "大きな数字",
+      "geo": {
+        "day-w": 360,
+        "day-h": 40,
+        "start-hour": 7,
+        "axis-y": 14,
+        "mark-top": [6, 10],
+        "ind-r": [3.6, 2.6],
+        "hour-marks": [0, 6, 12, 18],
+        "hour-y": 34,
+        "hour-dx": 2,
+        "now-r": 4
+      },
+      "font": {
+        "brand": 13,
+        "top": 12,
+        "next": 14,
+        "next-strong": 17,
+        "num": 64,
+        "num-wide": 150,
+        "hour": 10,
+        "foot": 12.5,
+        "foot-wide": 14
+      },
+      "stroke": {
+        "bar": 3,
+        "axis": 1,
+        "mark": 2
+      }
+    },
+    "donut": {
+      "name": "パステルのドーナツ",
+      "geo": {
+        "view": 300,
+        "ring-r": 112,
+        "knob-r": 8,
+        "label-y": 104,
+        "name-y": 134,
+        "time-y": 158,
+        "left-y": 194,
+        "star": "M0,-8 C1,-2 2,-1 8,0 C2,1 1,2 0,8 C-1,2 -2,1 -8,0 C-2,-1 -1,-2 0,-8Z",
+        "stars": [[38, 40, 0.9, 1], [262, 56, 0.7, 2], [30, 240, 0.6, 2], [268, 246, 0.85, 1], [150, 14, 0.5, 3]]
+      },
+      "font": {
+        "brand": 13,
+        "top": 12,
+        "label": 13,
+        "name": 20,
+        "time": 14,
+        "left": 22,
+        "tag": 12.5
+      },
+      "stroke": {
+        "ring": 24,
+        "knob": 3
+      },
+      "size": {
+        "svg-max": 340,
+        "svg-max-wide": 460
+      }
+    },
+    "planner": {
+      "name": "手帳",
+      "geo": {
+        "w": 360,
+        "before": 2,
+        "after": 10,
+        "row-h": 26,
+        "top": 12,
+        "line-x0": 44,
+        "line-x1": 352,
+        "hour-x": 8,
+        "hour-dy": 5,
+        "dot-x": 55,
+        "dot-r": 4,
+        "text-x": 66,
+        "text-dy": 4.5,
+        "pen-dy": 6,
+        "pen-h": 13,
+        "pen-em": 12.5,
+        "band-x": 320,
+        "band-step": 8,
+        "band-w": 6,
+        "now-r": 3.5,
+        "now-x": 314,
+        "now-dy": 4,
+        "dash": "2 4",
+        "gap": 15
+      },
+      "font": {
+        "brand": 13,
+        "top": 12,
+        "date": 21,
+        "date-sub": 12,
+        "stamp": 12.5,
+        "hour": 13,
+        "item": 14,
+        "item-minor": 12,
+        "now": 11,
+        "legend": 12
+      },
+      "stroke": {
+        "now": 1.6,
+        "stamp": 2,
+        "grid": 16
+      },
+      "size": {
+        "stamp": 58,
+        "swatch": 10,
+        "swatch-r": 3
+      }
+    },
     "line": {
       "name": "横に流れる帯",
       "geo": {
@@ -246,6 +359,38 @@
         "mark": 1.5,
         "mark-minor": 1,
         "tick": 1
+      }
+    },
+    "widget": {
+      "name": "タイル",
+      "geo": {
+        "ring-view": 100,
+        "ring-r": 40,
+        "ring-text-y": 56
+      },
+      "font": {
+        "brand": 13,
+        "top": 12,
+        "lab": 11,
+        "ttl": 13,
+        "small": 11,
+        "ring": 19,
+        "mk": 13,
+        "time": 44,
+        "list": 12.5,
+        "la-name": 15,
+        "la-left": 24
+      },
+      "stroke": {
+        "ring": 9
+      },
+      "size": {
+        "tile-r": 22,
+        "la-r": 20,
+        "la-bar": 5,
+        "mk-dot": 9,
+        "ring-max": 120,
+        "grid-max": 380
       }
     }
   },
@@ -537,6 +682,104 @@
         "lane": "#e3e8ef", "past": "rgba(0,0,0,.04)", "now": "#e0463a", "tick": "#b3bdca",
         "mark": "#2b3647", "minor": "#8d99a9", "fix": "#d93a2b", "left": "#b4521c",
         "s-syd": "#3d8fb3", "s-tky": "#d9603f", "s-ldn": "#3f9a57", "s-ny": "#7a63c9"
+      }
+    },
+    "shiro": {
+      "form": "big",
+      "name": "白",
+      "scheme": "light",
+      "chip": ["#f1f1ee", "#121212"],
+      "color": {
+        "bg": "#f1f1ee", "ink": "#121212", "sub": "#5c5c57", "line": "#d9d9d4",
+        "bar": "#121212", "axis": "#bdbdb7", "red": "#d23c2c", "on": "#1c7a45"
+      }
+    },
+    "kuro": {
+      "form": "big",
+      "name": "黒",
+      "scheme": "dark",
+      "chip": ["#0c0c0c", "#f2f2ee"],
+      "color": {
+        "bg": "#0c0c0c", "ink": "#f2f2ee", "sub": "#9a9a94", "line": "#2a2a2a",
+        "bar": "#f2f2ee", "axis": "#4a4a46", "red": "#ff5a4a", "on": "#4fd08a"
+      }
+    },
+    "pink": {
+      "form": "donut",
+      "name": "ピンク",
+      "scheme": "light",
+      "chip": ["#fdf2f6", "#ff9ec4"],
+      "color": {
+        "bg": "#fdf2f6", "ink": "#5a3d55", "sub": "#b58aa0", "line": "#f1d3df",
+        "ring-bg": "#f9dfe8", "ring-a": "#ff9ec4", "ring-b": "#b9a2ff", "knob": "#ffffff", "knob-edge": "#ff9ec4", "left": "#e2668f",
+        "star1": "#ffc2d6", "star2": "#cdbdff", "star3": "#ffd98a",
+        "tag-bg": "#ffffff", "tag-ink": "#7a5a73",
+        "next-bg": "#ff9ec4", "next-ink": "#ffffff",
+        "on-bg": "#efe8ff", "on-ink": "#6b55b5", "on-line": "#ddd2ff",
+        "g-bg": "#fff3c9", "g-ink": "#9a6a00", "g-line": "#f3dc8c"
+      }
+    },
+    "mint": {
+      "form": "donut",
+      "name": "ミント",
+      "scheme": "light",
+      "chip": ["#effaf5", "#7fdcc0"],
+      "color": {
+        "bg": "#effaf5", "ink": "#2f5a4e", "sub": "#7aa597", "line": "#cdeee2",
+        "ring-bg": "#d4f1e6", "ring-a": "#7fdcc0", "ring-b": "#ffd96a", "knob": "#ffffff", "knob-edge": "#7fdcc0", "left": "#22a07f",
+        "star1": "#a8ecd6", "star2": "#ffe59a", "star3": "#ffe59a",
+        "tag-bg": "#ffffff", "tag-ink": "#2f5a4e",
+        "next-bg": "#22a07f", "next-ink": "#ffffff",
+        "on-bg": "#dcf5eb", "on-ink": "#1d7d63", "on-line": "#b3e6d3",
+        "g-bg": "#fff6d4", "g-ink": "#8a6a00", "g-line": "#f3e09a"
+      }
+    },
+    "hogan": {
+      "form": "planner",
+      "name": "方眼の白",
+      "scheme": "light",
+      "chip": ["#fbfaf6", "#e0503a"],
+      "color": {
+        "bg": "#fbfaf6", "ink": "#3d3a35", "sub": "#8b8478", "line": "#e3ddd0",
+        "grid": "#e4dfd3", "half": "#eee9de", "pen": "#ffe680", "now": "#e0503a",
+        "stamp": "#d9473a", "stamp-plain": "#a39d92",
+        "dot-fix": "#e0a400", "dot-open": "#6f8fc9", "dot-minor": "#b9b2a6",
+        "s-syd": "#a8d4dd", "s-tky": "#f4b4a8", "s-ldn": "#bcdcae", "s-ny": "#cdbde9"
+      }
+    },
+    "kraft": {
+      "form": "planner",
+      "name": "クラフト紙",
+      "scheme": "light",
+      "chip": ["#e8d9bd", "#c8402e"],
+      "color": {
+        "bg": "#e8d9bd", "ink": "#4a3a28", "sub": "#7d6a52", "line": "#d2bf9c",
+        "grid": "#d6c4a2", "half": "#dccbab", "pen": "#fff27a", "now": "#c8402e",
+        "stamp": "#c8402e", "stamp-plain": "#998468",
+        "dot-fix": "#b98600", "dot-open": "#58739f", "dot-minor": "#a8977c",
+        "s-syd": "#8fbcc4", "s-tky": "#dc9a8b", "s-ldn": "#a6c495", "s-ny": "#b6a5d4"
+      }
+    },
+    "kurai": {
+      "form": "widget",
+      "name": "くらい",
+      "scheme": "dark",
+      "chip": ["#1c1c1e", "#ff9f0a"],
+      "color": {
+        "bg": "#304c5a", "ink": "#ffffff", "sub": "#a1a1a6", "line": "rgba(255,255,255,.28)",
+        "wall-a": "#304c5a", "wall-b": "#5f7f86", "wall-c": "#b9a98f", "lab": "rgba(255,255,255,.75)",
+        "tile": "rgba(28,28,30,.92)", "track": "#3a3a3c", "accent": "#ff9f0a", "on": "#30d158", "dot": "#48484a"
+      }
+    },
+    "akarui": {
+      "form": "widget",
+      "name": "明るい",
+      "scheme": "light",
+      "chip": ["#ffffff", "#ff9500"],
+      "color": {
+        "bg": "#dfe8ee", "ink": "#1c1c1e", "sub": "#6e6e73", "line": "rgba(28,28,30,.18)",
+        "wall-a": "#dfe8ee", "wall-b": "#ebebe9", "wall-c": "#f6efe4", "lab": "rgba(28,28,30,.62)",
+        "tile": "rgba(255,255,255,.92)", "track": "#e5e5ea", "accent": "#ff9500", "on": "#34c759", "dot": "#c7c7cc"
       }
     }
   }

@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { FORMS, GROUPS } from '../app/forms/index.js';
 import { SKINS } from '../app/skins.js';
-import { tickContext, dayFraction, diaBands, normalizeHolidays, bandWindow, handAngles, dial12, clockLeft, parts, TZ } from '../app/time.js';
+import { tickContext, dayFraction, diaBands, normalizeHolidays, eventsBetween, hourWindow, bandsIn, formatHms, formatHmShort, bandWindow, handAngles, dial12, clockLeft, parts, TZ } from '../app/time.js';
 import { windowSize, placeLabels } from '../app/forms/line.js';
 
 const jst = (s) => Date.parse(s + '+09:00');
@@ -10,7 +10,7 @@ const jst = (s) => Date.parse(s + '+09:00');
 test('形の一覧：id がかぶらない・色が1つ以上・分け方の順', () => {
   const ids = FORMS.map((f) => f.id);
   assert.equal(new Set(ids).size, ids.length);
-  assert.deepEqual(ids, ['dial', 'classic', 'rose', 'board', 'dep', 'world', 'line']);
+  assert.deepEqual(ids, ['dial', 'classic', 'rose', 'board', 'dep', 'world', 'big', 'donut', 'planner', 'line', 'widget']);
   for (const f of FORMS) {
     assert.ok(GROUPS.some((g) => g.id === f.group), f.id);
     assert.ok(f.colors.length >= 1, f.id);
@@ -39,6 +39,23 @@ test('ctx：その日の並び・進み具合・市場・ゴトー日・休み',
   const d = diaBands(jst('2026-11-13T16:30:00'), 7);
   assert.equal(d.now, 9.5);
   assert.deepEqual(d.bands.find((b) => b.id === 'tky').segs.map((g) => [g.a, g.b]), [[2, 10]]);
+});
+
+test('大きな数字・手帳・タイルの計算：範囲の中の大事な時間と指標・手帳のページ・残りの書き方', () => {
+  const hol = normalizeHolidays({ jp: [], uk: [], us: [['2026-11-26', '感謝祭']], jpYears: [2026] });
+  const ind = [{ id: 'pce', name: '米PCE', imp: 2, t: Date.parse('2026-11-25T13:30:00Z'), approx: false, tentative: false, sub: null }];
+  const w = hourWindow(jst('2026-11-25T21:40:00'), 2, 10);
+  assert.equal(w.from, jst('2026-11-25T19:00:00'));
+  assert.equal(w.to, jst('2026-11-26T07:00:00'));
+  const xs = eventsBetween(w.from, w.to, hol, ind);
+  assert.deepEqual(xs.map((x) => x.ev.id), ['ny', 'pce', 'nys', 'fix', 'nyc']);
+  assert.equal(xs[1].ev.kind, 'ind');
+  const th = eventsBetween(jst('2026-11-26T19:00:00'), jst('2026-11-27T07:00:00'), hol, []);
+  assert.equal(th.find((x) => x.ev.id === 'ny').off, 'NY休み');
+  const b = bandsIn(w.from, w.to, hol);
+  assert.deepEqual(b.find((x) => x.id === 'ny').segs.map((g) => [g.a, g.b]), [[3, 12]]);
+  assert.equal(formatHms(3 * 36e5 + 5 * 6e4 + 9e3), '3:05:09');
+  assert.equal(formatHmShort(46 * 36e5 + 54 * 6e4), '46:54');
 });
 
 test('横に流れる帯の窓：360px は前2時間・後ろ10時間、広いと後ろが長く（最大22時間・1時間30〜48px）', () => {
